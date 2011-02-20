@@ -100,19 +100,34 @@ void JSONDialog::populateTree (HWND hWndDlg, HTREEITEM tree_root, json_t * json_
 
 void JSONDialog::drawTree()
 {
-	json_t *json_root=NULL;
-	json_error err;
+	enum json_error err;
+	struct json_parsing_info *jpi;
 	HTREEITEM tree_root;
+
 	tree_root=initTree(this->getHSelf());
-	err=json_parse_document(&json_root,curJSON);
-	if(err==JSON_OK)
-	{
-		populateTree(this->getHSelf(),tree_root,json_root,0);
-		TreeView_Expand(GetDlgItem(this->getHSelf(),IDC_TREE1),tree_root,TVE_EXPAND);
-		json_free_value(&json_root);
-	}else
+
+
+	jpi = (json_parsing_info*)malloc (sizeof (struct json_parsing_info));
+	if (jpi == NULL)
 	{
 		::MessageBox(nppData._nppHandle,TEXT("Could not parse!!"),TEXT("JSON Viewer"),MB_OK|MB_ICONERROR);
+	}
+
+	json_jpi_init (jpi);
+
+	err = json_parse_fragment (jpi, curJSON);
+
+	if((err == JSON_WAITING_FOR_EOF) || (err == JSON_OK))
+	{
+		populateTree(this->getHSelf(),tree_root,jpi->cursor,0);
+		TreeView_Expand(GetDlgItem(this->getHSelf(),IDC_TREE1),tree_root,TVE_EXPAND);
+		json_free_value(&jpi->cursor);
+		free(jpi);
+	}else
+	{
+		TCHAR errMsg[100];
+		wsprintf(errMsg,TEXT("Could not parse!! at line %d"),jpi->line);
+		::MessageBox(nppData._nppHandle,errMsg,TEXT("JSON Viewer"),MB_OK|MB_ICONERROR);
 	}
 }
 

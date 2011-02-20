@@ -1369,9 +1369,16 @@ json_jpi_init (struct json_parsing_info *jpi)
 }
 
 
-int
-lexer (char *buffer, char **p, unsigned int *state, rcstring ** text, size_t *line)
+/*
+	In windows CRLF is the termination sequence..this function inc. the line
+	number on both CR and LF which gives erroneous error location in case of
+	windows. 
+	So, added a check for consecutive occurance of CRLF, in this particular
+	case line number is incremented only once.
+*/
+int lexer (char *buffer, char **p, unsigned int *state, rcstring ** text, size_t *line)
 {
+	int crOccured=0; //flag to mark occurance of CR
 	assert (buffer != NULL);
 	assert (p != NULL);
 	assert (state != NULL);
@@ -1394,8 +1401,14 @@ lexer (char *buffer, char **p, unsigned int *state, rcstring ** text, size_t *li
 					break;
 
 				case '\x0A':	/* line feed or new line */
+					if(crOccured) //if CR has occured before, don't increment line number
+					{
+						crOccured=0; //resets CR occurance flag
+						break;
+					}
 				case '\x0D':	/* Carriage return */
 					*line += 1;	// increment line number
+					crOccured=1; //sets the flag for CR occurance
 					break;
 
 				case '{':
