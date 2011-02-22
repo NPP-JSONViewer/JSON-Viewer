@@ -18,19 +18,13 @@ public :
 
     virtual void display(bool toShow = true) const {
         DockingDlgInterface::display(toShow);
-        /*if (toShow)
-			::SetFocus(::GetDlgItem(_hSelf, IDC_TREE1));*/
     };
 
 	void setParent(HWND parent2set){
 		_hParent = parent2set;
 	};
 
-	void setJSON(char* json)
-	{
-		curJSON=json;
-		drawTree();
-	}
+	void setJSON(char *json);
 
 protected :
 	virtual BOOL CALLBACK run_dlgProc(UINT message, WPARAM wParam, LPARAM lParam);

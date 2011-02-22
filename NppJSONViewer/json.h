@@ -114,6 +114,7 @@ The structure holding all information needed to resume parsing
 		char *p;
 		int string_length_limit_reached;	/*!< flag informing if the string limit length defined by JSON_MAX_STRING_LENGTH was reached */
 		size_t line;	// current document line
+		size_t char_num; //current character number in a line
 		json_t *cursor;	/*!< pointers to nodes belonging to the document tree which aid the document parsing */
 	};
 

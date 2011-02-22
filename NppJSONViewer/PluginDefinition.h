@@ -69,4 +69,6 @@ bool setCommand(size_t index, TCHAR *cmdName, PFUNCPLUGINCMD pFunc, ShortcutKey 
 //
 void openDialog();
 
+#define CUSTOM_MARK_ERROR (WM_USER + 1)
+
 #endif //PLUGINDEFINITION_H

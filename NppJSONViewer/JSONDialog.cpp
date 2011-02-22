@@ -56,16 +56,74 @@ HTREEITEM JSONDialog::insertToTree(HWND hWndDlg,HTREEITEM parent,char *text)
 		return item;
 }
 
+void JSONDialog::setJSON(char* json)
+{
+	if(curJSON==NULL || strcmp(json,curJSON)!=0)
+	{
+		curJSON=json;
+		if(this->isCreated())
+			drawTree();
+	}
+}
+
 void JSONDialog::populateTree (HWND hWndDlg, HTREEITEM tree_root, json_t * json_root, int level)
 {
 	HTREEITEM newItem;
 	switch (json_root->type)
 	{
 	case JSON_STRING:
-		newItem=insertToTree(hWndDlg,tree_root,json_root->text);
+		if(json_root->child==NULL && json_root->parent->type!=JSON_ARRAY)
+		{
+			TVITEM t;
+			t.hItem=tree_root;
+			t.mask=TVIF_HANDLE;
+			if(SendDlgItemMessage(hWndDlg,IDC_TREE1,TVM_GETITEM,0,(LPARAM)&t))
+			{
+				int len=strlen(json_root->parent->text)+3+strlen(json_root->text)+1;
+				char *txt=new char[len];
+				memset(txt, 0, len);
+				sprintf(txt,"%s : %s",json_root->parent->text,json_root->text);
+
+				len = strlen(txt) + 1;
+				wchar_t *w_txt = new wchar_t[len];
+				memset(w_txt, 0, len);
+				MultiByteToWideChar(CP_ACP, NULL, txt, -1, w_txt, len);
+				
+				t.pszText=w_txt;
+				t.mask=TVIF_TEXT;
+				::SendDlgItemMessage(hWndDlg,IDC_TREE1,TVM_SETITEM,0,(LPARAM)&t);
+			}
+		}else
+		{
+			newItem=insertToTree(hWndDlg,tree_root,json_root->text);
+		}
 		break;
 	case JSON_NUMBER:
-		newItem=insertToTree(hWndDlg,tree_root,json_root->text);
+		if(json_root->child==NULL && json_root->parent->type!=JSON_ARRAY)
+		{
+			TVITEM t;
+			t.hItem=tree_root;
+			t.mask=TVIF_HANDLE;
+			if(SendDlgItemMessage(hWndDlg,IDC_TREE1,TVM_GETITEM,0,(LPARAM)&t))
+			{
+				int len=strlen(json_root->parent->text)+3+strlen(json_root->text)+1;
+				char *txt=new char[len];
+				memset(txt, 0, len);
+				sprintf(txt,"%s : %s",json_root->parent->text,json_root->text);
+
+				len = strlen(txt) + 1;
+				wchar_t *w_txt = new wchar_t[len];
+				memset(w_txt, 0, len);
+				MultiByteToWideChar(CP_ACP, NULL, txt, -1, w_txt, len);
+				
+				t.pszText=w_txt;
+				t.mask=TVIF_TEXT;
+				::SendDlgItemMessage(hWndDlg,IDC_TREE1,TVM_SETITEM,0,(LPARAM)&t);
+			}
+		}else
+		{
+			newItem=insertToTree(hWndDlg,tree_root,json_root->text);
+		}
 		break;
 	case JSON_OBJECT:
 		newItem=insertToTree(hWndDlg,tree_root,"Object");
@@ -106,7 +164,6 @@ void JSONDialog::drawTree()
 
 	tree_root=initTree(this->getHSelf());
 
-
 	jpi = (json_parsing_info*)malloc (sizeof (struct json_parsing_info));
 	if (jpi == NULL)
 	{
@@ -125,9 +182,23 @@ void JSONDialog::drawTree()
 		free(jpi);
 	}else
 	{
-		TCHAR errMsg[100];
-		wsprintf(errMsg,TEXT("Could not parse!! at line %d"),jpi->line);
-		::MessageBox(nppData._nppHandle,errMsg,TEXT("JSON Viewer"),MB_OK|MB_ICONERROR);
+		::MessageBox(nppData._nppHandle,TEXT("Could not parse!!"),TEXT("JSON Viewer"),MB_OK|MB_ICONERROR);
+		
+		//mark the error position
+		// Get the current scintilla
+		int which = -1;
+		::SendMessage(nppData._nppHandle, NPPM_GETCURRENTSCINTILLA, 0, (LPARAM)&which);
+		if (which == -1)
+			return;
+
+		HWND curScintilla = (which == 0)?nppData._scintillaMainHandle:nppData._scintillaSecondHandle;
+		size_t start = ::SendMessage(curScintilla, SCI_GETSELECTIONSTART, 0, 0);
+
+		size_t errPosition=start+jpi->char_num;
+
+		::SendMessage(curScintilla,SCI_SETSEL,errPosition,errPosition+1);
+
+		free(jpi);
 	}
 }
 

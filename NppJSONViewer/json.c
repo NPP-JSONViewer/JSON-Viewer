@@ -1366,8 +1366,8 @@ json_jpi_init (struct json_parsing_info *jpi)
 	jpi->cursor = NULL;
 	jpi->line = 1;
 	jpi->string_length_limit_reached = 0;
+	jpi->char_num=0;
 }
-
 
 /*
 	In windows CRLF is the termination sequence..this function inc. the line
@@ -1376,9 +1376,10 @@ json_jpi_init (struct json_parsing_info *jpi)
 	So, added a check for consecutive occurance of CRLF, in this particular
 	case line number is incremented only once.
 */
-int lexer (char *buffer, char **p, unsigned int *state, rcstring ** text, size_t *line)
+
+int lexer (char *buffer, char **p, unsigned int *state, rcstring ** text, size_t *line, size_t *char_num)
 {
-	int crOccured=0; //flag to mark occurance of CR
+	int crOccured=0; //flag to mark occurance of CR, fix for windows style line termination which is "CRLF"
 	assert (buffer != NULL);
 	assert (p != NULL);
 	assert (state != NULL);
@@ -1389,6 +1390,11 @@ int lexer (char *buffer, char **p, unsigned int *state, rcstring ** text, size_t
 
 	while (**p != '\0')
 	{
+		//the error location is actually the position at which the
+		//parser stops,here buffer is the original string and 
+		//p is the part of the string which is not parsed yet..
+		//on subtraction gives the number of characters succefully parsed
+		*char_num=(strlen(buffer)-strlen(*p));
 		switch (*state)
 		{
 
@@ -1521,7 +1527,8 @@ int lexer (char *buffer, char **p, unsigned int *state, rcstring ** text, size_t
 				case 29:
 				case 30:
 				case 31:
-					/* ASCII control characters can only be present in a JSON string if they are escaped. If not then the document is invalid */
+					/* ASCII control characters can only be present in a JSON string if they are escaped. 
+					If not then the document is invalid */
 					return LEX_INVALID_CHARACTER;
 					break;
 
@@ -2160,7 +2167,7 @@ json_parse_fragment (struct json_parsing_info *info, char *buffer)
 		{
 		case 0:	/* starting point */
 			{
-				switch (lexer (buffer, &info->p, &info->lex_state, &info->lex_text, &info->line))
+				switch (lexer (buffer, &info->p, &info->lex_state, &info->lex_text, &info->line,&info->char_num))
 				{
 				case LEX_BEGIN_OBJECT:
 					info->state = 1;	/* begin object */
@@ -2213,7 +2220,7 @@ json_parse_fragment (struct json_parsing_info *info, char *buffer)
 				assert (info->cursor != NULL);
 				assert (info->cursor->type == JSON_OBJECT);
 
-				switch (lexer (buffer, &info->p, &info->lex_state, &info->lex_text, &info->line))
+				switch (lexer (buffer, &info->p, &info->lex_state, &info->lex_text, &info->line,&info->char_num))
 				{
 				case LEX_STRING:
 					if ((temp = json_new_value (JSON_STRING)) == NULL)
@@ -2270,7 +2277,7 @@ json_parse_fragment (struct json_parsing_info *info, char *buffer)
 
 				default:
 						/* this should never run */
-					fprintf (stderr, "JSON: state %d: defaulted at line %zd\n", info->state, info->line);
+					fprintf (stderr, "JSON: state %d: defaulted at line %d\n", info->state, info->line);
 					return JSON_MALFORMED_DOCUMENT;
 					break;
 				}
@@ -2283,7 +2290,7 @@ json_parse_fragment (struct json_parsing_info *info, char *buffer)
 				assert (info->cursor != NULL);
 				assert (info->cursor->type == JSON_OBJECT);
 
-				switch (lexer (buffer, &info->p, &info->lex_state, &info->lex_text, &info->line))
+				switch (lexer (buffer, &info->p, &info->lex_state, &info->lex_text, &info->line,&info->char_num))
 				{
 				case LEX_VALUE_SEPARATOR:
 					info->state = 4;	/* sibling, post-object */
@@ -2329,7 +2336,7 @@ json_parse_fragment (struct json_parsing_info *info, char *buffer)
 					break;
 
 				default:
-					fprintf (stderr, "JSON: state %d: defaulted at line %zd\n", info->state, info->line);
+					fprintf (stderr, "JSON: state %d: defaulted at line %d\n", info->state, info->line);
 					return JSON_MALFORMED_DOCUMENT;
 					break;
 				}
@@ -2341,7 +2348,7 @@ json_parse_fragment (struct json_parsing_info *info, char *buffer)
 				assert (info->cursor != NULL);
 				assert (info->cursor->type == JSON_OBJECT);
 
-				switch (lexer (buffer, &info->p, &info->lex_state, &info->lex_text, &info->line))
+				switch (lexer (buffer, &info->p, &info->lex_state, &info->lex_text, &info->line,&info->char_num))
 				{
 				case LEX_STRING:
 					if ((temp = json_new_value (JSON_STRING)) == NULL)
@@ -2365,7 +2372,7 @@ json_parse_fragment (struct json_parsing_info *info, char *buffer)
 					break;
 
 				default:	/* this should never run */
-					fprintf (stderr, "JSON: state %d: defaulted at line %zd\n", info->state, info->line);
+					fprintf (stderr, "JSON: state %d: defaulted at line %d\n", info->state, info->line);
 					return JSON_MALFORMED_DOCUMENT;
 					break;
 				}
@@ -2378,7 +2385,7 @@ json_parse_fragment (struct json_parsing_info *info, char *buffer)
 				assert (info->cursor != NULL);
 				assert (info->cursor->type == JSON_STRING);
 
-				switch (lexer (buffer, &info->p, &info->lex_state, &info->lex_text, &info->line))
+				switch (lexer (buffer, &info->p, &info->lex_state, &info->lex_text, &info->line,&info->char_num))
 				{
 				case LEX_NAME_SEPARATOR:
 					info->state = 6;	/* label, pos label:value separator */
@@ -2389,7 +2396,7 @@ json_parse_fragment (struct json_parsing_info *info, char *buffer)
 					break;
 
 				default:
-					fprintf (stderr, "JSON: state %d: defaulted at line %zd\n", info->state, info->line);
+					fprintf (stderr, "JSON: state %d: defaulted at line %d\n", info->state, info->line);
 					return JSON_MALFORMED_DOCUMENT;
 					break;
 				}
@@ -2403,7 +2410,7 @@ json_parse_fragment (struct json_parsing_info *info, char *buffer)
 				assert (info->cursor != NULL);
 				assert (info->cursor->type == JSON_STRING);
 
-				switch (value = lexer (buffer, &info->p, &info->lex_state, &info->lex_text, &info->line))
+				switch (value = lexer (buffer, &info->p, &info->lex_state, &info->lex_text, &info->line,&info->char_num))
 				{
 				case LEX_STRING:
 					if ((temp = json_new_value (JSON_STRING)) == NULL)
@@ -2528,7 +2535,7 @@ json_parse_fragment (struct json_parsing_info *info, char *buffer)
 					break;
 
 				default:
-					fprintf (stderr, "JSON: state %d: defaulted at line %zd\n", info->state, info->line);
+					fprintf (stderr, "JSON: state %d: defaulted at line %d\n", info->state, info->line);
 					return JSON_MALFORMED_DOCUMENT;
 					break;
 				}
@@ -2570,7 +2577,7 @@ json_parse_fragment (struct json_parsing_info *info, char *buffer)
 				assert (info->cursor != NULL);
 				assert (info->cursor->type == JSON_ARRAY);
 
-				switch (lexer (buffer, &info->p, &info->lex_state, &info->lex_text, &info->line))
+				switch (lexer (buffer, &info->p, &info->lex_state, &info->lex_text, &info->line,&info->char_num))
 				{
 				case LEX_STRING:
 					if ((temp = json_new_value (JSON_STRING)) == NULL)
@@ -2679,7 +2686,7 @@ json_parse_fragment (struct json_parsing_info *info, char *buffer)
 					break;
 
 				default:
-					fprintf (stderr, "JSON: state %d: defaulted at line %zd\n", info->state, info->line);
+					fprintf (stderr, "JSON: state %d: defaulted at line %d\n", info->state, info->line);
 					return JSON_MALFORMED_DOCUMENT;
 					break;
 				}
@@ -2690,7 +2697,7 @@ json_parse_fragment (struct json_parsing_info *info, char *buffer)
 			{
 				/*TODO perform tree sanity checks */
 				assert (info->cursor != NULL);
-				switch (lexer (buffer, &info->p, &info->lex_state, &info->lex_text, &info->line))
+				switch (lexer (buffer, &info->p, &info->lex_state, &info->lex_text, &info->line,&info->char_num))
 				{
 				case LEX_VALUE_SEPARATOR:
 					info->state = 8;
@@ -2740,7 +2747,7 @@ json_parse_fragment (struct json_parsing_info *info, char *buffer)
 					break;
 
 				default:
-					fprintf (stderr, "JSON: state %d: defaulted at line %zd\n", info->state, info->line);
+					fprintf (stderr, "JSON: state %d: defaulted at line %d\n", info->state, info->line);
 					return JSON_MALFORMED_DOCUMENT;
 					break;
 				}
@@ -2751,7 +2758,7 @@ json_parse_fragment (struct json_parsing_info *info, char *buffer)
 			{
 				/* perform tree sanity check */
 				assert (info->cursor->parent == NULL);
-				switch (lexer (buffer, &info->p, &info->lex_state, &info->lex_text, &info->line))
+				switch (lexer (buffer, &info->p, &info->lex_state, &info->lex_text, &info->line,&info->char_num))
 				{
 				case LEX_MORE:
 					return JSON_WAITING_FOR_EOF;
@@ -2769,7 +2776,7 @@ json_parse_fragment (struct json_parsing_info *info, char *buffer)
 			break;
 
 		default:
-			fprintf (stderr, "JSON: state %d: defaulted at line %zd\n", info->state, info->line);
+			fprintf (stderr, "JSON: state %d: defaulted at line %d\n", info->state, info->line);
 			return JSON_UNKNOWN_PROBLEM;
 		}
 	}
