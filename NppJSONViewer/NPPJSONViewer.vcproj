@@ -344,6 +344,10 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
+				RelativePath=".\Hyperlinks.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\json.c"
 				>
 			</File>
@@ -379,6 +383,10 @@
 			</File>
 			<File
 				RelativePath=".\dockingResource.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Hyperlinks.h"
 				>
 			</File>
 			<File

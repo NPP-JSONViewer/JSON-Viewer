@@ -20,7 +20,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "PluginDefinition.h"
 #include "menuCmdID.h"
 #include "JSONDialog.h"
-
+#include "Hyperlinks.h"
 
 HANDLE g_hMod;
 CHAR * curJSON=NULL;
@@ -74,12 +74,16 @@ INT_PTR CALLBACK abtDlgProc(HWND hwndDlg,UINT uMsg,WPARAM wParam, LPARAM lParam)
 	switch(uMsg)
 	{
 	case WM_INITDIALOG:
+		ConvertStaticToHyperlink(hwndDlg,IDC_WEB);
 		return TRUE;
 	case WM_COMMAND:
 		switch(LOWORD(wParam))
 		{
 		case IDOK:
 			EndDialog(hwndDlg,wParam);
+			return TRUE;
+		case IDC_WEB:
+			ShellExecute(hwndDlg, TEXT("open"),TEXT("https://sourceforge.net/projects/nppjsonviewer/"),NULL, NULL, SW_SHOWNORMAL);
 			return TRUE;
 		}
 	}
