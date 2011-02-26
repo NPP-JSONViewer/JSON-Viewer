@@ -14,6 +14,27 @@
 // Dialog resources
 //
 LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
+IDD_ABOUTDLG DIALOG 0, 0, 222, 102
+STYLE DS_3DLOOK | DS_ABSALIGN | DS_CENTER | DS_MODALFRAME | DS_SHELLFONT | WS_CAPTION | WS_VISIBLE | WS_POPUP | WS_SYSMENU
+EXSTYLE WS_EX_WINDOWEDGE
+CAPTION "About JSONViewer"
+FONT 8, "Ms Shell Dlg"
+{
+    DEFPUSHBUTTON   "OK", IDOK, 82, 85, 50, 14
+    GROUPBOX        "JSONViewer", IDC_STATIC, 14, 7, 198, 74, BS_CENTER
+    LTEXT           "Author:", IDC_STATIC, 27, 21, 24, 8, SS_LEFT
+    LTEXT           "Kapil Ratnani", IDC_STATIC, 105, 21, 43, 8, SS_LEFT
+    LTEXT           "Version:", IDC_STATIC, 27, 35, 26, 8, SS_LEFT
+    LTEXT           "1.1", IDC_STATIC, 104, 35, 11, 8, SS_LEFT
+    LTEXT           "Licence:", IDC_STATIC, 27, 48, 28, 8, SS_LEFT
+    LTEXT           "GPL", IDC_STATIC, 104, 48, 15, 8, SS_LEFT
+    LTEXT           "Special thanks to:", IDC_STATIC, 27, 63, 58, 8, SS_LEFT
+    LTEXT           "Don Ho and Rui Maciel for mjson", IDC_STATIC, 103, 63, 105, 8, SS_LEFT
+}
+
+
+
+LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
 IDD_TREE DIALOG 0, 0, 208, 322
 STYLE DS_3DLOOK | DS_CENTER | DS_SHELLFONT | WS_CAPTION | WS_VISIBLE | WS_CHILDWINDOW
 EXSTYLE WS_EX_TOOLWINDOW | WS_EX_TOPMOST
@@ -30,8 +51,8 @@ FONT 8, "Ms Shell Dlg"
 //
 LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
 1 VERSIONINFO
-    FILEVERSION     1,0,0,0
-    PRODUCTVERSION  1,0,0,0
+    FILEVERSION     1,1,0,0
+    PRODUCTVERSION  1,1,0,0
     FILEOS          VOS__WINDOWS32
     FILETYPE        VFT_DLL
     FILESUBTYPE     VFT2_UNKNOWN
@@ -45,11 +66,11 @@ LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
             VALUE "Comments", "JSONViewer plugin for Notepad++"
             VALUE "CompanyName", "Kapil Ratnani"
             VALUE "FileDescription", "Notepad++ plugin"
-            VALUE "FileVersion", "1.0"
+            VALUE "FileVersion", "1.1"
             VALUE "InternalName", "JSONViewer"
             VALUE "OriginalFilename", "NPPJSONViewer.dll"
             VALUE "ProductName", "JSONViewer plugin for Notepad++"
-            VALUE "ProductVersion", "1.0"
+            VALUE "ProductVersion", "1.1"
             VALUE "SpecialBuild", "UNICODE"
         }
     }

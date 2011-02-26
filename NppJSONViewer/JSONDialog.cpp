@@ -1,16 +1,21 @@
-//This program is free software; you can redistribute it and/or
-//modify it under the terms of the GNU General Public License
-//as published by the Free Software Foundation; either
-//version 2 of the License, or (at your option) any later version.
-//
-//This program is distributed in the hope that it will be useful,
-//but WITHOUT ANY WARRANTY; without even the implied warranty of
-//MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//GNU General Public License for more details.
-//
-//You should have received a copy of the GNU General Public License
-//along with this program; if not, write to the Free Software
-//Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+/*
+This file is part of JSONViewer Plugin for Notepad++
+Copyright (C)2011 Kapil Ratnani <kapil.ratnani@iiitb.net>
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+*/
 
 #include "JSONDialog.h"
 #include "PluginDefinition.h"
@@ -18,6 +23,9 @@
 
 extern NppData nppData;
 
+/*
+	Delete all items from the tree and creates the root node
+*/
 HTREEITEM JSONDialog::initTree(HWND hWndDlg)
 {
 	
@@ -37,6 +45,9 @@ HTREEITEM JSONDialog::initTree(HWND hWndDlg)
 	return item;		
 }
 
+/*
+	inserts a node in the tree
+*/
 HTREEITEM JSONDialog::insertToTree(HWND hWndDlg,HTREEITEM parent,char *text)
 {
 		TV_INSERTSTRUCT tvinsert;    
@@ -56,6 +67,9 @@ HTREEITEM JSONDialog::insertToTree(HWND hWndDlg,HTREEITEM parent,char *text)
 		return item;
 }
 
+/*
+	sets the curJSON var and draws the tree
+*/
 void JSONDialog::setJSON(char* json)
 {
 	if(curJSON==NULL || strcmp(json,curJSON)!=0)
@@ -66,12 +80,19 @@ void JSONDialog::setJSON(char* json)
 	}
 }
 
+/*
+	populates the nodes in the tree according to the parsed JSON
+*/
 void JSONDialog::populateTree (HWND hWndDlg, HTREEITEM tree_root, json_t * json_root, int level)
 {
 	HTREEITEM newItem;
 	switch (json_root->type)
 	{
 	case JSON_STRING:
+		/*
+			if this is the leaf node show it in the same level as the parent.
+			in other words, it shows a value with its key in a form "key":"value"
+		*/
 		if(json_root->child==NULL && json_root->parent->type!=JSON_ARRAY)
 		{
 			TVITEM t;
@@ -95,10 +116,15 @@ void JSONDialog::populateTree (HWND hWndDlg, HTREEITEM tree_root, json_t * json_
 			}
 		}else
 		{
+			//not a leaf insert in to tree
 			newItem=insertToTree(hWndDlg,tree_root,json_root->text);
 		}
 		break;
 	case JSON_NUMBER:
+		/*
+			if this is the leaf node show it in the same level as the parent.
+			in other words, it shows a value with its key in a form "key":"value"
+		*/
 		if(json_root->child==NULL && json_root->parent->type!=JSON_ARRAY)
 		{
 			TVITEM t;
@@ -122,6 +148,7 @@ void JSONDialog::populateTree (HWND hWndDlg, HTREEITEM tree_root, json_t * json_
 			}
 		}else
 		{
+			//not a leaf insert in to tree
 			newItem=insertToTree(hWndDlg,tree_root,json_root->text);
 		}
 		break;
@@ -156,6 +183,10 @@ void JSONDialog::populateTree (HWND hWndDlg, HTREEITEM tree_root, json_t * json_
 	}
 }
 
+/*
+	parses curJSON and draws the tree.
+	marks the error location in case of a parsing error
+*/
 void JSONDialog::drawTree()
 {
 	enum json_error err;

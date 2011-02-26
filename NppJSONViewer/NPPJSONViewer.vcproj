@@ -352,7 +352,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\NppPluginDemo.cpp"
+				RelativePath=".\NppPlugin.cpp"
 				>
 			</File>
 			<File

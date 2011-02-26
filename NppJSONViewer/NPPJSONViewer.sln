@@ -15,8 +15,8 @@ Global
 		{1590D7CD-7D3A-4AB7-A355-EE02F7FB987D}.ANSI Debug|Win32.Build.0 = Unicode Release|Win32
 		{1590D7CD-7D3A-4AB7-A355-EE02F7FB987D}.ANSI Release|Win32.ActiveCfg = ANSI Release|Win32
 		{1590D7CD-7D3A-4AB7-A355-EE02F7FB987D}.ANSI Release|Win32.Build.0 = ANSI Release|Win32
-		{1590D7CD-7D3A-4AB7-A355-EE02F7FB987D}.Unicode Debug|Win32.ActiveCfg = Unicode Debug|Win32
-		{1590D7CD-7D3A-4AB7-A355-EE02F7FB987D}.Unicode Debug|Win32.Build.0 = Unicode Debug|Win32
+		{1590D7CD-7D3A-4AB7-A355-EE02F7FB987D}.Unicode Debug|Win32.ActiveCfg = Unicode Release|Win32
+		{1590D7CD-7D3A-4AB7-A355-EE02F7FB987D}.Unicode Debug|Win32.Build.0 = Unicode Release|Win32
 		{1590D7CD-7D3A-4AB7-A355-EE02F7FB987D}.Unicode Realeas|Win32.ActiveCfg = Unicode Release|Win32
 		{1590D7CD-7D3A-4AB7-A355-EE02F7FB987D}.Unicode Realeas|Win32.Build.0 = Unicode Release|Win32
 	EndGlobalSection

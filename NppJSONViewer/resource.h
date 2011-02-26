@@ -3,4 +3,5 @@
 #endif
 
 #define IDD_TREE                                101
+#define IDD_ABOUTDLG                            103
 #define IDC_TREE1                               1002
