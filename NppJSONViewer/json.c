@@ -1,22 +1,22 @@
 /***************************************************************************
- *   Copyright (C) 2007 by Rui Maciel									   *
- *   rui.maciel@gmail.com												   *
- *                                                                         *
- *   This program is free software; you can redistribute it and/or modify  *
- *   it under the terms of the GNU Library General Public License as       *
- *   published by the Free Software Foundation; either version 2 of the    *
- *   License, or (at your option) any later version.                       *
- *                                                                         *
- *   This program is distributed in the hope that it will be useful,       *
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
- *   GNU General Public License for more details.                          *
- *                                                                         *
- *   You should have received a copy of the GNU Library General Public     *
- *   License along with this program; if not, write to the                 *
- *   Free Software Foundation, Inc.,                                       *
- *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
- ***************************************************************************/
+*   Copyright (C) 2007 by Rui Maciel   *
+*   rui.maciel@gmail.com   *
+*                                                                         *
+*   This program is free software; you can redistribute it and/or modify  *
+*   it under the terms of the GNU Library General Public License as       *
+*   published by the Free Software Foundation; either version 2 of the    *
+*   License, or (at your option) any later version.                       *
+*                                                                         *
+*   This program is distributed in the hope that it will be useful,       *
+*   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+*   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+*   GNU General Public License for more details.                          *
+*                                                                         *
+*   You should have received a copy of the GNU Library General Public     *
+*   License along with this program; if not, write to the                 *
+*   Free Software Foundation, Inc.,                                       *
+*   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
+***************************************************************************/
 
 #include "json.h"
 
@@ -29,20 +29,20 @@
 
 enum LEX_VALUE
 { LEX_MORE = 0,
-	LEX_INVALID_CHARACTER,
-	LEX_TRUE,
-	LEX_FALSE,
-	LEX_NULL,
-	LEX_BEGIN_OBJECT,
-	LEX_END_OBJECT,
-	LEX_BEGIN_ARRAY,
-	LEX_END_ARRAY,
-	LEX_NAME_SEPARATOR,
-	LEX_VALUE_SEPARATOR,
-	LEX_STRING,
-	LEX_NUMBER,
-	LEX_ERROR,
-	LEX_MEMORY
+LEX_INVALID_CHARACTER,
+LEX_TRUE,
+LEX_FALSE,
+LEX_NULL,
+LEX_BEGIN_OBJECT,
+LEX_END_OBJECT,
+LEX_BEGIN_ARRAY,
+LEX_END_ARRAY,
+LEX_NAME_SEPARATOR,
+LEX_VALUE_SEPARATOR,
+LEX_STRING,
+LEX_NUMBER,
+LEX_ERROR,
+LEX_MEMORY
 };
 
 
@@ -581,7 +581,7 @@ json_tree_to_string (json_t * root, char **text)
 	output = rcs_create (RSTRING_DEFAULT);
 
 	/* start the convoluted fun */
-      state1:			/* open value */
+state1:			/* open value */
 	{
 		if ((cursor->previous) && (cursor != root))	/*if cursor is children and not root than it is a followup sibling */
 		{
@@ -735,7 +735,7 @@ json_tree_to_string (json_t * root, char **text)
 		}
 	}
 
-      state2:			/* close value */
+state2:			/* close value */
 	{
 		switch (cursor->type)
 		{
@@ -782,13 +782,13 @@ json_tree_to_string (json_t * root, char **text)
 		}
 	}
 
-      error:
+error:
 	{
 		rcs_free (&output);
 		return JSON_UNKNOWN_PROBLEM;
 	}
 
-      end:
+end:
 	{
 		*text = rcs_unwrap (output);
 		return JSON_OK;
@@ -808,7 +808,7 @@ json_stream_output (FILE * file, json_t * root)
 	/* set up the output and temporary rwstrings */
 
 	/* start the convoluted fun */
-      state1:			/* open value */
+state1:			/* open value */
 	{
 		if ((cursor->previous) && (cursor != root))	/*if cursor is children and not root than it is a followup sibling */
 		{
@@ -923,7 +923,7 @@ json_stream_output (FILE * file, json_t * root)
 		}
 	}
 
-      state2:			/* close value */
+state2:			/* close value */
 	{
 		switch (cursor->type)
 		{
@@ -964,12 +964,12 @@ json_stream_output (FILE * file, json_t * root)
 		}
 	}
 
-      error:
+error:
 	{
 		return JSON_UNKNOWN_PROBLEM;
 	}
 
-      end:
+end:
 	{
 		fprintf (file, "\n");
 		return JSON_OK;
@@ -1366,15 +1366,15 @@ json_jpi_init (struct json_parsing_info *jpi)
 	jpi->cursor = NULL;
 	jpi->line = 1;
 	jpi->string_length_limit_reached = 0;
-	jpi->char_num=0;
+	jpi->char_num=1;
 }
 
 /*
-	In windows CRLF is the termination sequence..this function inc. the line
-	number on both CR and LF which gives erroneous error location in case of
-	windows. 
-	So, added a check for consecutive occurance of CRLF, in this particular
-	case line number is incremented only once.
+In windows CRLF is the termination sequence..this function inc. the line
+number on both CR and LF which gives erroneous error location in case of
+windows. 
+So, added a check for consecutive occurance of CRLF, in this particular
+case line number is incremented only once.
 */
 
 int lexer (char *buffer, char **p, unsigned int *state, rcstring ** text, size_t *line, size_t *char_num)
@@ -1417,14 +1417,14 @@ int lexer (char *buffer, char **p, unsigned int *state, rcstring ** text, size_t
 					crOccured=1; //sets the flag for CR occurance
 					break;
 
-				case '{':
-					return LEX_BEGIN_OBJECT;
-				case '}':
-					return LEX_END_OBJECT;
 				case '[':
 					return LEX_BEGIN_ARRAY;
 				case ']':
 					return LEX_END_ARRAY;
+				case '{':
+					return LEX_BEGIN_OBJECT;
+				case '}':
+					return LEX_END_OBJECT;
 				case ':':
 					return LEX_NAME_SEPARATOR;
 				case ',':
@@ -2173,6 +2173,10 @@ json_parse_fragment (struct json_parsing_info *info, char *buffer)
 					info->state = 1;	/* begin object */
 					break;
 
+				case LEX_BEGIN_ARRAY:
+					info->state = 7;
+					break;
+
 				case LEX_INVALID_CHARACTER:
 					return JSON_MALFORMED_DOCUMENT;
 					break;
@@ -2276,7 +2280,7 @@ json_parse_fragment (struct json_parsing_info *info, char *buffer)
 					break;
 
 				default:
-						/* this should never run */
+					/* this should never run */
 					fprintf (stderr, "JSON: state %d: defaulted at line %d\n", info->state, info->line);
 					return JSON_MALFORMED_DOCUMENT;
 					break;
@@ -2926,7 +2930,7 @@ json_saxy_parse (struct json_saxy_parser_status *jsps, struct json_saxy_function
 		return JSON_UNKNOWN_PROBLEM;
 	}
 
-      state0:			/* starting point */
+state0:			/* starting point */
 	{
 		switch (c)
 		{
@@ -2956,7 +2960,7 @@ json_saxy_parse (struct json_saxy_parser_status *jsps, struct json_saxy_function
 		case '[':
 			if (jsf->open_array != NULL)
 				jsf->open_array ();
-/*                      jsps->state = 0;        // redundant*/
+			/*                      jsps->state = 0;        // redundant*/
 			break;
 
 		case ']':
@@ -2980,7 +2984,7 @@ json_saxy_parse (struct json_saxy_parser_status *jsps, struct json_saxy_function
 		case ':':
 			if (jsf->label_value_separator != NULL)
 				jsf->label_value_separator ();
-/*                      jsps->state = 0;        // redundant*/
+			/*                      jsps->state = 0;        // redundant*/
 			break;
 
 		case ',':
@@ -3045,7 +3049,7 @@ json_saxy_parse (struct json_saxy_parser_status *jsps, struct json_saxy_function
 		return JSON_OK;
 	}
 
-      state1:			/* parse string */
+state1:			/* parse string */
 	{
 		switch (c)
 		{
@@ -3099,7 +3103,7 @@ json_saxy_parse (struct json_saxy_parser_status *jsps, struct json_saxy_function
 		return JSON_OK;
 	}
 
-      state2:			/* parse string: escaped character */
+state2:			/* parse string: escaped character */
 	{
 		switch (c)
 		{
@@ -3152,7 +3156,7 @@ json_saxy_parse (struct json_saxy_parser_status *jsps, struct json_saxy_function
 		return JSON_OK;
 	}
 
-      state3:			/* parse string: escaped unicode 1 */
+state3:			/* parse string: escaped unicode 1 */
 	{
 		switch (c)
 		{
@@ -3201,7 +3205,7 @@ json_saxy_parse (struct json_saxy_parser_status *jsps, struct json_saxy_function
 		return JSON_OK;
 	}
 
-      state4:			/* parse string: escaped unicode 2 */
+state4:			/* parse string: escaped unicode 2 */
 	{
 		switch (c)
 		{
@@ -3250,7 +3254,7 @@ json_saxy_parse (struct json_saxy_parser_status *jsps, struct json_saxy_function
 		return JSON_OK;
 	}
 
-      state5:			/* parse string: escaped unicode 3 */
+state5:			/* parse string: escaped unicode 3 */
 	{
 		switch (c)
 		{
@@ -3299,7 +3303,7 @@ json_saxy_parse (struct json_saxy_parser_status *jsps, struct json_saxy_function
 		return JSON_OK;
 	}
 
-      state6:			/* parse string: escaped unicode 4 */
+state6:			/* parse string: escaped unicode 4 */
 	{
 		switch (c)
 		{
@@ -3348,7 +3352,7 @@ json_saxy_parse (struct json_saxy_parser_status *jsps, struct json_saxy_function
 		return JSON_OK;
 	}
 
-      state7:			/* parse true: tr */
+state7:			/* parse true: tr */
 	{
 		if (c != 'r')
 		{
@@ -3359,7 +3363,7 @@ json_saxy_parse (struct json_saxy_parser_status *jsps, struct json_saxy_function
 		return JSON_OK;
 	}
 
-      state8:			/* parse true: tru */
+state8:			/* parse true: tru */
 	{
 		if (c != 'u')
 		{
@@ -3370,7 +3374,7 @@ json_saxy_parse (struct json_saxy_parser_status *jsps, struct json_saxy_function
 		return JSON_OK;
 	}
 
-      state9:			/* parse true: true */
+state9:			/* parse true: true */
 	{
 		if (c != 'e')
 		{
@@ -3383,7 +3387,7 @@ json_saxy_parse (struct json_saxy_parser_status *jsps, struct json_saxy_function
 		return JSON_OK;
 	}
 
-      state10:			/* parse false: fa */
+state10:			/* parse false: fa */
 	{
 		if (c != 'a')
 		{
@@ -3394,7 +3398,7 @@ json_saxy_parse (struct json_saxy_parser_status *jsps, struct json_saxy_function
 		return JSON_OK;
 	}
 
-      state11:			/* parse false: fal */
+state11:			/* parse false: fal */
 	{
 		if (c != 'l')
 		{
@@ -3405,7 +3409,7 @@ json_saxy_parse (struct json_saxy_parser_status *jsps, struct json_saxy_function
 		return JSON_OK;
 	}
 
-      state12:			/* parse false: fals */
+state12:			/* parse false: fals */
 	{
 		if (c != 's')
 		{
@@ -3416,7 +3420,7 @@ json_saxy_parse (struct json_saxy_parser_status *jsps, struct json_saxy_function
 		return JSON_OK;
 	}
 
-      state13:			/* parse false: false */
+state13:			/* parse false: false */
 	{
 		if (c != 'e')
 		{
@@ -3429,7 +3433,7 @@ json_saxy_parse (struct json_saxy_parser_status *jsps, struct json_saxy_function
 		return JSON_OK;
 	}
 
-      state14:			/* parse null: nu */
+state14:			/* parse null: nu */
 	{
 		if (c != 'u')
 		{
@@ -3440,7 +3444,7 @@ json_saxy_parse (struct json_saxy_parser_status *jsps, struct json_saxy_function
 		return JSON_OK;
 	}
 
-      state15:			/* parse null: nul */
+state15:			/* parse null: nul */
 	{
 		if (c != 'l')
 		{
@@ -3451,7 +3455,7 @@ json_saxy_parse (struct json_saxy_parser_status *jsps, struct json_saxy_function
 		return JSON_OK;
 	}
 
-      state16:			/* parse null: null */
+state16:			/* parse null: null */
 	{
 		if (c != 'l')
 		{
@@ -3464,7 +3468,7 @@ json_saxy_parse (struct json_saxy_parser_status *jsps, struct json_saxy_function
 		return JSON_OK;
 	}
 
-      state17:			/* parse number: 0 */
+state17:			/* parse number: 0 */
 	{
 		switch (c)
 		{
@@ -3547,7 +3551,7 @@ json_saxy_parse (struct json_saxy_parser_status *jsps, struct json_saxy_function
 		return JSON_OK;
 	}
 
-      state18:			/* parse number: start fraccional part */
+state18:			/* parse number: start fraccional part */
 	{
 		switch (c)
 		{
@@ -3585,7 +3589,7 @@ json_saxy_parse (struct json_saxy_parser_status *jsps, struct json_saxy_function
 		return JSON_OK;
 	}
 
-      state19:			/* parse number: fraccional part */
+state19:			/* parse number: fraccional part */
 	{
 		switch (c)
 		{
@@ -3613,7 +3617,7 @@ json_saxy_parse (struct json_saxy_parser_status *jsps, struct json_saxy_function
 					jsps->string_length_limit_reached = 1;
 				}
 			}
-/*                      jsps->state = 19;       // parse number: fractional part*/
+			/*                      jsps->state = 19;       // parse number: fractional part*/
 			break;
 
 		case 'e':
@@ -3699,7 +3703,7 @@ json_saxy_parse (struct json_saxy_parser_status *jsps, struct json_saxy_function
 		return JSON_OK;
 	}
 
-      state20:			/* parse number: start exponent part */
+state20:			/* parse number: start exponent part */
 	{
 		switch (c)
 		{
@@ -3749,7 +3753,7 @@ json_saxy_parse (struct json_saxy_parser_status *jsps, struct json_saxy_function
 		return JSON_OK;
 	}
 
-      state21:			/* parse number: exponent part */
+state21:			/* parse number: exponent part */
 	{
 		switch (c)
 		{
@@ -3777,7 +3781,7 @@ json_saxy_parse (struct json_saxy_parser_status *jsps, struct json_saxy_function
 					jsps->string_length_limit_reached = 1;
 				}
 			}
-/*                              jsps->state = 21;       // parse number: exponent part*/
+			/*                              jsps->state = 21;       // parse number: exponent part*/
 			break;
 
 		case '\x20':
@@ -3855,7 +3859,7 @@ json_saxy_parse (struct json_saxy_parser_status *jsps, struct json_saxy_function
 		return JSON_OK;
 	}
 
-      state22:			/* parse number: start exponent part */
+state22:			/* parse number: start exponent part */
 	{
 		switch (c)
 		{
@@ -3890,7 +3894,7 @@ json_saxy_parse (struct json_saxy_parser_status *jsps, struct json_saxy_function
 		return JSON_OK;
 	}
 
-      state23:			/* parse number: start negative */
+state23:			/* parse number: start negative */
 	{
 		switch (c)
 		{
@@ -3936,7 +3940,7 @@ json_saxy_parse (struct json_saxy_parser_status *jsps, struct json_saxy_function
 		return JSON_OK;
 	}
 
-      state24:			/* parse number: decimal part */
+state24:			/* parse number: decimal part */
 	{
 		switch (c)
 		{
@@ -3968,7 +3972,7 @@ json_saxy_parse (struct json_saxy_parser_status *jsps, struct json_saxy_function
 					jsps->string_length_limit_reached = 1;
 				}
 			}
-/*                              jsps->state = 24;       // parse number: decimal part*/
+			/*                              jsps->state = 24;       // parse number: decimal part*/
 			break;
 
 		case '.':
@@ -4063,7 +4067,7 @@ json_saxy_parse (struct json_saxy_parser_status *jsps, struct json_saxy_function
 		return JSON_OK;
 	}
 
-      state25:			/* open object */
+state25:			/* open object */
 	{
 		switch (c)
 		{
@@ -4091,7 +4095,7 @@ json_saxy_parse (struct json_saxy_parser_status *jsps, struct json_saxy_function
 		return JSON_OK;
 	}
 
-      state26:			/* close object/array */
+state26:			/* close object/array */
 	{
 		switch (c)
 		{
@@ -4104,13 +4108,13 @@ json_saxy_parse (struct json_saxy_parser_status *jsps, struct json_saxy_function
 		case '}':
 			if (jsf->close_object != NULL)
 				jsf->close_object ();
-/*                      jsp->state = 26;        // close object*/
+			/*                      jsp->state = 26;        // close object*/
 			break;
 
 		case ']':
 			if (jsf->close_array != NULL)
 				jsf->close_array ();
-/*                      jsps->state = 26;       // close object/array*/
+			/*                      jsps->state = 26;       // close object/array*/
 			break;
 
 		case ',':
@@ -4126,7 +4130,7 @@ json_saxy_parse (struct json_saxy_parser_status *jsps, struct json_saxy_function
 		return JSON_OK;
 	}
 
-      state27:			/* sibling followup */
+state27:			/* sibling followup */
 	{
 		switch (c)
 		{
@@ -4150,7 +4154,7 @@ json_saxy_parse (struct json_saxy_parser_status *jsps, struct json_saxy_function
 		case '[':
 			if (jsf->open_array != NULL)
 				jsf->open_array ();
-/*                      jsps->state = 0;        // redundant*/
+			/*                      jsps->state = 0;        // redundant*/
 			break;
 
 		case 't':

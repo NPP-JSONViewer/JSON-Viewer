@@ -53,8 +53,8 @@ FONT 8, "Ms Shell Dlg"
 //
 LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
 1 VERSIONINFO
-    FILEVERSION     1,1,0,0
-    PRODUCTVERSION  1,1,0,0
+    FILEVERSION     1,1,5,0
+    PRODUCTVERSION  1,1,5,0
     FILEOS          VOS__WINDOWS32
     FILETYPE        VFT_DLL
     FILESUBTYPE     VFT2_UNKNOWN
@@ -68,11 +68,11 @@ LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
             VALUE "Comments", "JSONViewer plugin for Notepad++"
             VALUE "CompanyName", "Kapil Ratnani"
             VALUE "FileDescription", "Notepad++ plugin"
-            VALUE "FileVersion", "1.1"
+            VALUE "FileVersion", "1.15"
             VALUE "InternalName", "JSONViewer"
             VALUE "OriginalFilename", "NPPJSONViewer.dll"
             VALUE "ProductName", "JSONViewer plugin for Notepad++"
-            VALUE "ProductVersion", "1.1"
+            VALUE "ProductVersion", "1.15"
             VALUE "SpecialBuild", "UNICODE"
         }
     }
