@@ -25,7 +25,7 @@ FONT 8, "Ms Shell Dlg"
     LTEXT           "Author:", IDC_STATIC, 27, 21, 24, 8, SS_LEFT
     LTEXT           "Kapil Ratnani", IDC_STATIC, 105, 21, 43, 8, SS_LEFT
     LTEXT           "Version:", IDC_STATIC, 27, 35, 26, 8, SS_LEFT
-    LTEXT           "1.1", IDC_STATIC, 104, 35, 11, 8, SS_LEFT
+    LTEXT           "1.15", IDC_STATIC, 104, 35, 15, 8, SS_LEFT
     LTEXT           "Licence:", IDC_STATIC, 27, 48, 28, 8, SS_LEFT
     LTEXT           "GPL", IDC_STATIC, 104, 48, 15, 8, SS_LEFT
     LTEXT           "Special thanks to:", IDC_STATIC, 27, 63, 58, 8, SS_LEFT
