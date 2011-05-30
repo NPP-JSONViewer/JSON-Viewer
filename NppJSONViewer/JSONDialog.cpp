@@ -24,11 +24,11 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 extern NppData nppData;
 
 /*
-	Delete all items from the tree and creates the root node
+Delete all items from the tree and creates the root node
 */
 HTREEITEM JSONDialog::initTree(HWND hWndDlg)
 {
-	
+
 	int TreeCount=TreeView_GetCount(GetDlgItem(this->getHSelf(),IDC_TREE1));
 	if(TreeCount>0)
 		TreeView_DeleteAllItems(GetDlgItem(this->getHSelf(),IDC_TREE1));
@@ -38,51 +38,42 @@ HTREEITEM JSONDialog::initTree(HWND hWndDlg)
 	tvinsert.hParent=NULL;     
 	tvinsert.hInsertAfter=TVI_ROOT;
 	tvinsert.item.mask=TVIF_TEXT;
-                                 
+
 	tvinsert.item.pszText=L"JSON";
 	HTREEITEM item=(HTREEITEM)SendDlgItemMessage(hWndDlg,IDC_TREE1,TVM_INSERTITEM,0,(LPARAM)&tvinsert);
-	
+
 	return item;		
 }
 
 /*
-	inserts a node in the tree
+inserts a node in the tree
 */
 HTREEITEM JSONDialog::insertToTree(HWND hWndDlg,HTREEITEM parent,char *text)
 {
-		TV_INSERTSTRUCT tvinsert;    
+	TV_INSERTSTRUCT tvinsert;    
 
-		tvinsert.hParent=parent;     
-		tvinsert.hInsertAfter=TVI_LAST;
-		tvinsert.item.mask=TVIF_TEXT;
+	tvinsert.hParent=parent;     
+	tvinsert.hInsertAfter=TVI_LAST;
+	tvinsert.item.mask=TVIF_TEXT;
 
-		int len = strlen(text) + 1;
-		wchar_t *w_msg = new wchar_t[len];
-		memset(w_msg, 0, len);
-		MultiByteToWideChar(CP_ACP, NULL, text, -1, w_msg, len);
+	int len = strlen(text) + 1;
+	wchar_t *w_msg = new wchar_t[len];
+	memset(w_msg, 0, len);
+	MultiByteToWideChar(CP_ACP, NULL, text, -1, w_msg, len);
 
-		tvinsert.item.pszText=w_msg;
-		HTREEITEM item=(HTREEITEM)SendDlgItemMessage(hWndDlg,IDC_TREE1,TVM_INSERTITEM,0,(LPARAM)&tvinsert);
-		
-		return item;
+	tvinsert.item.pszText=w_msg;
+	HTREEITEM item=(HTREEITEM)SendDlgItemMessage(hWndDlg,IDC_TREE1,TVM_INSERTITEM,0,(LPARAM)&tvinsert);
+
+	return item;
 }
 
-/*
-	sets the curJSON var and draws the tree
-*/
 void JSONDialog::setJSON(char* json)
 {
-	if(curJSON==NULL || strcmp(json,curJSON)!=0)
-	{
-		curJSON=json;
-		if(this->isCreated())
-			drawTree();
-	}
+	curJSON=json;
+	if(this->isCreated())
+		drawTree();
 }
 
-/*
-	populates the nodes in the tree according to the parsed JSON
-*/
 void JSONDialog::populateTree (HWND hWndDlg, HTREEITEM tree_root, json_t * json_root, int level)
 {
 	HTREEITEM newItem;
@@ -90,8 +81,8 @@ void JSONDialog::populateTree (HWND hWndDlg, HTREEITEM tree_root, json_t * json_
 	{
 	case JSON_STRING:
 		/*
-			if this is the leaf node show it in the same level as the parent.
-			in other words, it shows a value with its key in a form "key":"value"
+		if this is the leaf node show it in the same level as the parent.
+		in other words, it shows a value with its key in a form "key":"value"
 		*/
 		if(json_root->child==NULL && json_root->parent->type!=JSON_ARRAY)
 		{
@@ -109,7 +100,7 @@ void JSONDialog::populateTree (HWND hWndDlg, HTREEITEM tree_root, json_t * json_
 				wchar_t *w_txt = new wchar_t[len];
 				memset(w_txt, 0, len);
 				MultiByteToWideChar(CP_ACP, NULL, txt, -1, w_txt, len);
-				
+
 				t.pszText=w_txt;
 				t.mask=TVIF_TEXT;
 				::SendDlgItemMessage(hWndDlg,IDC_TREE1,TVM_SETITEM,0,(LPARAM)&t);
@@ -122,8 +113,8 @@ void JSONDialog::populateTree (HWND hWndDlg, HTREEITEM tree_root, json_t * json_
 		break;
 	case JSON_NUMBER:
 		/*
-			if this is the leaf node show it in the same level as the parent.
-			in other words, it shows a value with its key in a form "key":"value"
+		if this is the leaf node show it in the same level as the parent.
+		in other words, it shows a value with its key in a form "key":"value"
 		*/
 		if(json_root->child==NULL && json_root->parent->type!=JSON_ARRAY)
 		{
@@ -141,7 +132,7 @@ void JSONDialog::populateTree (HWND hWndDlg, HTREEITEM tree_root, json_t * json_
 				wchar_t *w_txt = new wchar_t[len];
 				memset(w_txt, 0, len);
 				MultiByteToWideChar(CP_ACP, NULL, txt, -1, w_txt, len);
-				
+
 				t.pszText=w_txt;
 				t.mask=TVIF_TEXT;
 				::SendDlgItemMessage(hWndDlg,IDC_TREE1,TVM_SETITEM,0,(LPARAM)&t);
@@ -173,7 +164,7 @@ void JSONDialog::populateTree (HWND hWndDlg, HTREEITEM tree_root, json_t * json_
 	{
 		json_t *ita, *itb;
 		ita = json_root->child;
-		
+
 		while (ita != NULL)
 		{
 			populateTree(hWndDlg,newItem,ita, level + 1);
@@ -184,8 +175,8 @@ void JSONDialog::populateTree (HWND hWndDlg, HTREEITEM tree_root, json_t * json_
 }
 
 /*
-	parses curJSON and draws the tree.
-	marks the error location in case of a parsing error
+parses curJSON and draws the tree.
+marks the error location in case of a parsing error
 */
 void JSONDialog::drawTree()
 {
@@ -214,7 +205,7 @@ void JSONDialog::drawTree()
 	}else
 	{
 		::MessageBox(nppData._nppHandle,TEXT("Could not parse!!"),TEXT("JSON Viewer"),MB_OK|MB_ICONERROR);
-		
+
 		//mark the error position
 		// Get the current scintilla
 		int which = -1;
@@ -242,7 +233,7 @@ BOOL CALLBACK JSONDialog::run_dlgProc(UINT message, WPARAM wParam, LPARAM lParam
 		hTree=GetDlgItem(this->getHSelf(),IDC_TREE1);// tree control
 		drawTree();
 		return TRUE;
-	
+
 	case WM_SIZE:
 		width=LOWORD(lParam);
 		height=HIWORD(lParam);

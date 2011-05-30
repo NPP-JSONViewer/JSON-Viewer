@@ -54,18 +54,18 @@ void pluginCleanUp()
 // Initialization of your plugin commands
 void commandMenuInit()
 {
-    // setCommand(int index,                      // zero based number to indicate the order of command
-    //            TCHAR *commandName,             // the command name that you want to see in plugin menu
-    //            PFUNCPLUGINCMD functionPointer, // the symbol of function (function pointer) associated with this command. The body should be defined below. See Step 4.
-    //            ShortcutKey *shortcut,          // optional. Define a shortcut to trigger this command
-    //            bool check0nInit                // optional. Make this menu item be checked visually
-    //            );
+	// setCommand(int index,                      // zero based number to indicate the order of command
+	//            TCHAR *commandName,             // the command name that you want to see in plugin menu
+	//            PFUNCPLUGINCMD functionPointer, // the symbol of function (function pointer) associated with this command. The body should be defined below. See Step 4.
+	//            ShortcutKey *shortcut,          // optional. Define a shortcut to trigger this command
+	//            bool check0nInit                // optional. Make this menu item be checked visually
+	//            );
 	ShortcutKey *sk=new ShortcutKey();
 	sk->_isAlt=TRUE;
 	sk->_isCtrl=TRUE;
 	sk->_isShift=TRUE;
 	sk->_key=0x4A;
-    setCommand(0, TEXT("Show &JSON Viewer"), openJSONDialog,sk , false);
+	setCommand(0, TEXT("Show &JSON Viewer"), openJSONDialog,sk , false);
 	setCommand(1, TEXT("&About"), openAboutDlg,NULL , false);
 }
 
@@ -111,18 +111,18 @@ void commandMenuCleanUp()
 //
 bool setCommand(size_t index, TCHAR *cmdName, PFUNCPLUGINCMD pFunc, ShortcutKey *sk, bool check0nInit) 
 {
-    if (index >= nbFunc)
-        return false;
+	if (index >= nbFunc)
+		return false;
 
-    if (!pFunc)
-        return false;
+	if (!pFunc)
+		return false;
 
-    lstrcpy(funcItem[index]._itemName, cmdName);
-    funcItem[index]._pFunc = pFunc;
-    funcItem[index]._init2Check = check0nInit;
-    funcItem[index]._pShKey = sk;
+	lstrcpy(funcItem[index]._itemName, cmdName);
+	funcItem[index]._pFunc = pFunc;
+	funcItem[index]._init2Check = check0nInit;
+	funcItem[index]._pShKey = sk;
 
-    return true;
+	return true;
 }
 
 //----------------------------------------------//
@@ -131,12 +131,13 @@ bool setCommand(size_t index, TCHAR *cmdName, PFUNCPLUGINCMD pFunc, ShortcutKey 
 
 void showJSONDialog(char *json)
 {
-	jsonDialog.setParent(nppData._nppHandle);
-	jsonDialog.setJSON(json);
 	tTbData	data = {0};
-
-	if (!jsonDialog.isCreated())
+	if (jsonDialog.isCreated())
 	{
+		jsonDialog.display();
+	}else
+	{
+		jsonDialog.setParent(nppData._nppHandle);
 		jsonDialog.create(&data);
 
 		// define the default docking behaviour
@@ -149,18 +150,20 @@ void showJSONDialog(char *json)
 		data.dlgID = 0;
 		::SendMessage(nppData._nppHandle, NPPM_DMMREGASDCKDLG, 0, (LPARAM)&data);
 	}
-	jsonDialog.display();
+
+	if(jsonDialog.isVisible())
+		jsonDialog.setJSON(json);
 }
 
 void openJSONDialog()
 {
 	// Get the current scintilla
-    int which = -1;
-    ::SendMessage(nppData._nppHandle, NPPM_GETCURRENTSCINTILLA, 0, (LPARAM)&which);
-    if (which == -1)
-        return;
+	int which = -1;
+	::SendMessage(nppData._nppHandle, NPPM_GETCURRENTSCINTILLA, 0, (LPARAM)&which);
+	if (which == -1)
+		return;
 
-    HWND curScintilla = (which == 0)?nppData._scintillaMainHandle:nppData._scintillaSecondHandle;
+	HWND curScintilla = (which == 0)?nppData._scintillaMainHandle:nppData._scintillaSecondHandle;
 	size_t start = ::SendMessage(curScintilla, SCI_GETSELECTIONSTART, 0, 0);
 	size_t end = ::SendMessage(curScintilla, SCI_GETSELECTIONEND, 0, 0);
 	if (end < start)
@@ -171,12 +174,14 @@ void openJSONDialog()
 	}
 
 	size_t asciiTextLen = end - start;
-	if (asciiTextLen == 0){ 
+	if (asciiTextLen == 0)
+	{ 
 		return;
 	}
 
-    curJSON = new CHAR[asciiTextLen+1];
-    
-    ::SendMessage(curScintilla, SCI_GETSELTEXT, 0, (LPARAM)curJSON);
+	curJSON = new CHAR[asciiTextLen+1];
+
+	::SendMessage(curScintilla, SCI_GETSELTEXT, 0, (LPARAM)curJSON);
 	showJSONDialog(curJSON);
+	delete curJSON;
 }

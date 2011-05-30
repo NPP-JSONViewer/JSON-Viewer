@@ -1,7 +1,7 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual C++ Express 2008
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NPPJSONViewer", "NPPJSONViewer.vcproj", "{1590D7CD-7D3A-4AB7-A355-EE02F7FB987D}"
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual C++ Express 2010
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NPPJSONViewer", "NPPJSONViewer.vcxproj", "{1590D7CD-7D3A-4AB7-A355-EE02F7FB987D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
