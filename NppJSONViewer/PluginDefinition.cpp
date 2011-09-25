@@ -131,13 +131,12 @@ bool setCommand(size_t index, TCHAR *cmdName, PFUNCPLUGINCMD pFunc, ShortcutKey 
 
 void showJSONDialog(char *json)
 {
+	jsonDialog.setParent(nppData._nppHandle);
+	jsonDialog.setJSON(json);
 	tTbData	data = {0};
-	if (jsonDialog.isCreated())
+
+	if (!jsonDialog.isCreated())
 	{
-		jsonDialog.display();
-	}else
-	{
-		jsonDialog.setParent(nppData._nppHandle);
 		jsonDialog.create(&data);
 
 		// define the default docking behaviour
@@ -150,9 +149,7 @@ void showJSONDialog(char *json)
 		data.dlgID = 0;
 		::SendMessage(nppData._nppHandle, NPPM_DMMREGASDCKDLG, 0, (LPARAM)&data);
 	}
-
-	if(jsonDialog.isVisible())
-		jsonDialog.setJSON(json);
+	jsonDialog.display();
 }
 
 void openJSONDialog()
