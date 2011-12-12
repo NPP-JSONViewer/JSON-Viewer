@@ -1,5 +1,5 @@
 =================
-JSONViewer 1.17
+JSONViewer 1.175
 by Kapil Ratnani
 =================
 
@@ -22,6 +22,10 @@ Rui Maciel for mjson library
 ==================
 Latest Updates:
 ==================
+----
+1.175
+----
+1. Now displays a message box when JSON string is not selected.
 
 ----
 1.17
