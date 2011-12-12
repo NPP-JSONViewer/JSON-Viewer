@@ -1,0 +1,47 @@
+=================
+JSONViewer 1.17
+by Kapil Ratnani
+=================
+
+This plugin is meant to display a JSON string in a Treeview. It also marks the error position in case of parsing errors. Thats it!!!
+
+============
+Instruction:
+============
+1. Paste the file "NPPJSONViewer.dll" to Notepad++ plugin folder
+2. open a document containing a JSON string
+3. Select JSON fragment and navigate to plugins/JSON Viewer/show JSON Viewer or press "Ctrl+Alt+Shift+J"
+4. Viola!! if the JSON is valid, it will be shown in a Treeview
+
+==================
+Special Thanks to:
+==================
+Don Ho for Notepad++
+Rui Maciel for mjson library	
+
+==================
+Latest Updates:
+==================
+
+----
+1.17
+----
+1. Fixed dialog display issue, that occured in 1.16 release.
+
+----
+1.16
+----
+1. Fixed bug - 3305433 do not find error on second try and do not build tree
+2. Fixed a memory leak..was not deallocating memory allocated to json strings
+
+----
+1.15
+----
+1. Fixed bug 3203739 "Unable to parse JSON Arrays"
+
+----
+1.1
+----
+1. Fixed hotkey, now press CTRL+SHIFT+ALT+J(default).
+2. Marks error position in JSON
+
