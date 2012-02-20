@@ -186,6 +186,13 @@ void JSONDialog::drawTree()
 
 	tree_root=initTree(this->getHSelf());
 
+	if(strlen(curJSON)==0){
+		insertToTree(this->getHSelf(),tree_root,"Error:Please select a JSON String.");
+		TreeView_Expand(GetDlgItem(this->getHSelf(),IDC_TREE1),tree_root,TVE_EXPAND);
+		return;
+	}
+
+
 	jpi = (json_parsing_info*)malloc (sizeof (struct json_parsing_info));
 	if (jpi == NULL)
 	{
