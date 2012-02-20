@@ -60,13 +60,21 @@ void commandMenuInit()
 	//            ShortcutKey *shortcut,          // optional. Define a shortcut to trigger this command
 	//            bool check0nInit                // optional. Make this menu item be checked visually
 	//            );
-	ShortcutKey *sk=new ShortcutKey();
-	sk->_isAlt=TRUE;
-	sk->_isCtrl=TRUE;
-	sk->_isShift=TRUE;
-	sk->_key=0x4A;
-	setCommand(0, TEXT("Show &JSON Viewer"), openJSONDialog,sk , false);
-	setCommand(1, TEXT("&About"), openAboutDlg,NULL , false);
+
+	ShortcutKey *openJSONsk=new ShortcutKey();
+	openJSONsk->_isAlt=TRUE;
+	openJSONsk->_isCtrl=TRUE;
+	openJSONsk->_isShift=TRUE;
+	openJSONsk->_key='J';
+
+	ShortcutKey *formatJSONsk=new ShortcutKey();
+	formatJSONsk->_isAlt=TRUE;
+	formatJSONsk->_isCtrl=TRUE;
+	formatJSONsk->_isShift=TRUE;
+	formatJSONsk->_key='M';
+	setCommand(0, TEXT("Show &JSON Viewer"), openJSONDialog,openJSONsk , false);
+	setCommand(1, TEXT("&Format JSON"), formatSelectedJSON,formatJSONsk , false);
+	setCommand(2, TEXT("&About"), openAboutDlg,NULL , false);
 }
 
 INT_PTR CALLBACK abtDlgProc(HWND hwndDlg,UINT uMsg,WPARAM wParam, LPARAM lParam)
@@ -103,6 +111,7 @@ void commandMenuCleanUp()
 {
 	// Don't forget to deallocate your shortcut here
 	delete funcItem[0]._pShKey;
+	delete funcItem[1]._pShKey;
 }
 
 
@@ -171,15 +180,53 @@ void openJSONDialog()
 	}
 
 	size_t asciiTextLen = end - start;
+	/*
 	if (asciiTextLen == 0)
 	{ 
-		MessageBox(nppData._nppHandle,TEXT("Please select a JSON string."),TEXT("JSON Viewer"),MB_OK|MB_ICONINFORMATION);
+		//MessageBox(nppData._nppHandle,TEXT("Please select a JSON string."),TEXT("JSON Viewer"),MB_OK|MB_ICONINFORMATION);
+		return;
+	}
+	*/
+	
+
+	curJSON = new CHAR[asciiTextLen+1];
+
+	::SendMessage(curScintilla, SCI_GETSELTEXT, 0, (LPARAM)curJSON);
+	showJSONDialog(curJSON);
+	delete curJSON;
+}
+
+void formatSelectedJSON(){
+	// Get the current scintilla
+	int which = -1;
+	::SendMessage(nppData._nppHandle, NPPM_GETCURRENTSCINTILLA, 0, (LPARAM)&which);
+	if (which == -1)
+		return;
+
+	HWND curScintilla = (which == 0)?nppData._scintillaMainHandle:nppData._scintillaSecondHandle;
+	size_t start = ::SendMessage(curScintilla, SCI_GETSELECTIONSTART, 0, 0);
+	size_t end = ::SendMessage(curScintilla, SCI_GETSELECTIONEND, 0, 0);
+	if (end < start)
+	{
+		size_t tmp = start;
+		start = end;
+		end = tmp;
+	}
+
+	size_t asciiTextLen = end - start;
+	
+	if (asciiTextLen == 0)
+	{ 
+		//MessageBox(nppData._nppHandle,TEXT("Please select a JSON string."),TEXT("JSON Viewer"),MB_OK|MB_ICONINFORMATION);
 		return;
 	}
 
 	curJSON = new CHAR[asciiTextLen+1];
 
 	::SendMessage(curScintilla, SCI_GETSELTEXT, 0, (LPARAM)curJSON);
-	showJSONDialog(curJSON);
+	CHAR* fJson=json_format_string(curJSON);
+	::SendMessage(curScintilla,SCI_REPLACESEL,0,(LPARAM)fJson);
+	
+	free(fJson);
 	delete curJSON;
 }

@@ -33,7 +33,7 @@ const TCHAR NPP_PLUGIN_NAME[] = TEXT("JSON Viewer");
 //
 // Here define the number of your plugin commands
 //
-const int nbFunc = 2;
+const int nbFunc = 3;
 
 
 //
@@ -69,7 +69,7 @@ bool setCommand(size_t index, TCHAR *cmdName, PFUNCPLUGINCMD pFunc, ShortcutKey 
 //
 void openJSONDialog();
 void openAboutDlg();
-
+void formatSelectedJSON();
 #define CUSTOM_MARK_ERROR (WM_USER + 1)
 
 #endif //PLUGINDEFINITION_H
