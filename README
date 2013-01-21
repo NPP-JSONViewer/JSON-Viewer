@@ -1,5 +1,5 @@
 =================
-JSONViewer 1.19
+JSONViewer 1.20
 by Kapil Ratnani
 =================
 
@@ -22,6 +22,11 @@ Rui Maciel for mjson library
 ==================
 Latest Updates:
 ==================
+----
+1.20
+----
+1. Fixed bug "#3 quoted doublequotes-Jan Huschauer"
+
 ----
 1.19
 ----

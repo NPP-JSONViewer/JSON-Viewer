@@ -81,8 +81,7 @@ void JSONDialog::populateTree (HWND hWndDlg, HTREEITEM tree_root, json_t * json_
 	{
 	case JSON_STRING:
 		/*
-		if this is the leaf node show it in the same level as the parent.
-		in other words, it shows a value with its key in a form "key":"value"
+		insert the value with its key in a form "key":"value"
 		*/
 		if(json_root->child==NULL && json_root->parent->type!=JSON_ARRAY)
 		{
@@ -94,7 +93,11 @@ void JSONDialog::populateTree (HWND hWndDlg, HTREEITEM tree_root, json_t * json_
 				int len=strlen(json_root->parent->text)+3+strlen(json_root->text)+1;
 				char *txt=new char[len];
 				memset(txt, 0, len);
-				sprintf(txt,"%s : %s",json_root->parent->text,json_root->text);
+				char *unesc_text=json_unescape(json_root->text);
+				char *unesc_parent_text=json_unescape(json_root->parent->text);
+				sprintf(txt,"%s : %s",unesc_parent_text,unesc_text);
+				free(unesc_text);
+				free(unesc_parent_text);
 
 				len = strlen(txt) + 1;
 				wchar_t *w_txt = new wchar_t[len];
@@ -107,14 +110,15 @@ void JSONDialog::populateTree (HWND hWndDlg, HTREEITEM tree_root, json_t * json_
 			}
 		}else
 		{
-			//not a leaf insert in to tree
-			newItem=insertToTree(hWndDlg,tree_root,json_root->text);
+			// it is an array element, insert directly
+			char *unesc_elem=json_unescape(json_root->text);
+			newItem=insertToTree(hWndDlg,tree_root,unesc_elem);
+			free(unesc_elem);
 		}
 		break;
 	case JSON_NUMBER:
 		/*
-		if this is the leaf node show it in the same level as the parent.
-		in other words, it shows a value with its key in a form "key":"value"
+		insert the value with its key in a form "key":"value"
 		*/
 		if(json_root->child==NULL && json_root->parent->type!=JSON_ARRAY)
 		{
@@ -126,7 +130,9 @@ void JSONDialog::populateTree (HWND hWndDlg, HTREEITEM tree_root, json_t * json_
 				int len=strlen(json_root->parent->text)+3+strlen(json_root->text)+1;
 				char *txt=new char[len];
 				memset(txt, 0, len);
-				sprintf(txt,"%s : %s",json_root->parent->text,json_root->text);
+				char *unesc_parent_text=json_unescape(json_root->parent->text);
+				sprintf(txt,"%s : %s",unesc_parent_text,json_root->text);
+				free(unesc_parent_text);
 
 				len = strlen(txt) + 1;
 				wchar_t *w_txt = new wchar_t[len];
@@ -139,7 +145,7 @@ void JSONDialog::populateTree (HWND hWndDlg, HTREEITEM tree_root, json_t * json_
 			}
 		}else
 		{
-			//not a leaf insert in to tree
+			// it is an array element, insert directly
 			newItem=insertToTree(hWndDlg,tree_root,json_root->text);
 		}
 		break;
@@ -162,14 +168,13 @@ void JSONDialog::populateTree (HWND hWndDlg, HTREEITEM tree_root, json_t * json_
 
 	if (json_root->child != NULL)
 	{
-		json_t *ita, *itb;
+		json_t *ita;
 		ita = json_root->child;
 
 		while (ita != NULL)
 		{
 			populateTree(hWndDlg,newItem,ita, level + 1);
-			itb = ita->next;
-			ita = itb;
+			ita = ita->next;
 		}
 	}
 }
