@@ -1,5 +1,5 @@
 =================
-JSONViewer 1.20
+JSONViewer 1.21
 by Kapil Ratnani
 =================
 
@@ -22,6 +22,12 @@ Rui Maciel for mjson library
 ==================
 Latest Updates:
 ==================
+
+----
+1.21
+----
+1. Fixed display of UTF-8 characters.
+
 ----
 1.20
 ----

@@ -25,7 +25,7 @@ FONT 8, "Ms Shell Dlg"
     LTEXT           "Author:", IDC_STATIC, 27, 21, 24, 8, SS_LEFT
     LTEXT           "Kapil Ratnani", IDC_STATIC, 105, 21, 43, 8, SS_LEFT
     LTEXT           "Version:", IDC_STATIC, 27, 35, 26, 8, SS_LEFT
-    LTEXT           "1.20", IDC_STATIC, 104, 35, 15, 8, SS_LEFT
+    LTEXT           "1.21", IDC_STATIC, 104, 35, 15, 8, SS_LEFT
     LTEXT           "Licence:", IDC_STATIC, 27, 48, 28, 8, SS_LEFT
     LTEXT           "GPL", IDC_STATIC, 104, 48, 15, 8, SS_LEFT
     LTEXT           "Special thanks to:", IDC_STATIC, 27, 63, 58, 8, SS_LEFT
@@ -53,8 +53,8 @@ FONT 8, "Ms Shell Dlg"
 //
 LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
 1 VERSIONINFO
-    FILEVERSION     1,20,0,0
-    PRODUCTVERSION  1,20,0,0
+    FILEVERSION     1,21,0,0
+    PRODUCTVERSION  1,21,0,0
     FILEOS          VOS__WINDOWS32
     FILETYPE        VFT_DLL
     FILESUBTYPE     VFT2_UNKNOWN
@@ -68,11 +68,11 @@ LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
             VALUE "Comments", "JSONViewer plugin for Notepad++"
             VALUE "CompanyName", "Kapil Ratnani"
             VALUE "FileDescription", "Notepad++ plugin"
-            VALUE "FileVersion", "1.20"
+            VALUE "FileVersion", "1.21"
             VALUE "InternalName", "JSONViewer"
             VALUE "OriginalFilename", "NPPJSONViewer.dll"
             VALUE "ProductName", "JSONViewer plugin for Notepad++"
-            VALUE "ProductVersion", "1.20"
+            VALUE "ProductVersion", "1.21"
             VALUE "SpecialBuild", "UNICODE"
         }
     }

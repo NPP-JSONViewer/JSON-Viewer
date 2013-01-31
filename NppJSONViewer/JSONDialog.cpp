@@ -59,7 +59,7 @@ HTREEITEM JSONDialog::insertToTree(HWND hWndDlg,HTREEITEM parent,char *text)
 	int len = strlen(text) + 1;
 	wchar_t *w_msg = new wchar_t[len];
 	memset(w_msg, 0, len);
-	MultiByteToWideChar(CP_ACP, NULL, text, -1, w_msg, len);
+	MultiByteToWideChar(CP_UTF8, NULL, text, -1, w_msg, len);
 
 	tvinsert.item.pszText=w_msg;
 	HTREEITEM item=(HTREEITEM)SendDlgItemMessage(hWndDlg,IDC_TREE1,TVM_INSERTITEM,0,(LPARAM)&tvinsert);
@@ -102,7 +102,7 @@ void JSONDialog::populateTree (HWND hWndDlg, HTREEITEM tree_root, json_t * json_
 				len = strlen(txt) + 1;
 				wchar_t *w_txt = new wchar_t[len];
 				memset(w_txt, 0, len);
-				MultiByteToWideChar(CP_ACP, NULL, txt, -1, w_txt, len);
+				MultiByteToWideChar(CP_UTF8, NULL, txt, -1, w_txt, len);
 
 				t.pszText=w_txt;
 				t.mask=TVIF_TEXT;
@@ -137,7 +137,7 @@ void JSONDialog::populateTree (HWND hWndDlg, HTREEITEM tree_root, json_t * json_
 				len = strlen(txt) + 1;
 				wchar_t *w_txt = new wchar_t[len];
 				memset(w_txt, 0, len);
-				MultiByteToWideChar(CP_ACP, NULL, txt, -1, w_txt, len);
+				MultiByteToWideChar(CP_UTF8, NULL, txt, -1, w_txt, len);
 
 				t.pszText=w_txt;
 				t.mask=TVIF_TEXT;
