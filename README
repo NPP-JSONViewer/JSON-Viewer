@@ -1,5 +1,5 @@
 =================
-JSONViewer 1.21
+JSONViewer 1.22
 by Kapil Ratnani
 =================
 
@@ -22,6 +22,11 @@ Rui Maciel for mjson library
 ==================
 Latest Updates:
 ==================
+
+----
+1.22
+----
+1. Fixed display of boolean values. Now displaying as "key":True/False
 
 ----
 1.21
