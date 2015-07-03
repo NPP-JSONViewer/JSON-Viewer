@@ -27,6 +27,7 @@ Latest Updates:
 1.22
 ----
 1. Fixed display of boolean values. Now displaying as "key":True/False
+   Thanks @yoyokenny
 
 ----
 1.21
