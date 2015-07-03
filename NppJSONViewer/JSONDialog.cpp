@@ -156,10 +156,78 @@ void JSONDialog::populateTree (HWND hWndDlg, HTREEITEM tree_root, json_t * json_
 		newItem=insertToTree(hWndDlg,tree_root,"Array");
 		break;
 	case JSON_TRUE:
-		newItem=insertToTree(hWndDlg,tree_root,"True");
+		/*
+		insert the value with its key in a form "key":"value"
+		*/
+		if(json_root->child==NULL && json_root->parent->type!=JSON_ARRAY)
+		{
+			TVITEM t;
+			t.hItem=tree_root;
+			t.mask=TVIF_HANDLE;
+			if(SendDlgItemMessage(hWndDlg,IDC_TREE1,TVM_GETITEM,0,(LPARAM)&t))
+			{
+				int len=strlen(json_root->parent->text)+3+strlen(json_root->text)+1;
+				char *txt=new char[len];
+				memset(txt, 0, len);
+				char *unesc_text=json_unescape("True");
+				char *unesc_parent_text=json_unescape(json_root->parent->text);
+				sprintf(txt,"%s : %s",unesc_parent_text,unesc_text);
+				free(unesc_text);
+				free(unesc_parent_text);
+
+				len = strlen(txt) + 1;
+				wchar_t *w_txt = new wchar_t[len];
+				memset(w_txt, 0, len);
+				MultiByteToWideChar(CP_UTF8, NULL, txt, -1, w_txt, len);
+
+				t.pszText=w_txt;
+				t.mask=TVIF_TEXT;
+				::SendDlgItemMessage(hWndDlg,IDC_TREE1,TVM_SETITEM,0,(LPARAM)&t);
+			}
+		}else
+		{
+			// it is an array element, insert directly
+			char *unesc_elem=json_unescape(json_root->text);
+			newItem=insertToTree(hWndDlg,tree_root,unesc_elem);
+			free(unesc_elem);
+		}
 		break;
 	case JSON_FALSE:
-		newItem=insertToTree(hWndDlg,tree_root,"False");
+		/*
+		insert the value with its key in a form "key":"value"
+		*/
+		if(json_root->child==NULL && json_root->parent->type!=JSON_ARRAY)
+		{
+			TVITEM t;
+			t.hItem=tree_root;
+			t.mask=TVIF_HANDLE;
+			if(SendDlgItemMessage(hWndDlg,IDC_TREE1,TVM_GETITEM,0,(LPARAM)&t))
+			{
+				int len=strlen(json_root->parent->text)+3+strlen(json_root->text)+1;
+				char *txt=new char[len];
+				memset(txt, 0, len);
+				char *unesc_text=json_unescape("False");
+				char *unesc_parent_text=json_unescape(json_root->parent->text);
+				sprintf(txt,"%s : %s",unesc_parent_text,unesc_text);
+				free(unesc_text);
+				free(unesc_parent_text);
+
+				len = strlen(txt) + 1;
+				wchar_t *w_txt = new wchar_t[len];
+				memset(w_txt, 0, len);
+				MultiByteToWideChar(CP_UTF8, NULL, txt, -1, w_txt, len);
+
+				t.pszText=w_txt;
+				t.mask=TVIF_TEXT;
+				::SendDlgItemMessage(hWndDlg,IDC_TREE1,TVM_SETITEM,0,(LPARAM)&t);
+			}
+		}else
+		{
+			// it is an array element, insert directly
+			char *unesc_elem=json_unescape(json_root->text);
+			newItem=insertToTree(hWndDlg,tree_root,unesc_elem);
+			free(unesc_elem);
+		}
 		break;
 	case JSON_NULL:
 		newItem=insertToTree(hWndDlg,tree_root,"null");
