@@ -1101,11 +1101,6 @@ json_format_string (const char *text)
 				{
 					rcs_catc (output, '\\');
 					pos++;
-					if (text[pos] == '\"')	/* don't consider a \" escaped sequence as an end of string */
-					{
-						rcs_catc (output, '\"');
-						pos++;
-					}
 				}
 				else if (text[pos] == '\"')	/* reached end of string */
 				{
