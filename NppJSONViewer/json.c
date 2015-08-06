@@ -1039,7 +1039,7 @@ json_format_string (const char *text)
 	size_t pos = 0, text_length;
 
 	// make sure these two integers are signed
-	// we want to allow negative when the json is bad
+	// we want to allow testing against negative when the json is bad
 	signed int indentation = 0;	/* the current indentation level */
 	signed int i;				/* loop iterator variable */
 	char loop;
