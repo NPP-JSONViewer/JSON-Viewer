@@ -1037,8 +1037,11 @@ char *
 json_format_string (const char *text)
 {
 	size_t pos = 0, text_length;
-	unsigned int indentation = 0;	/* the current indentation level */
-	unsigned int i;		/* loop iterator variable */
+
+	// make sure these two integers are signed
+	// we want to allow negative when the json is bad
+	signed int indentation = 0;	/* the current indentation level */
+	signed int i;				/* loop iterator variable */
 	char loop;
 
 	rcstring *output;
@@ -1069,6 +1072,9 @@ json_format_string (const char *text)
 		case '}':
 			indentation--;
 			rcs_catc (output, '\n');
+			// the for loop will compare i with potential negative values
+			// so we don't get caught in an infinite loop if the json is faulty with more "}" than "{"
+			// we just print out the same number of faulty "}" characters.
 			for (i = 0; i < indentation; i++)
 			{
 				rcs_catc (output, '\t');
