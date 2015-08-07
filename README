@@ -17,7 +17,7 @@ Instruction:
 Special Thanks to:
 ==================
 Don Ho for Notepad++
-Rui Maciel for mjson library	
+Rui Maciel for mjson library
 
 ==================
 Latest Updates:
@@ -28,6 +28,8 @@ Latest Updates:
 ----
 1. Fixed display of boolean values. Now displaying as "key":True/False
    Thanks @yoyokenny
+2. Fixed hang on faulty JSON.
+   Thanks @vancekic
 
 ----
 1.21
