@@ -161,6 +161,19 @@ void showJSONDialog(char *json)
 	jsonDialog.display();
 }
 
+void selectAllIfUnselectedAndSetCurJSON(size_t selectedTextLength, HWND curScintilla) {
+	if (selectedTextLength == 0) {
+		size_t allTextlength = ::SendMessage(curScintilla, SCI_GETLENGTH, 0, (LPARAM)curJSON);
+		::SendMessage(curScintilla, SCI_SETSELECTIONSTART, 0, (LPARAM)curJSON);
+		::SendMessage(curScintilla, SCI_SETSELECTIONEND, allTextlength, (LPARAM)curJSON);
+		curJSON = new CHAR[allTextlength];
+	} else {
+		curJSON = new CHAR[selectedTextLength+1];
+	}
+
+	::SendMessage(curScintilla, SCI_GETSELTEXT, 0, (LPARAM)curJSON);
+}
+
 void openJSONDialog()
 {
 	// Get the current scintilla
@@ -180,18 +193,8 @@ void openJSONDialog()
 	}
 
 	size_t asciiTextLen = end - start;
-	/*
-	if (asciiTextLen == 0)
-	{ 
-		//MessageBox(nppData._nppHandle,TEXT("Please select a JSON string."),TEXT("JSON Viewer"),MB_OK|MB_ICONINFORMATION);
-		return;
-	}
-	*/
+	selectAllIfUnselectedAndSetCurJSON(asciiTextLen, curScintilla);	
 	
-
-	curJSON = new CHAR[asciiTextLen+1];
-
-	::SendMessage(curScintilla, SCI_GETSELTEXT, 0, (LPARAM)curJSON);
 	showJSONDialog(curJSON);
 	delete curJSON;
 }
@@ -214,16 +217,8 @@ void formatSelectedJSON(){
 	}
 
 	size_t asciiTextLen = end - start;
-	
-	if (asciiTextLen == 0)
-	{ 
-		//MessageBox(nppData._nppHandle,TEXT("Please select a JSON string."),TEXT("JSON Viewer"),MB_OK|MB_ICONINFORMATION);
-		return;
-	}
+	selectAllIfUnselectedAndSetCurJSON(asciiTextLen, curScintilla);	
 
-	curJSON = new CHAR[asciiTextLen+1];
-
-	::SendMessage(curScintilla, SCI_GETSELTEXT, 0, (LPARAM)curJSON);
 	CHAR* fJson=json_format_string(curJSON);
 	::SendMessage(curScintilla,SCI_REPLACESEL,0,(LPARAM)fJson);
 	
