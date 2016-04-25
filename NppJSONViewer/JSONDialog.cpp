@@ -51,18 +51,22 @@ inserts a node in the tree
 HTREEITEM JSONDialog::insertToTree(HWND hWndDlg,HTREEITEM parent,char *text)
 {
 	TV_INSERTSTRUCT tvinsert;    
-
+	HTREEITEM item = NULL;
 	tvinsert.hParent=parent;     
 	tvinsert.hInsertAfter=TVI_LAST;
 	tvinsert.item.mask=TVIF_TEXT;
 
 	int len = strlen(text) + 1;
 	wchar_t *w_msg = new wchar_t[len];
-	memset(w_msg, 0, len);
-	MultiByteToWideChar(CP_UTF8, NULL, text, -1, w_msg, len);
+	if (w_msg)
+	{
+		memset(w_msg, 0, len);
+		MultiByteToWideChar(CP_UTF8, NULL, text, -1, w_msg, len);
 
-	tvinsert.item.pszText=w_msg;
-	HTREEITEM item=(HTREEITEM)SendDlgItemMessage(hWndDlg,IDC_TREE1,TVM_INSERTITEM,0,(LPARAM)&tvinsert);
+		tvinsert.item.pszText = w_msg;
+		item = (HTREEITEM)SendDlgItemMessage(hWndDlg, IDC_TREE1, TVM_INSERTITEM, 0, (LPARAM)&tvinsert);
+		delete[] w_msg; // fix memory leak
+	}
 
 	return item;
 }
@@ -92,21 +96,30 @@ void JSONDialog::populateTree (HWND hWndDlg, HTREEITEM tree_root, json_t * json_
 			{
 				int len=strlen(json_root->parent->text)+3+strlen(json_root->text)+1;
 				char *txt=new char[len];
-				memset(txt, 0, len);
-				char *unesc_text=json_unescape(json_root->text);
-				char *unesc_parent_text=json_unescape(json_root->parent->text);
-				sprintf(txt,"%s : %s",unesc_parent_text,unesc_text);
-				free(unesc_text);
-				free(unesc_parent_text);
+				if (txt)
+				{
+					memset(txt, 0, len);
+					char *unesc_text = json_unescape(json_root->text);
+					char *unesc_parent_text = json_unescape(json_root->parent->text);
+					sprintf(txt, "%s : %s", unesc_parent_text, unesc_text);
+					free(unesc_text);
+					free(unesc_parent_text);
 
-				len = strlen(txt) + 1;
-				wchar_t *w_txt = new wchar_t[len];
-				memset(w_txt, 0, len);
-				MultiByteToWideChar(CP_UTF8, NULL, txt, -1, w_txt, len);
+					len = strlen(txt) + 1;
+					wchar_t *w_txt = new wchar_t[len];
+					if (w_txt)
+					{
+						memset(w_txt, 0, len);
+						MultiByteToWideChar(CP_UTF8, NULL, txt, -1, w_txt, len);
 
-				t.pszText=w_txt;
-				t.mask=TVIF_TEXT;
-				::SendDlgItemMessage(hWndDlg,IDC_TREE1,TVM_SETITEM,0,(LPARAM)&t);
+						t.pszText = w_txt;
+						t.mask = TVIF_TEXT;
+						::SendDlgItemMessage(hWndDlg, IDC_TREE1, TVM_SETITEM, 0, (LPARAM)&t);
+						delete[] w_txt; //fix memory leak
+					}
+
+					delete[] txt; //fix memory leak
+				}
 			}
 		}else
 		{
@@ -129,19 +142,29 @@ void JSONDialog::populateTree (HWND hWndDlg, HTREEITEM tree_root, json_t * json_
 			{
 				int len=strlen(json_root->parent->text)+3+strlen(json_root->text)+1;
 				char *txt=new char[len];
-				memset(txt, 0, len);
-				char *unesc_parent_text=json_unescape(json_root->parent->text);
-				sprintf(txt,"%s : %s",unesc_parent_text,json_root->text);
-				free(unesc_parent_text);
+				if (txt)
+				{
+					memset(txt, 0, len);
+					char *unesc_parent_text = json_unescape(json_root->parent->text);
+					sprintf(txt, "%s : %s", unesc_parent_text, json_root->text);
+					free(unesc_parent_text);
 
-				len = strlen(txt) + 1;
-				wchar_t *w_txt = new wchar_t[len];
-				memset(w_txt, 0, len);
-				MultiByteToWideChar(CP_UTF8, NULL, txt, -1, w_txt, len);
+					len = strlen(txt) + 1;
+					wchar_t *w_txt = new wchar_t[len];
+					if (w_txt)
+					{
+						memset(w_txt, 0, len);
+						MultiByteToWideChar(CP_UTF8, NULL, txt, -1, w_txt, len);
 
-				t.pszText=w_txt;
-				t.mask=TVIF_TEXT;
-				::SendDlgItemMessage(hWndDlg,IDC_TREE1,TVM_SETITEM,0,(LPARAM)&t);
+						t.pszText = w_txt;
+						t.mask = TVIF_TEXT;
+						::SendDlgItemMessage(hWndDlg, IDC_TREE1, TVM_SETITEM, 0, (LPARAM)&t);
+
+						delete[] w_txt;// fix memory leak
+					}
+
+					delete[] txt; // fix memory leak
+				}
 			}
 		}else
 		{
@@ -168,21 +191,30 @@ void JSONDialog::populateTree (HWND hWndDlg, HTREEITEM tree_root, json_t * json_
 			{
 				int len=strlen(json_root->parent->text)+3+strlen("True")+1;
 				char *txt=new char[len];
-				memset(txt, 0, len);
-				char *unesc_text=json_unescape("True");
-				char *unesc_parent_text=json_unescape(json_root->parent->text);
-				sprintf(txt,"%s : %s",unesc_parent_text,unesc_text);
-				free(unesc_text);
-				free(unesc_parent_text);
+				if (txt)
+				{
+					memset(txt, 0, len);
+					char *unesc_text = json_unescape("True");
+					char *unesc_parent_text = json_unescape(json_root->parent->text);
+					sprintf(txt, "%s : %s", unesc_parent_text, unesc_text);
+					free(unesc_text);
+					free(unesc_parent_text);
 
-				len = strlen(txt) + 1;
-				wchar_t *w_txt = new wchar_t[len];
-				memset(w_txt, 0, len);
-				MultiByteToWideChar(CP_UTF8, NULL, txt, -1, w_txt, len);
+					len = strlen(txt) + 1;
+					wchar_t *w_txt = new wchar_t[len];
+					
+					if (w_txt)
+					{
+						memset(w_txt, 0, len);
+						MultiByteToWideChar(CP_UTF8, NULL, txt, -1, w_txt, len);
 
-				t.pszText=w_txt;
-				t.mask=TVIF_TEXT;
-				::SendDlgItemMessage(hWndDlg,IDC_TREE1,TVM_SETITEM,0,(LPARAM)&t);
+						t.pszText = w_txt;
+						t.mask = TVIF_TEXT;
+						::SendDlgItemMessage(hWndDlg, IDC_TREE1, TVM_SETITEM, 0, (LPARAM)&t);
+						delete[] w_txt;//fix memory leak
+					}
+					delete[] txt; //fix memory leak
+				}
 			}
 		}else
 		{
@@ -205,21 +237,29 @@ void JSONDialog::populateTree (HWND hWndDlg, HTREEITEM tree_root, json_t * json_
 			{
 				int len=strlen(json_root->parent->text)+3+strlen("False")+1;
 				char *txt=new char[len];
-				memset(txt, 0, len);
-				char *unesc_text=json_unescape("False");
-				char *unesc_parent_text=json_unescape(json_root->parent->text);
-				sprintf(txt,"%s : %s",unesc_parent_text,unesc_text);
-				free(unesc_text);
-				free(unesc_parent_text);
+				if (txt)
+				{
+					memset(txt, 0, len);
+					char *unesc_text = json_unescape("False");
+					char *unesc_parent_text = json_unescape(json_root->parent->text);
+					sprintf(txt, "%s : %s", unesc_parent_text, unesc_text);
+					free(unesc_text);
+					free(unesc_parent_text);
 
-				len = strlen(txt) + 1;
-				wchar_t *w_txt = new wchar_t[len];
-				memset(w_txt, 0, len);
-				MultiByteToWideChar(CP_UTF8, NULL, txt, -1, w_txt, len);
+					len = strlen(txt) + 1;
+					wchar_t *w_txt = new wchar_t[len];
+					if (w_txt)
+					{
+						memset(w_txt, 0, len);
+						MultiByteToWideChar(CP_UTF8, NULL, txt, -1, w_txt, len);
 
-				t.pszText=w_txt;
-				t.mask=TVIF_TEXT;
-				::SendDlgItemMessage(hWndDlg,IDC_TREE1,TVM_SETITEM,0,(LPARAM)&t);
+						t.pszText = w_txt;
+						t.mask = TVIF_TEXT;
+						::SendDlgItemMessage(hWndDlg, IDC_TREE1, TVM_SETITEM, 0, (LPARAM)&t);
+						delete[] w_txt; // fix memory leak
+					}
+					delete[] txt; // fix memory leak
+				}
 			}
 		}else
 		{
