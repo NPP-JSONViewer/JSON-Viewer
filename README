@@ -1,5 +1,5 @@
 =================
-JSONViewer 1.22
+JSONViewer 1.23
 by Kapil Ratnani
 =================
 
@@ -22,6 +22,14 @@ Rui Maciel for mjson library
 ==================
 Latest Updates:
 ==================
+
+----
+1.23
+----
+1. Select all text when no selection
+   Thanks @vakio
+2. fix memory leak and close About dialog when clicking "Close" button
+   Thanks @quangnh89 
 
 ----
 1.22
