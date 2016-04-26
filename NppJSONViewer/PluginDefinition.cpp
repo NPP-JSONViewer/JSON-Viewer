@@ -87,6 +87,7 @@ INT_PTR CALLBACK abtDlgProc(HWND hwndDlg,UINT uMsg,WPARAM wParam, LPARAM lParam)
 	case WM_COMMAND:
 		switch(LOWORD(wParam))
 		{
+		case IDCANCEL: // Close this dialog when clicking to close button
 		case IDOK:
 			EndDialog(hwndDlg,wParam);
 			return TRUE;
