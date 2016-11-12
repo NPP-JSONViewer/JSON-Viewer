@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2007 by Rui Maciel									   *
- *   rui.maciel@gmail.com												   *
+ *   Copyright (C) 2007 by Rui Maciel   *
+ *   rui.maciel@gmail.com   *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU Library General Public License as       *
@@ -24,17 +24,14 @@
 \note error handling is only in a very rudimentary form.
 \author Rui Maciel	rui_maciel@users.sourceforge.net
 \author Sven Herzberg
-\version v1.3
+\version v1.7
 */
 
-//#include <stdint.h>
+#include <stdint.h>
 #include <stdio.h>
 
 #ifndef JSON_H
 #define JSON_H
-
-typedef signed long long int int64_t;
-typedef unsigned long long int uint64_t;
 
 #ifdef __cplusplus
 extern "C"
@@ -111,9 +108,9 @@ The structure holding all information needed to resume parsing
 		unsigned int state;	/*!< the state where the parsing was left on the last parser run */
 		unsigned int lex_state;
 		rcstring *lex_text;
-		char *p;
+		const char *p;
 		int string_length_limit_reached;	/*!< flag informing if the string limit length defined by JSON_MAX_STRING_LENGTH was reached */
-		size_t line;	// current document line
+		size_t line;	/* current document line */
 		size_t char_num; //current character number in a line
 		json_t *cursor;	/*!< pointers to nodes belonging to the document tree which aid the document parsing */
 	};
@@ -124,17 +121,17 @@ The structure which holds the pointers to the functions that will be called by t
 **/
 	struct json_saxy_functions
 	{
-		int (*open_object) ();
-		int (*close_object) ();
-		int (*open_array) ();
-		int (*close_array) ();
+		int (*open_object) (void);
+		int (*close_object) (void);
+		int (*open_array) (void);
+		int (*close_array) (void);
 		int (*new_string) (char *text);
 		int (*new_number) (char *text);
-		int (*new_true) ();
-		int (*new_false) ();
-		int (*new_null) ();
-		int (*label_value_separator) ();
-		int (*sibling_separator) ();
+		int (*new_true) (void);
+		int (*new_false) (void);
+		int (*new_null) (void);
+		int (*label_value_separator) (void);
+		int (*sibling_separator) (void);
 	};
 
 
@@ -281,7 +278,7 @@ Outputs a new UTF8 c-string which replaces all characters that must be escaped w
 @param text an UTF8 char text string
 @return an UTF-8 c-string holding the same text string but with escaped characters
 **/
-	char *json_escape (char *text);
+	char *json_escape (const char *text);
 
 /**
  * Outputs a new UTF-8 c-string which has all escaped characters replaced by
@@ -290,7 +287,7 @@ Outputs a new UTF8 c-string which replaces all characters that must be escaped w
  * @param test a UTF-8 c-string
  * @return a newly allocated UTF-8 c-string; free with free()
  */
-	char *json_unescape (char *text);
+	char *json_unescape (const char *text);
 
 
 /**
@@ -307,7 +304,7 @@ Produces a document tree sequentially from a JSON markup text fragment
 @param buffer a null-terminated c-string containing a JSON document fragment
 @return a code describing how the operation ended up
 **/
-	enum json_error json_parse_fragment (struct json_parsing_info *info, char *buffer);
+	enum json_error json_parse_fragment (struct json_parsing_info *info, const char *buffer);
 
 
 /**
@@ -316,7 +313,7 @@ Produces a document tree from a JSON markup text string that contains a complete
 @param text a c-string containing a complete JSON text document
 @return a pointer to the new document tree or NULL if some error occurred
 **/
-	enum json_error json_parse_document (json_t ** root, char *text);
+	enum json_error json_parse_document (json_t ** root, const char *text);
 
 
 /**
