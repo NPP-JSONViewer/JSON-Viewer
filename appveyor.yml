@@ -12,8 +12,8 @@ platform:
     - Win32
 
 configuration:
-    - Unicode Release
-    - Unicode Debug
+    - Release
+    - Debug
 
 install:
     - if "%platform%"=="x64" set archi=amd64
@@ -27,5 +27,5 @@ build:
 build_script:
     - cd "%APPVEYOR_BUILD_FOLDER%"
     - cd NppJSONViewer
-    - msbuild NppJSONViewer.sln /p:configuration="%configuration%" /p:platform="%platform%" /p:PlatformToolset="%PlatformToolset%"
+    - msbuild NppJSONViewer.sln /m /p:configuration="%configuration%" /p:platform="%platform%" /p:PlatformToolset="%PlatformToolset%"
 
