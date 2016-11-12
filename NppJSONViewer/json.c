@@ -25,6 +25,7 @@
 #include <assert.h>
 #include <memory.h>
 #include <sys/types.h>
+#include <string.h>
 
 
 enum LEX_VALUE
@@ -1336,7 +1337,7 @@ json_unescape (char *text)
 					}
 					else
 					{
-						fprintf (stderr, "JSON: unsupported unicode value: 0x%lX\n", unicode);
+						fprintf (stderr, "JSON: unsupported unicode value: 0x%llX\n", unicode);
 					}
 				}
 				break;
@@ -2282,7 +2283,7 @@ json_parse_fragment (struct json_parsing_info *info, char *buffer)
 
 				default:
 					/* this should never run */
-					fprintf (stderr, "JSON: state %d: defaulted at line %d\n", info->state, info->line);
+					fprintf (stderr, "JSON: state %d: defaulted at line %zu\n", info->state, info->line);
 					return JSON_MALFORMED_DOCUMENT;
 					break;
 				}
@@ -2341,7 +2342,7 @@ json_parse_fragment (struct json_parsing_info *info, char *buffer)
 					break;
 
 				default:
-					fprintf (stderr, "JSON: state %d: defaulted at line %d\n", info->state, info->line);
+					fprintf (stderr, "JSON: state %d: defaulted at line %zu\n", info->state, info->line);
 					return JSON_MALFORMED_DOCUMENT;
 					break;
 				}
@@ -2377,7 +2378,7 @@ json_parse_fragment (struct json_parsing_info *info, char *buffer)
 					break;
 
 				default:	/* this should never run */
-					fprintf (stderr, "JSON: state %d: defaulted at line %d\n", info->state, info->line);
+					fprintf (stderr, "JSON: state %d: defaulted at line %zu\n", info->state, info->line);
 					return JSON_MALFORMED_DOCUMENT;
 					break;
 				}
@@ -2401,7 +2402,7 @@ json_parse_fragment (struct json_parsing_info *info, char *buffer)
 					break;
 
 				default:
-					fprintf (stderr, "JSON: state %d: defaulted at line %d\n", info->state, info->line);
+					fprintf (stderr, "JSON: state %d: defaulted at line %zu\n", info->state, info->line);
 					return JSON_MALFORMED_DOCUMENT;
 					break;
 				}
@@ -2540,7 +2541,7 @@ json_parse_fragment (struct json_parsing_info *info, char *buffer)
 					break;
 
 				default:
-					fprintf (stderr, "JSON: state %d: defaulted at line %d\n", info->state, info->line);
+					fprintf (stderr, "JSON: state %d: defaulted at line %zu\n", info->state, info->line);
 					return JSON_MALFORMED_DOCUMENT;
 					break;
 				}
@@ -2691,7 +2692,7 @@ json_parse_fragment (struct json_parsing_info *info, char *buffer)
 					break;
 
 				default:
-					fprintf (stderr, "JSON: state %d: defaulted at line %d\n", info->state, info->line);
+					fprintf (stderr, "JSON: state %d: defaulted at line %zu\n", info->state, info->line);
 					return JSON_MALFORMED_DOCUMENT;
 					break;
 				}
@@ -2752,7 +2753,7 @@ json_parse_fragment (struct json_parsing_info *info, char *buffer)
 					break;
 
 				default:
-					fprintf (stderr, "JSON: state %d: defaulted at line %d\n", info->state, info->line);
+					fprintf (stderr, "JSON: state %d: defaulted at line %zu\n", info->state, info->line);
 					return JSON_MALFORMED_DOCUMENT;
 					break;
 				}
@@ -2781,7 +2782,7 @@ json_parse_fragment (struct json_parsing_info *info, char *buffer)
 			break;
 
 		default:
-			fprintf (stderr, "JSON: state %d: defaulted at line %d\n", info->state, info->line);
+			fprintf (stderr, "JSON: state %d: defaulted at line %zu\n", info->state, info->line);
 			return JSON_UNKNOWN_PROBLEM;
 		}
 	}

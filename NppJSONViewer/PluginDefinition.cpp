@@ -1,21 +1,19 @@
-/*
-This file is part of JSONViewer Plugin for Notepad++
-Copyright (C)2011 Kapil Ratnani <kapil.ratnani@iiitb.net>
-
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or (at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
-*/
+//this file is part of notepad++
+//Copyright (C)2003 Don HO <donho@altern.org>
+//
+//This program is free software; you can redistribute it and/or
+//modify it under the terms of the GNU General Public License
+//as published by the Free Software Foundation; either
+//version 2 of the License, or (at your option) any later version.
+//
+//This program is distributed in the hope that it will be useful,
+//but WITHOUT ANY WARRANTY; without even the implied warranty of
+//MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//GNU General Public License for more details.
+//
+//You should have received a copy of the GNU General Public License
+//along with this program; if not, write to the Free Software
+//Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
 #include "PluginDefinition.h"
 #include "menuCmdID.h"
@@ -34,6 +32,7 @@ FuncItem funcItem[nbFunc];
 // The data of Notepad++ that you can use in your plugin commands
 //
 NppData nppData;
+
 //
 // Initialize your plugin data here
 // It will be called while plugin loading   
@@ -52,6 +51,7 @@ void pluginCleanUp()
 
 //
 // Initialization of your plugin commands
+// You should fill your plugins commands here
 void commandMenuInit()
 {
 	// setCommand(int index,                      // zero based number to indicate the order of command
@@ -77,7 +77,7 @@ void commandMenuInit()
 	setCommand(2, TEXT("&About"), openAboutDlg,NULL , false);
 }
 
-INT_PTR CALLBACK abtDlgProc(HWND hwndDlg,UINT uMsg,WPARAM wParam, LPARAM lParam)
+INT_PTR CALLBACK abtDlgProc(HWND hwndDlg,UINT uMsg,WPARAM wParam, LPARAM /*lParam*/)
 {
 	switch(uMsg)
 	{
@@ -167,7 +167,7 @@ void selectAllIfUnselectedAndSetCurJSON(size_t selectedTextLength, HWND curScint
 		size_t allTextlength = ::SendMessage(curScintilla, SCI_GETLENGTH, 0, (LPARAM)curJSON);
 		::SendMessage(curScintilla, SCI_SETSELECTIONSTART, 0, (LPARAM)curJSON);
 		::SendMessage(curScintilla, SCI_SETSELECTIONEND, allTextlength, (LPARAM)curJSON);
-		curJSON = new CHAR[allTextlength];
+		curJSON = new CHAR[allTextlength+1];
 	} else {
 		curJSON = new CHAR[selectedTextLength+1];
 	}
@@ -197,7 +197,7 @@ void openJSONDialog()
 	selectAllIfUnselectedAndSetCurJSON(asciiTextLen, curScintilla);	
 	
 	showJSONDialog(curJSON);
-	delete curJSON;
+	delete [] curJSON;
 }
 
 void formatSelectedJSON(){
@@ -224,5 +224,5 @@ void formatSelectedJSON(){
 	::SendMessage(curScintilla,SCI_REPLACESEL,0,(LPARAM)fJson);
 	
 	free(fJson);
-	delete curJSON;
+	delete [] curJSON;
 }

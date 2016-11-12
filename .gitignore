@@ -1,0 +1,14 @@
+*.sdf
+*.sln
+*.suo
+*.obj
+*.tlog
+*.dll
+*.lib
+*.exp
+NppJSONViewer/Debug
+NppJSONViewer/Release
+NppJSONViewer/x64
+NppJSONViewer/NppJSONViewer.vcxproj.user
+*.aps
+*.zip

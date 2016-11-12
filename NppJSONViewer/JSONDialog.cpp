@@ -80,7 +80,7 @@ void JSONDialog::setJSON(char* json)
 
 void JSONDialog::populateTree (HWND hWndDlg, HTREEITEM tree_root, json_t * json_root, int level)
 {
-	HTREEITEM newItem;
+	HTREEITEM newItem = NULL;
 	switch (json_root->type)
 	{
 	case JSON_STRING:
@@ -281,7 +281,10 @@ void JSONDialog::populateTree (HWND hWndDlg, HTREEITEM tree_root, json_t * json_
 
 		while (ita != NULL)
 		{
-			populateTree(hWndDlg,newItem,ita, level + 1);
+			if (newItem)
+			{
+				populateTree(hWndDlg, newItem, ita, level + 1);
+			}
 			ita = ita->next;
 		}
 	}
@@ -344,7 +347,7 @@ void JSONDialog::drawTree()
 	}
 }
 
-BOOL CALLBACK JSONDialog::run_dlgProc(UINT message, WPARAM wParam, LPARAM lParam)
+INT_PTR CALLBACK JSONDialog::run_dlgProc(UINT message, WPARAM wParam, LPARAM lParam)
 {
 	int width,height;
 	switch (message) 
