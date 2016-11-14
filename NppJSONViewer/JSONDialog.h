@@ -22,6 +22,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 #include "DockingDlgInterface.h"
 #include "PluginInterface.h"
+#include <commctrl.h>
+#include "resource.h"
 #include "json.h"
 
 class JSONDialog : public DockingDlgInterface
@@ -46,7 +48,7 @@ public :
 	void setJSON(char *json);
 
 protected :
-	virtual BOOL CALLBACK run_dlgProc(UINT message, WPARAM wParam, LPARAM lParam);
+	virtual INT_PTR CALLBACK run_dlgProc(UINT message, WPARAM wParam, LPARAM lParam);
 };
 
 #endif //JSONDIALOG_H
