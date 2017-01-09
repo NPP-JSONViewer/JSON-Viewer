@@ -1,5 +1,5 @@
 =================
-JSONViewer 1.23
+JSONViewer 1.24
 by Kapil Ratnani
 =================
 
@@ -23,6 +23,12 @@ Rui Maciel for mjson library
 Latest Updates:
 ==================
 
+
+----
+1.24
+----
+1. 64 bit support. Thanks @chcg
+   
 ----
 1.23
 ----
