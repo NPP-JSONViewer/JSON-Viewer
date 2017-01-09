@@ -29,3 +29,8 @@ build_script:
     - cd NppJSONViewer
     - msbuild NppJSONViewer.sln /m /p:configuration="%configuration%" /p:platform="%platform%" /p:PlatformToolset="%PlatformToolset%"
 
+artifacts:
+    - path: NppJSONViewer\x64\Release\NPPJSONViewer.dll
+      name: x64
+    - path: NppJSONViewer\Release\NPPJSONViewer.dll
+      name: Win32
