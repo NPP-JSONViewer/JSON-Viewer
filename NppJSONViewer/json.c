@@ -1083,6 +1083,30 @@ json_format_string (const char *text)
 			pos++;
 			break;
 
+		case '[':
+			indentation++;
+			rcs_catcs (output, "{\n", 2);
+			for (i = 0; i < indentation; i++)
+			{
+				rcs_catc (output, '\t');
+			}
+			pos++;
+			break;
+
+		case ']':
+			indentation--;
+			rcs_catc (output, '\n');
+			// the for loop will compare i with potential negative values
+			// so we don't get caught in an infinite loop if the json is faulty with more "}" than "{"
+			// we just print out the same number of faulty "}" characters.
+			for (i = 0; i < indentation; i++)
+			{
+				rcs_catc (output, '\t');
+			}
+			rcs_catc (output, '}');
+			pos++;
+			break;
+
 		case ':':
 			rcs_catcs (output, ": ", 2);
 			pos++;
