@@ -1085,7 +1085,7 @@ json_format_string (const char *text)
 
 		case '[':
 			indentation++;
-			rcs_catcs (output, "{\n", 2);
+			rcs_catcs (output, "[\n", 2);
 			for (i = 0; i < indentation; i++)
 			{
 				rcs_catc (output, '\t');
@@ -1103,7 +1103,7 @@ json_format_string (const char *text)
 			{
 				rcs_catc (output, '\t');
 			}
-			rcs_catc (output, '}');
+			rcs_catc (output, ']');
 			pos++;
 			break;
 
