@@ -17,11 +17,11 @@ LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
 IDD_ABOUTDLG DIALOG 0, 0, 268, 119
 STYLE DS_3DLOOK | DS_ABSALIGN | DS_CENTER | DS_MODALFRAME | DS_SHELLFONT | WS_CAPTION | WS_VISIBLE | WS_POPUP | WS_SYSMENU
 EXSTYLE WS_EX_WINDOWEDGE
-CAPTION "About JSONViewer"
+CAPTION "About JSON Viewer"
 FONT 8, "Ms Shell Dlg"
 {
     DEFPUSHBUTTON   "OK", IDOK, 105, 103, 50, 14, 0, WS_EX_LEFT
-    GROUPBOX        "JSONViewer", IDC_STATIC, 14, 7, 247, 90, BS_CENTER, WS_EX_LEFT
+    GROUPBOX        "JSON Viewer", IDC_STATIC, 14, 7, 247, 90, BS_CENTER, WS_EX_LEFT
     LTEXT           "Author:", IDC_STATIC, 27, 21, 24, 8, SS_LEFT, WS_EX_LEFT
     LTEXT           "Kapil Ratnani", IDC_STATIC, 105, 21, 43, 8, SS_LEFT, WS_EX_LEFT
     LTEXT           "Version:", IDC_STATIC, 27, 35, 26, 8, SS_LEFT, WS_EX_LEFT
@@ -31,7 +31,7 @@ FONT 8, "Ms Shell Dlg"
     LTEXT           "Special thanks to:", IDC_STATIC, 27, 63, 58, 8, SS_LEFT, WS_EX_LEFT
     LTEXT           "Don Ho for Notepad++ and Rui Maciel for mjson", IDC_STATIC, 103, 63, 152, 8, SS_LEFT, WS_EX_LEFT
     LTEXT           "Website:", IDC_STATIC, 28, 78, 29, 8, SS_LEFT, WS_EX_LEFT
-    LTEXT           "https://sourceforge.net/projects/nppjsonviewer/", IDC_WEB, 104, 78, 154, 8, SS_LEFT | SS_NOTIFY, WS_EX_LEFT
+    LTEXT           "https://github.com/kapilratnani/JSON-Viewer", IDC_WEB, 104, 78, 154, 8, SS_LEFT | SS_NOTIFY, WS_EX_LEFT
 }
 
 
