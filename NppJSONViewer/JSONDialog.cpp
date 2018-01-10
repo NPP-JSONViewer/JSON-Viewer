@@ -20,7 +20,12 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "JSONDialog.h"
 #include "PluginDefinition.h"
 #include "json.h"
+#include <sstream>
+#include "StopWatch.h"
+#include "SaxHandler.h"
+#include "rapidjson/reader.h"
 
+using win32::Stopwatch;
 extern NppData nppData;
 
 /*
@@ -48,7 +53,7 @@ HTREEITEM JSONDialog::initTree(HWND hWndDlg)
 /*
 inserts a node in the tree
 */
-HTREEITEM JSONDialog::insertToTree(HWND hWndDlg,HTREEITEM parent,char *text)
+HTREEITEM JSONDialog::insertToTree(HWND hWndDlg,HTREEITEM parent, const char *text)
 {
 	TV_INSERTSTRUCT tvinsert;    
 	HTREEITEM item = NULL;
@@ -71,11 +76,48 @@ HTREEITEM JSONDialog::insertToTree(HWND hWndDlg,HTREEITEM parent,char *text)
 	return item;
 }
 
+HTREEITEM JSONDialog::insertToTree(HTREEITEM parent, const char *text) {
+	return this->insertToTree(this->getHSelf(), parent, text);
+}
+
 void JSONDialog::setJSON(char* json)
 {
 	curJSON=json;
-	if(this->isCreated())
-		drawTree();
+	if (this->isCreated())
+		//drawTree();
+		drawTreeSaxParse();
+}
+
+void JSONDialog::populateTreeUsingSax(HWND hWndDlg, HTREEITEM tree_root, char *json) {
+	Stopwatch sw;
+	sw.Start();
+	SaxHandler handler(this, tree_root);
+	rapidjson::Reader reader;
+	
+	rapidjson::StringStream ss(json);
+	if (!reader.Parse<rapidjson::kParseNumbersAsStringsFlag>(ss, handler)) {
+		::MessageBox(nppData._nppHandle, TEXT("Could not parse!!"), TEXT("JSON Viewer"), MB_OK | MB_ICONERROR);
+
+		//mark the error position
+		// Get the current scintilla
+		int which = -1;
+		::SendMessage(nppData._nppHandle, NPPM_GETCURRENTSCINTILLA, 0, (LPARAM)&which);
+		if (which == -1)
+			return;
+
+		HWND curScintilla = (which == 0) ? nppData._scintillaMainHandle : nppData._scintillaSecondHandle;
+		size_t start = ::SendMessage(curScintilla, SCI_GETSELECTIONSTART, 0, 0);
+
+		size_t errPosition = start + reader.GetErrorOffset();
+		::SendMessage(curScintilla, SCI_SETSEL, errPosition, errPosition + 1);
+	}
+	
+	sw.Stop();
+	long long elapsed = sw.ElapsedMilliseconds();
+	std::wstringstream s;
+	s << "tree_time:" << elapsed << " ms";
+
+	//::MessageBox(nppData._nppHandle, s.str().c_str(), TEXT("JSON Viewer"), MB_OK);
 }
 
 void JSONDialog::populateTree (HWND hWndDlg, HTREEITEM tree_root, json_t * json_root, int level)
@@ -273,7 +315,7 @@ void JSONDialog::populateTree (HWND hWndDlg, HTREEITEM tree_root, json_t * json_
 		newItem=insertToTree(hWndDlg,tree_root,"null");
 		break;
 	}
-
+	// DFS
 	if (json_root->child != NULL)
 	{
 		json_t *ita;
@@ -289,6 +331,28 @@ void JSONDialog::populateTree (HWND hWndDlg, HTREEITEM tree_root, json_t * json_
 		}
 	}
 }
+
+/*
+parses curJSON and draws the tree.
+marks the error location in case of a parsing error
+*/
+void JSONDialog::drawTreeSaxParse()
+{
+	HTREEITEM tree_root;
+	tree_root = initTree(this->getHSelf());
+
+	if (strlen(curJSON) == 0) {
+		insertToTree(this->getHSelf(), tree_root, "Error:Please select a JSON String.");
+		TreeView_Expand(GetDlgItem(this->getHSelf(), IDC_TREE1), tree_root, TVE_EXPAND);
+		return;
+	}
+	
+	Stopwatch sw;
+	sw.Start();
+	populateTreeUsingSax(this->getHSelf(), tree_root, curJSON);
+	TreeView_Expand(GetDlgItem(this->getHSelf(), IDC_TREE1), tree_root, TVE_EXPAND);
+}
+
 
 /*
 parses curJSON and draws the tree.
@@ -316,9 +380,14 @@ void JSONDialog::drawTree()
 	}
 
 	json_jpi_init (jpi);
-
+	Stopwatch sw;
+	sw.Start();
 	err = json_parse_fragment (jpi, curJSON);
+	sw.Stop();
+	long long parse_time = sw.ElapsedMilliseconds();
 
+	sw.Reset();
+	sw.Start();
 	if((err == JSON_WAITING_FOR_EOF) || (err == JSON_OK))
 	{
 		populateTree(this->getHSelf(),tree_root,jpi->cursor,0);
@@ -345,6 +414,14 @@ void JSONDialog::drawTree()
 
 		free(jpi);
 	}
+	sw.Stop();
+	long long tree_time = sw.ElapsedMilliseconds();
+	std::wstringstream s;
+	s << "parse_time:" << parse_time<<" ms, tree_time:"<<tree_time<<" ms";
+	
+	::MessageBox(nppData._nppHandle, s.str().c_str(), TEXT("JSON Viewer"), MB_OK | MB_ICONERROR);
+
+
 }
 
 INT_PTR CALLBACK JSONDialog::run_dlgProc(UINT message, WPARAM wParam, LPARAM lParam)

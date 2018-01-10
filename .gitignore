@@ -12,3 +12,4 @@ NppJSONViewer/x64
 NppJSONViewer/NppJSONViewer.vcxproj.user
 *.aps
 *.zip
+.vs/

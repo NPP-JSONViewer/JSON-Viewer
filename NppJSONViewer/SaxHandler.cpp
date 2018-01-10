@@ -1,0 +1,196 @@
+#include "SaxHandler.h"
+#include <iostream>
+#include "JSONDialog.h"
+#include "utils.h"
+using namespace std;
+
+/*
+	1. on Start Object
+		push current root to stack
+		get current parent
+		if(lastKey is not null or parent is array)
+			if(parent is not an array)
+				get last key
+				curRoot = insert into tree (lastKey)
+				clear key
+			else
+				curRoot = insert into tree (counter)
+				increment counter
+	2. on Start Array
+		push current root to stack
+		if(currentRoot is not treeRoot)
+			get last key
+			curRoot = insert into tree (lastKey)
+			clear key
+	3. on Key
+		lastKey = key name
+	4. on Value
+		get current parent
+		if(parent is not an array)
+			insert to tree with lastKey:value
+			clear key
+		else
+			insert to tree with counter:value
+			increment counter
+	5. on End Object
+		pop from stack
+	6. on End Array
+		pop from stack
+*/
+const char* NULL_STR = "null";
+const char* TRUE_STR = "true";
+const char* FALSE_STR = "false";
+
+bool SaxHandler::Null() {
+	return this->String(NULL_STR, sizeof(NULL_STR), true);
+}
+
+bool SaxHandler::Bool(bool b) {
+	if (b)
+		return this->String(TRUE_STR, sizeof(TRUE_STR), true);
+	return this->String(FALSE_STR, sizeof(FALSE_STR), true);
+}
+
+bool SaxHandler::Int(int i) { cout << "Int(" << i << ")" << endl; return true; }
+bool SaxHandler::Uint(unsigned u) { cout << "Uint(" << u << ")" << endl; return true; }
+bool SaxHandler::Int64(int64_t i) { cout << "Int64(" << i << ")" << endl; return true; }
+bool SaxHandler::Uint64(uint64_t u) { cout << "Uint64(" << u << ")" << endl; return true; }
+bool SaxHandler::Double(double d) { cout << "Double(" << d << ")" << endl; return true; }
+
+bool SaxHandler::RawNumber(const char *str, SizeType length, bool copy) {
+	return this->String(str, length, copy);
+}
+
+bool SaxHandler::String(const char* str, SizeType length, bool copy) {
+	// copy and process
+	TreeNode *parent = this->stack.top();
+	char *value = NULL;
+	int len;
+	if (!parent->isArray) {
+		len = strlen(this->lastKey) + 3 + length + 1;
+		value = new char[len];
+		snprintf(value, len, "%s : %s", this->lastKey, str);
+		value[len - 1] = '\0';
+		delete[] this->lastKey;
+		this->lastKey = NULL;
+	}
+	else {
+		string strCount = SSTR(parent->counter);
+		len = strCount.size() + 3 + length + 1;
+		value = new char[len];
+		snprintf(value, len, "%s : %s", strCount.c_str(), str);
+		value[len - 1] = '\0';
+		parent->counter++;
+	}
+
+	// insert
+	this->dlg->insertToTree(parent->subRoot, value);
+
+	//clear
+	delete[] value;
+	return true;
+}
+
+bool SaxHandler::StartObject() {
+	TreeNode *parent;
+	if (this->stack.empty()) {
+		parent = new TreeNode;
+		parent->isArray = false;
+		parent->subRoot = treeRoot;
+		parent->counter = 0;
+		this->stack.push(parent);
+	}
+	else {
+		parent = this->stack.top();
+	}
+
+	if (this->lastKey != NULL || parent->isArray) {
+		HTREEITEM newNode;
+		if (!parent->isArray) {
+			newNode = this->dlg->insertToTree(parent->subRoot, this->lastKey);
+			delete this->lastKey;
+			this->lastKey = NULL;
+		}
+		else {
+			newNode = this->dlg->insertToTree(parent->subRoot, SSTR(parent->counter).c_str());
+		}
+
+		parent->counter++;
+		TreeNode *newTreeNode = new TreeNode;
+		newTreeNode->isArray = false;
+		newTreeNode->subRoot = newNode;
+		newTreeNode->counter = 0;
+		this->stack.push(newTreeNode);
+	}
+	return true;
+}
+
+bool SaxHandler::EndObject(SizeType memberCount) {
+	if (!this->stack.empty()) {
+		TreeNode *node = this->stack.top();
+		this->stack.pop();
+		delete node;
+	}
+	return true;
+}
+
+bool SaxHandler::Key(const char* str, SizeType length, bool copy) {
+	this->lastKey = new char[length + 1];
+	strncpy(this->lastKey, str, length);
+	this->lastKey[length] = '\0';
+	return true;
+}
+
+bool SaxHandler::StartArray() {
+	TreeNode *parent;
+	if (this->stack.empty()) {
+		parent = new TreeNode;
+		parent->isArray = false;
+		parent->subRoot = treeRoot;
+		parent->counter = 0;
+		this->stack.push(parent);
+	}
+	else {
+		parent = this->stack.top();
+	}
+
+	if (this->lastKey != NULL || parent->isArray) {
+		HTREEITEM newNode;
+		if (!parent->isArray) {
+			newNode = this->dlg->insertToTree(parent->subRoot, this->lastKey);
+			delete this->lastKey;
+			this->lastKey = NULL;
+		}
+		else {
+			newNode = this->dlg->insertToTree(parent->subRoot, SSTR(parent->counter).c_str());
+		}
+		parent->counter++;
+		TreeNode *newTreeNode = new TreeNode;
+		newTreeNode->isArray = true;
+		newTreeNode->subRoot = newNode;
+		newTreeNode->counter = 0;
+		this->stack.push(newTreeNode);
+	}
+	return true;
+}
+
+bool SaxHandler::EndArray(SizeType elementCount) {
+	if (!this->stack.empty()) {
+		TreeNode *node = this->stack.top();
+		this->stack.pop();
+		delete node;
+	}
+	return true;
+}
+
+SaxHandler::SaxHandler(JSONDialog *dlg, HTREEITEM treeRoot) {
+	this->dlg = dlg;
+	this->lastKey = NULL;
+	this->treeRoot = treeRoot;
+}
+
+
+SaxHandler::~SaxHandler()
+{
+}
+

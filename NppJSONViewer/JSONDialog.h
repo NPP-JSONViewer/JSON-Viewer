@@ -31,11 +31,15 @@ class JSONDialog : public DockingDlgInterface
 	char *curJSON;
 	HANDLE hTree;
 	void drawTree();
+	void drawTreeSaxParse();
 	HTREEITEM initTree(HWND hWndDlg);
-	HTREEITEM insertToTree(HWND hWndDlg,HTREEITEM parent,char *text);
+	HTREEITEM insertToTree(HWND hWndDlg,HTREEITEM parent,const char *text);
 	void populateTree (HWND hWndDlg, HTREEITEM tree_root, json_t * json_root, int level);
+	void populateTreeUsingSax(HWND hWndDlg, HTREEITEM tree_root, char * json);
 public :
 	JSONDialog() : DockingDlgInterface(IDD_TREE){};
+
+	HTREEITEM insertToTree(HTREEITEM parent, const char *text);
 
     virtual void display(bool toShow = true) const {
         DockingDlgInterface::display(toShow);
