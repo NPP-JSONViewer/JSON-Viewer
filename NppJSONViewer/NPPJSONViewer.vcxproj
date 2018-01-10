@@ -76,16 +76,16 @@
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>C:\Users\kapil\source\repos\JSON-Viewer\thirdparty\rapidjson\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)..\thirdparty\rapidjson\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>C:\Users\kapil\source\repos\JSON-Viewer\thirdparty\rapidjson\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)..\thirdparty\rapidjson\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>C:\Users\kapil\source\repos\JSON-Viewer\thirdparty\rapidjson\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)..\thirdparty\rapidjson\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>C:\Users\kapil\source\repos\JSON-Viewer\thirdparty\rapidjson\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)..\thirdparty\rapidjson\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
