@@ -15,15 +15,15 @@ struct TreeNode {
 };
 
 
-class SaxHandler : public BaseReaderHandler<UTF8<>, SaxHandler>
+class TreeBuilder : public BaseReaderHandler<UTF8<>, TreeBuilder>
 {
 	JSONDialog *dlg;
 	std::stack<TreeNode*> stack;
 	HTREEITEM treeRoot;
 	char *lastKey;
 public:
-	SaxHandler(JSONDialog *dlg, HTREEITEM treeRoot);
-	~SaxHandler();
+	TreeBuilder(JSONDialog *dlg, HTREEITEM treeRoot);
+	~TreeBuilder();
 
 	bool Null();
 	bool Bool(bool b);

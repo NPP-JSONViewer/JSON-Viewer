@@ -33,7 +33,7 @@
     <ClCompile Include="StaticDialog.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="SaxHandler.cpp">
+    <ClCompile Include="TreeBuilder.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -83,10 +83,10 @@
     <ClInclude Include="StopWatch.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="SaxHandler.h">
+    <ClInclude Include="utils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="utils.h">
+    <ClInclude Include="TreeBuilder.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

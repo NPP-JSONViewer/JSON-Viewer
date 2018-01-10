@@ -22,7 +22,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "json.h"
 #include <sstream>
 #include "StopWatch.h"
-#include "SaxHandler.h"
+#include "TreeBuilder.h"
 #include "rapidjson/reader.h"
 
 using win32::Stopwatch;
@@ -91,7 +91,7 @@ void JSONDialog::setJSON(char* json)
 void JSONDialog::populateTreeUsingSax(HWND hWndDlg, HTREEITEM tree_root, char *json) {
 	Stopwatch sw;
 	sw.Start();
-	SaxHandler handler(this, tree_root);
+	TreeBuilder handler(this, tree_root);
 	rapidjson::Reader reader;
 	
 	rapidjson::StringStream ss(json);

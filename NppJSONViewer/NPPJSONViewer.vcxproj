@@ -175,7 +175,7 @@
     <ClCompile Include="JSONDialog.cpp" />
     <ClCompile Include="NppPlugin.cpp" />
     <ClCompile Include="PluginDefinition.cpp" />
-    <ClCompile Include="SaxHandler.cpp" />
+    <ClCompile Include="TreeBuilder.cpp" />
     <ClCompile Include="StaticDialog.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -190,7 +190,7 @@
     <ClInclude Include="PluginDefinition.h" />
     <ClInclude Include="PluginInterface.h" />
     <ClInclude Include="resource.h" />
-    <ClInclude Include="SaxHandler.h" />
+    <ClInclude Include="TreeBuilder.h" />
     <ClInclude Include="Scintilla.h" />
     <ClInclude Include="StaticDialog.h" />
     <ClInclude Include="StopWatch.h" />

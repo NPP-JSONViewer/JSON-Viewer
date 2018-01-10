@@ -1,4 +1,4 @@
-#include "SaxHandler.h"
+#include "TreeBuilder.h"
 #include <iostream>
 #include "JSONDialog.h"
 #include "utils.h"
@@ -41,27 +41,27 @@ const char* NULL_STR = "null";
 const char* TRUE_STR = "true";
 const char* FALSE_STR = "false";
 
-bool SaxHandler::Null() {
+bool TreeBuilder::Null() {
 	return this->String(NULL_STR, sizeof(NULL_STR), true);
 }
 
-bool SaxHandler::Bool(bool b) {
+bool TreeBuilder::Bool(bool b) {
 	if (b)
 		return this->String(TRUE_STR, sizeof(TRUE_STR), true);
 	return this->String(FALSE_STR, sizeof(FALSE_STR), true);
 }
 
-bool SaxHandler::Int(int i) { cout << "Int(" << i << ")" << endl; return true; }
-bool SaxHandler::Uint(unsigned u) { cout << "Uint(" << u << ")" << endl; return true; }
-bool SaxHandler::Int64(int64_t i) { cout << "Int64(" << i << ")" << endl; return true; }
-bool SaxHandler::Uint64(uint64_t u) { cout << "Uint64(" << u << ")" << endl; return true; }
-bool SaxHandler::Double(double d) { cout << "Double(" << d << ")" << endl; return true; }
+bool TreeBuilder::Int(int i) { cout << "Int(" << i << ")" << endl; return true; }
+bool TreeBuilder::Uint(unsigned u) { cout << "Uint(" << u << ")" << endl; return true; }
+bool TreeBuilder::Int64(int64_t i) { cout << "Int64(" << i << ")" << endl; return true; }
+bool TreeBuilder::Uint64(uint64_t u) { cout << "Uint64(" << u << ")" << endl; return true; }
+bool TreeBuilder::Double(double d) { cout << "Double(" << d << ")" << endl; return true; }
 
-bool SaxHandler::RawNumber(const char *str, SizeType length, bool copy) {
+bool TreeBuilder::RawNumber(const char *str, SizeType length, bool copy) {
 	return this->String(str, length, copy);
 }
 
-bool SaxHandler::String(const char* str, SizeType length, bool copy) {
+bool TreeBuilder::String(const char* str, SizeType length, bool copy) {
 	// copy and process
 	TreeNode *parent = this->stack.top();
 	char *value = NULL;
@@ -91,7 +91,7 @@ bool SaxHandler::String(const char* str, SizeType length, bool copy) {
 	return true;
 }
 
-bool SaxHandler::StartObject() {
+bool TreeBuilder::StartObject() {
 	TreeNode *parent;
 	if (this->stack.empty()) {
 		parent = new TreeNode;
@@ -125,7 +125,7 @@ bool SaxHandler::StartObject() {
 	return true;
 }
 
-bool SaxHandler::EndObject(SizeType memberCount) {
+bool TreeBuilder::EndObject(SizeType memberCount) {
 	if (!this->stack.empty()) {
 		TreeNode *node = this->stack.top();
 		this->stack.pop();
@@ -134,14 +134,14 @@ bool SaxHandler::EndObject(SizeType memberCount) {
 	return true;
 }
 
-bool SaxHandler::Key(const char* str, SizeType length, bool copy) {
+bool TreeBuilder::Key(const char* str, SizeType length, bool copy) {
 	this->lastKey = new char[length + 1];
 	strncpy(this->lastKey, str, length);
 	this->lastKey[length] = '\0';
 	return true;
 }
 
-bool SaxHandler::StartArray() {
+bool TreeBuilder::StartArray() {
 	TreeNode *parent;
 	if (this->stack.empty()) {
 		parent = new TreeNode;
@@ -174,7 +174,7 @@ bool SaxHandler::StartArray() {
 	return true;
 }
 
-bool SaxHandler::EndArray(SizeType elementCount) {
+bool TreeBuilder::EndArray(SizeType elementCount) {
 	if (!this->stack.empty()) {
 		TreeNode *node = this->stack.top();
 		this->stack.pop();
@@ -183,14 +183,14 @@ bool SaxHandler::EndArray(SizeType elementCount) {
 	return true;
 }
 
-SaxHandler::SaxHandler(JSONDialog *dlg, HTREEITEM treeRoot) {
+TreeBuilder::TreeBuilder(JSONDialog *dlg, HTREEITEM treeRoot) {
 	this->dlg = dlg;
 	this->lastKey = NULL;
 	this->treeRoot = treeRoot;
 }
 
 
-SaxHandler::~SaxHandler()
+TreeBuilder::~TreeBuilder()
 {
 }
 
