@@ -1,11 +1,10 @@
 version: 1.0.{build}
-image: Visual Studio 2015
+image: Visual Studio 2017
 
 
 environment:
   matrix:
-  - PlatformToolset: v120_xp
-  - PlatformToolset: v140_xp
+  - PlatformToolset: v141_xp
 
 platform:
     - x64
@@ -16,9 +15,8 @@ configuration:
     - Debug
 
 install:
-    - if "%platform%"=="x64" set archi=amd64
-    - if "%platform%"=="Win32" set archi=x86
-    - call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" %archi%
+    - if "%platform%"=="x64" call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvars64.bat"
+    - if "%platform%"=="Win32" call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvars32.bat"
 
 build:
     parallel: true                  # enable MSBuild parallel builds
@@ -27,10 +25,10 @@ build:
 build_script:
     - cd "%APPVEYOR_BUILD_FOLDER%"
     - cd NppJSONViewer
-    - msbuild NppJSONViewer.sln /m /p:configuration="%configuration%" /p:platform="%platform%" /p:PlatformToolset="%PlatformToolset%"
+    - msbuild NppJSONViewer.sln /m /p:configuration="%configuration%" /p:platform="%platform%"
 
 artifacts:
     - path: NppJSONViewer\x64\Release\NPPJSONViewer.dll
       name: x64
-    - path: NppJSONViewer\Release\NPPJSONViewer.dll
+    - path: NppJSONViewer\Win32\Release\NPPJSONViewer.dll
       name: Win32
