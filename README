@@ -1,5 +1,5 @@
 =================
-JSONViewer 1.24
+JSONViewer 1.30 alpha
 by Kapil Ratnani
 =================
 
@@ -23,6 +23,10 @@ Rui Maciel for mjson library
 Latest Updates:
 ==================
 
+-----
+1.30a
+-----
+1. Now using rapidjson
 
 ----
 1.24
