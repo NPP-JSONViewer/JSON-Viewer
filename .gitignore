@@ -9,6 +9,7 @@
 NppJSONViewer/Debug
 NppJSONViewer/Release
 NppJSONViewer/x64
+NppJSONViewer/Win32
 NppJSONViewer/NppJSONViewer.vcxproj.user
 *.aps
 *.zip

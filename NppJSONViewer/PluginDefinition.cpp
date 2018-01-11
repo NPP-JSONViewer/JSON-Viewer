@@ -19,6 +19,10 @@
 #include "menuCmdID.h"
 #include "JSONDialog.h"
 #include "Hyperlinks.h"
+#include "rapidjson/prettywriter.h"
+#include "rapidjson/stringbuffer.h"
+#include "rapidjson/reader.h"
+#include "rapidjson/document.h"
 
 HANDLE g_hMod;
 CHAR * curJSON=NULL;
@@ -220,9 +224,14 @@ void formatSelectedJSON(){
 	size_t asciiTextLen = end - start;
 	selectAllIfUnselectedAndSetCurJSON(asciiTextLen, curScintilla);	
 
-	CHAR* fJson=json_format_string(curJSON);
+	rapidjson::StringBuffer sb;
+	rapidjson::PrettyWriter<rapidjson::StringBuffer> pw(sb);
+	rapidjson::StringStream ss(curJSON);
+	rapidjson::Reader reader;
+
+	reader.Parse(ss, pw);
+	const char* fJson = sb.GetString();
 	::SendMessage(curScintilla,SCI_REPLACESEL,0,(LPARAM)fJson);
 	
-	free(fJson);
 	delete [] curJSON;
 }
