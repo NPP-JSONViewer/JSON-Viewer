@@ -15,9 +15,9 @@ configuration:
     - Debug
 
 install:
-    - if "%platform%"=="x64" call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvars64.bat"
-    - if "%platform%"=="Win32" call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvars32.bat"
-
+    - if "%platform%"=="x64" set platform_input=x64
+    - if "%platform%"=="Win32" set platform_input=Win32
+    
 build:
     parallel: true                  # enable MSBuild parallel builds
     verbosity: minimal
@@ -25,7 +25,7 @@ build:
 build_script:
     - cd "%APPVEYOR_BUILD_FOLDER%"
     - cd NppJSONViewer
-    - msbuild NppJSONViewer.sln /m /p:configuration="%configuration%" /p:platform="%platform%"
+    - msbuild NppJSONViewre.sln /m /p:configuration="%configuration%" /p:platform="%platform_input%" /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
 
 artifacts:
     - path: NppJSONViewer\x64\Release\NPPJSONViewer.dll
