@@ -24,6 +24,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 //#include "StopWatch.h"
 #include "TreeBuilder.h"
 #include "rapidjson/reader.h"
+#include "resource.h"
 
 //using win32::Stopwatch;
 extern NppData nppData;
@@ -34,32 +35,32 @@ Delete all items from the tree and creates the root node
 HTREEITEM JSONDialog::initTree(HWND hWndDlg)
 {
 
-	int TreeCount=TreeView_GetCount(GetDlgItem(this->getHSelf(),IDC_TREE1));
-	if(TreeCount>0)
-		TreeView_DeleteAllItems(GetDlgItem(this->getHSelf(),IDC_TREE1));
+	int TreeCount = TreeView_GetCount(GetDlgItem(this->getHSelf(), IDC_TREE1));
+	if (TreeCount > 0)
+		TreeView_DeleteAllItems(GetDlgItem(this->getHSelf(), IDC_TREE1));
 
-	TV_INSERTSTRUCT tvinsert;    
+	TV_INSERTSTRUCT tvinsert;
 
-	tvinsert.hParent=NULL;     
-	tvinsert.hInsertAfter=TVI_ROOT;
-	tvinsert.item.mask=TVIF_TEXT;
+	tvinsert.hParent = NULL;
+	tvinsert.hInsertAfter = TVI_ROOT;
+	tvinsert.item.mask = TVIF_TEXT;
 
-	tvinsert.item.pszText=L"JSON";
-	HTREEITEM item=(HTREEITEM)SendDlgItemMessage(hWndDlg,IDC_TREE1,TVM_INSERTITEM,0,(LPARAM)&tvinsert);
+	tvinsert.item.pszText = L"JSON";
+	HTREEITEM item = (HTREEITEM)SendDlgItemMessage(hWndDlg, IDC_TREE1, TVM_INSERTITEM, 0, (LPARAM)&tvinsert);
 
-	return item;		
+	return item;
 }
 
 /*
 inserts a node in the tree
 */
-HTREEITEM JSONDialog::insertToTree(HWND hWndDlg,HTREEITEM parent, const char *text)
+HTREEITEM JSONDialog::insertToTree(HWND hWndDlg, HTREEITEM parent, const char *text)
 {
-	TV_INSERTSTRUCT tvinsert;    
+	TV_INSERTSTRUCT tvinsert;
 	HTREEITEM item = NULL;
-	tvinsert.hParent=parent;     
-	tvinsert.hInsertAfter=TVI_LAST;
-	tvinsert.item.mask=TVIF_TEXT;
+	tvinsert.hParent = parent;
+	tvinsert.hInsertAfter = TVI_LAST;
+	tvinsert.item.mask = TVIF_TEXT;
 
 	int len = strlen(text) + 1;
 	wchar_t *w_msg = new wchar_t[len];
@@ -82,7 +83,7 @@ HTREEITEM JSONDialog::insertToTree(HTREEITEM parent, const char *text) {
 
 void JSONDialog::setJSON(char* json)
 {
-	curJSON=json;
+	curJSON = json;
 	if (this->isCreated())
 		//drawTree();
 		drawTreeSaxParse();
@@ -93,7 +94,7 @@ void JSONDialog::populateTreeUsingSax(HWND hWndDlg, HTREEITEM tree_root, char *j
 	//sw.Start();
 	TreeBuilder handler(this, tree_root);
 	rapidjson::Reader reader;
-	
+
 	rapidjson::StringStream ss(json);
 	if (!reader.Parse<rapidjson::kParseNumbersAsStringsFlag>(ss, handler)) {
 		::MessageBox(nppData._nppHandle, TEXT("Could not parse!!"), TEXT("JSON Viewer"), MB_OK | MB_ICONERROR);
@@ -111,7 +112,7 @@ void JSONDialog::populateTreeUsingSax(HWND hWndDlg, HTREEITEM tree_root, char *j
 		size_t errPosition = start + reader.GetErrorOffset();
 		::SendMessage(curScintilla, SCI_SETSEL, errPosition, errPosition + 1);
 	}
-	
+
 	//sw.Stop();
 	//long long elapsed = sw.ElapsedMilliseconds();
 	//std::wstringstream s;
@@ -346,7 +347,7 @@ void JSONDialog::drawTreeSaxParse()
 		TreeView_Expand(GetDlgItem(this->getHSelf(), IDC_TREE1), tree_root, TVE_EXPAND);
 		return;
 	}
-	
+
 	populateTreeUsingSax(this->getHSelf(), tree_root, curJSON);
 	TreeView_Expand(GetDlgItem(this->getHSelf(), IDC_TREE1), tree_root, TVE_EXPAND);
 }
@@ -424,21 +425,31 @@ marks the error location in case of a parsing error
 
 INT_PTR CALLBACK JSONDialog::run_dlgProc(UINT message, WPARAM wParam, LPARAM lParam)
 {
-	int width,height;
-	switch (message) 
+	int width, height;
+	switch (message)
 	{
 	case WM_INITDIALOG:
-		hTree=GetDlgItem(this->getHSelf(),IDC_TREE1);// tree control
+		hTree = GetDlgItem(this->getHSelf(), IDC_TREE1);// tree control
 		drawTreeSaxParse();
 		return TRUE;
 
 	case WM_SIZE:
-		width=LOWORD(lParam);
-		height=HIWORD(lParam);
-		SetWindowPos(GetDlgItem(this->getHSelf(),IDC_TREE1),HWND_TOP,0,0,width,height,SWP_SHOWWINDOW);
+		width = LOWORD(lParam);
+		height = HIWORD(lParam);
+		SetWindowPos(GetDlgItem(this->getHSelf(), IDC_TREE1), HWND_TOP, 0, 0, width, height, SWP_SHOWWINDOW);
 		return TRUE;
-
-	default :
+	case WM_NOTIFY:
+		switch (LOWORD(wParam)) {
+		case IDC_TREE1:
+			if (((LPNMHDR)lParam)->code == NM_RCLICK)
+			{
+				return DockingDlgInterface::run_dlgProc(message, wParam, lParam);
+			}
+			break;
+		default:
+			return DockingDlgInterface::run_dlgProc(message, wParam, lParam);
+		}
+	default:
 		return DockingDlgInterface::run_dlgProc(message, wParam, lParam);
 	}
 }
