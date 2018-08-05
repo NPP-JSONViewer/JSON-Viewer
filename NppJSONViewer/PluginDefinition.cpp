@@ -96,7 +96,7 @@ INT_PTR CALLBACK abtDlgProc(HWND hwndDlg,UINT uMsg,WPARAM wParam, LPARAM /*lPara
 			EndDialog(hwndDlg,wParam);
 			return TRUE;
 		case IDC_WEB:
-			ShellExecute(hwndDlg, TEXT("open"),TEXT("https://sourceforge.net/projects/nppjsonviewer/"),NULL, NULL, SW_SHOWNORMAL);
+			ShellExecute(hwndDlg, TEXT("open"),TEXT("https://github.com/kapilratnani/JSON-Viewer"),NULL, NULL, SW_SHOWNORMAL);
 			return TRUE;
 		}
 	}
