@@ -25,7 +25,7 @@
 #include "rapidjson/document.h"
 
 HANDLE g_hMod;
-CHAR * curJSON=NULL;
+CHAR * curJSON = NULL;
 JSONDialog jsonDialog;
 //
 // The plugin data that Notepad++ needs
@@ -42,8 +42,8 @@ NppData nppData;
 // It will be called while plugin loading   
 void pluginInit(HANDLE hModule)
 {
-	g_hMod=hModule;
-	jsonDialog.init((HINSTANCE)g_hMod,nppData._nppHandle);
+	g_hMod = hModule;
+	jsonDialog.init((HINSTANCE)g_hMod, nppData._nppHandle);
 }
 
 //
@@ -65,38 +65,38 @@ void commandMenuInit()
 	//            bool check0nInit                // optional. Make this menu item be checked visually
 	//            );
 
-	ShortcutKey *openJSONsk=new ShortcutKey();
-	openJSONsk->_isAlt=TRUE;
-	openJSONsk->_isCtrl=TRUE;
-	openJSONsk->_isShift=TRUE;
-	openJSONsk->_key='J';
+	ShortcutKey *openJSONsk = new ShortcutKey();
+	openJSONsk->_isAlt = TRUE;
+	openJSONsk->_isCtrl = TRUE;
+	openJSONsk->_isShift = TRUE;
+	openJSONsk->_key = 'J';
 
-	ShortcutKey *formatJSONsk=new ShortcutKey();
-	formatJSONsk->_isAlt=TRUE;
-	formatJSONsk->_isCtrl=TRUE;
-	formatJSONsk->_isShift=TRUE;
-	formatJSONsk->_key='M';
-	setCommand(0, TEXT("Show &JSON Viewer"), openJSONDialog,openJSONsk , false);
-	setCommand(1, TEXT("&Format JSON"), formatSelectedJSON,formatJSONsk , false);
-	setCommand(2, TEXT("&About"), openAboutDlg,NULL , false);
+	ShortcutKey *formatJSONsk = new ShortcutKey();
+	formatJSONsk->_isAlt = TRUE;
+	formatJSONsk->_isCtrl = TRUE;
+	formatJSONsk->_isShift = TRUE;
+	formatJSONsk->_key = 'M';
+	setCommand(0, TEXT("Show &JSON Viewer"), openJSONDialog, openJSONsk, false);
+	setCommand(1, TEXT("&Format JSON"), formatSelectedJSON, formatJSONsk, false);
+	setCommand(2, TEXT("&About"), openAboutDlg, NULL, false);
 }
 
-INT_PTR CALLBACK abtDlgProc(HWND hwndDlg,UINT uMsg,WPARAM wParam, LPARAM /*lParam*/)
+INT_PTR CALLBACK abtDlgProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM /*lParam*/)
 {
-	switch(uMsg)
+	switch (uMsg)
 	{
 	case WM_INITDIALOG:
-		ConvertStaticToHyperlink(hwndDlg,IDC_WEB);
+		ConvertStaticToHyperlink(hwndDlg, IDC_WEB);
 		return TRUE;
 	case WM_COMMAND:
-		switch(LOWORD(wParam))
+		switch (LOWORD(wParam))
 		{
 		case IDCANCEL: // Close this dialog when clicking to close button
 		case IDOK:
-			EndDialog(hwndDlg,wParam);
+			EndDialog(hwndDlg, wParam);
 			return TRUE;
 		case IDC_WEB:
-			ShellExecute(hwndDlg, TEXT("open"),TEXT("https://sourceforge.net/projects/nppjsonviewer/"),NULL, NULL, SW_SHOWNORMAL);
+			ShellExecute(hwndDlg, TEXT("open"), TEXT("https://sourceforge.net/projects/nppjsonviewer/"), NULL, NULL, SW_SHOWNORMAL);
 			return TRUE;
 		}
 	}
@@ -105,7 +105,7 @@ INT_PTR CALLBACK abtDlgProc(HWND hwndDlg,UINT uMsg,WPARAM wParam, LPARAM /*lPara
 
 void openAboutDlg()
 {
-	::CreateDialog((HINSTANCE)g_hMod,MAKEINTRESOURCE(IDD_ABOUTDLG),nppData._nppHandle,abtDlgProc);
+	::CreateDialog((HINSTANCE)g_hMod, MAKEINTRESOURCE(IDD_ABOUTDLG), nppData._nppHandle, abtDlgProc);
 }
 
 
@@ -123,7 +123,7 @@ void commandMenuCleanUp()
 //
 // This function help you to initialize your plugin commands
 //
-bool setCommand(size_t index, TCHAR *cmdName, PFUNCPLUGINCMD pFunc, ShortcutKey *sk, bool check0nInit) 
+bool setCommand(size_t index, TCHAR *cmdName, PFUNCPLUGINCMD pFunc, ShortcutKey *sk, bool check0nInit)
 {
 	if (index >= nbFunc)
 		return false;
@@ -147,7 +147,7 @@ void showJSONDialog(char *json)
 {
 	jsonDialog.setParent(nppData._nppHandle);
 	jsonDialog.setJSON(json);
-	tTbData	data = {0};
+	tTbData	data = { 0 };
 
 	if (!jsonDialog.isCreated())
 	{
@@ -157,7 +157,7 @@ void showJSONDialog(char *json)
 		data.uMask = DWS_DF_CONT_LEFT;
 
 		data.pszModuleName = jsonDialog.getPluginFileName();
-		data.pszName=L"JSON Viewer";
+		data.pszName = L"JSON Viewer";
 
 		// the dlgDlg should be the index of funcItem where the current function pointer is
 		data.dlgID = 0;
@@ -171,9 +171,10 @@ void selectAllIfUnselectedAndSetCurJSON(size_t selectedTextLength, HWND curScint
 		size_t allTextlength = ::SendMessage(curScintilla, SCI_GETLENGTH, 0, (LPARAM)curJSON);
 		::SendMessage(curScintilla, SCI_SETSELECTIONSTART, 0, (LPARAM)curJSON);
 		::SendMessage(curScintilla, SCI_SETSELECTIONEND, allTextlength, (LPARAM)curJSON);
-		curJSON = new CHAR[allTextlength+1];
-	} else {
-		curJSON = new CHAR[selectedTextLength+1];
+		curJSON = new CHAR[allTextlength + 1];
+	}
+	else {
+		curJSON = new CHAR[selectedTextLength + 1];
 	}
 
 	::SendMessage(curScintilla, SCI_GETSELTEXT, 0, (LPARAM)curJSON);
@@ -187,7 +188,7 @@ void openJSONDialog()
 	if (which == -1)
 		return;
 
-	HWND curScintilla = (which == 0)?nppData._scintillaMainHandle:nppData._scintillaSecondHandle;
+	HWND curScintilla = (which == 0) ? nppData._scintillaMainHandle : nppData._scintillaSecondHandle;
 	size_t start = ::SendMessage(curScintilla, SCI_GETSELECTIONSTART, 0, 0);
 	size_t end = ::SendMessage(curScintilla, SCI_GETSELECTIONEND, 0, 0);
 	if (end < start)
@@ -198,20 +199,20 @@ void openJSONDialog()
 	}
 
 	size_t asciiTextLen = end - start;
-	selectAllIfUnselectedAndSetCurJSON(asciiTextLen, curScintilla);	
-	
+	selectAllIfUnselectedAndSetCurJSON(asciiTextLen, curScintilla);
+
 	showJSONDialog(curJSON);
-	delete [] curJSON;
+	delete[] curJSON;
 }
 
-void formatSelectedJSON(){
+void formatSelectedJSON() {
 	// Get the current scintilla
 	int which = -1;
 	::SendMessage(nppData._nppHandle, NPPM_GETCURRENTSCINTILLA, 0, (LPARAM)&which);
 	if (which == -1)
 		return;
 
-	HWND curScintilla = (which == 0)?nppData._scintillaMainHandle:nppData._scintillaSecondHandle;
+	HWND curScintilla = (which == 0) ? nppData._scintillaMainHandle : nppData._scintillaSecondHandle;
 	size_t start = ::SendMessage(curScintilla, SCI_GETSELECTIONSTART, 0, 0);
 	size_t end = ::SendMessage(curScintilla, SCI_GETSELECTIONEND, 0, 0);
 	if (end < start)
@@ -222,16 +223,20 @@ void formatSelectedJSON(){
 	}
 
 	size_t asciiTextLen = end - start;
-	selectAllIfUnselectedAndSetCurJSON(asciiTextLen, curScintilla);	
+	selectAllIfUnselectedAndSetCurJSON(asciiTextLen, curScintilla);
 
 	rapidjson::StringBuffer sb;
 	rapidjson::PrettyWriter<rapidjson::StringBuffer> pw(sb);
+	bool useTabs = ::SendMessage(curScintilla, SCI_GETUSETABS, 0, 0);
+	int indentLen = useTabs ? 1 : ::SendMessage(curScintilla, SCI_GETTABWIDTH, 0, 0);
+	char indentChar = useTabs ? '\t' : ' ';
+	pw.SetIndent(indentChar, indentLen);
 	rapidjson::StringStream ss(curJSON);
 	rapidjson::Reader reader;
 
 	reader.Parse(ss, pw);
 	const char* fJson = sb.GetString();
-	::SendMessage(curScintilla,SCI_REPLACESEL,0,(LPARAM)fJson);
-	
-	delete [] curJSON;
+	::SendMessage(curScintilla, SCI_REPLACESEL, 0, (LPARAM)fJson);
+
+	delete[] curJSON;
 }
