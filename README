@@ -1,5 +1,5 @@
 =================
-JSONViewer 1.30 alpha
+JSONViewer 1.31
 by Kapil Ratnani
 =================
 
@@ -22,6 +22,11 @@ Rui Maciel for mjson library
 ==================
 Latest Updates:
 ==================
+
+-----
+1.31
+-----
+1. Reads tab setting from notepad++ settings
 
 -----
 1.30a
