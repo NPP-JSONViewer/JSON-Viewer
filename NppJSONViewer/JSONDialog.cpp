@@ -70,6 +70,7 @@ HTREEITEM JSONDialog::insertToTree(HWND hWndDlg, HTREEITEM parent, const char *t
 		MultiByteToWideChar(CP_UTF8, NULL, text, -1, w_msg, len);
 
 		tvinsert.item.pszText = w_msg;
+		tvinsert.item.lParam = 42;
 		item = (HTREEITEM)SendDlgItemMessage(hWndDlg, IDC_TREE1, TVM_INSERTITEM, 0, (LPARAM)&tvinsert);
 		delete[] w_msg; // fix memory leak
 	}
@@ -423,6 +424,23 @@ marks the error location in case of a parsing error
 //
 //}
 
+void JSONDialog::showContextMenu(LONG x, LONG y) {
+	// load popup menu
+	HMENU hPopupMenu = CreatePopupMenu();
+	InsertMenu(hPopupMenu, 0, MF_BYPOSITION | MF_STRING, IDM_TREEITEM_COPY, L"&Copy");
+	SetForegroundWindow(this->getHSelf());
+	int command = TrackPopupMenu(hPopupMenu, TPM_RETURNCMD|TPM_LEFTALIGN, x, y, 0, this->getHSelf(), NULL);
+
+	if (command == IDM_TREEITEM_COPY) 
+	{
+		TVHITTESTINFO hitTestInfo;
+		hitTestInfo.pt.x = x;
+		hitTestInfo.pt.y = y;
+		HTREEITEM treeItem = TreeView_HitTest(this->getHSelf(), &hitTestInfo);
+		MessageBox(this->getHSelf(), L"Copy", L"Copy", MB_OK);
+	}
+}
+
 INT_PTR CALLBACK JSONDialog::run_dlgProc(UINT message, WPARAM wParam, LPARAM lParam)
 {
 	int width, height;
@@ -443,12 +461,15 @@ INT_PTR CALLBACK JSONDialog::run_dlgProc(UINT message, WPARAM wParam, LPARAM lPa
 		case IDC_TREE1:
 			if (((LPNMHDR)lParam)->code == NM_RCLICK)
 			{
-				return DockingDlgInterface::run_dlgProc(message, wParam, lParam);
+				POINT cursor;
+				GetCursorPos(&cursor);
+				showContextMenu(cursor.x, cursor.y);
 			}
 			break;
 		default:
 			return DockingDlgInterface::run_dlgProc(message, wParam, lParam);
 		}
+		break;
 	default:
 		return DockingDlgInterface::run_dlgProc(message, wParam, lParam);
 	}

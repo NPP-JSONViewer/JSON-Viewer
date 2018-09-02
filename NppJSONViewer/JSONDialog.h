@@ -29,13 +29,14 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 class JSONDialog : public DockingDlgInterface
 {
 	char *curJSON;
-	HANDLE hTree;
+	HWND hTree;
 	//void drawTree();
 	void drawTreeSaxParse();
 	HTREEITEM initTree(HWND hWndDlg);
 	HTREEITEM insertToTree(HWND hWndDlg,HTREEITEM parent,const char *text);
 	//void populateTree (HWND hWndDlg, HTREEITEM tree_root, json_t * json_root, int level);
 	void populateTreeUsingSax(HWND hWndDlg, HTREEITEM tree_root, char * json);
+	void showContextMenu(LONG x, LONG y);
 public :
 	JSONDialog() : DockingDlgInterface(IDD_TREE){};
 

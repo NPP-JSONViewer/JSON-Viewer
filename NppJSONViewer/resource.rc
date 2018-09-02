@@ -11,6 +11,21 @@
 
 
 //
+// Menu resources
+//
+LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
+IDR_TREEITEM_MENU MENU
+{
+    POPUP ""
+    {
+        MENUITEM "&Copy", IDM_TREEITEM_COPY
+        MENUITEM "&Edit", IDM_TREEITEM_EDIT
+    }
+}
+
+
+
+//
 // Dialog resources
 //
 LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
