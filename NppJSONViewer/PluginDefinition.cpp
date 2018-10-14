@@ -234,7 +234,7 @@ void formatSelectedJSON() {
 	rapidjson::StringStream ss(curJSON);
 	rapidjson::Reader reader;
 
-	reader.Parse(ss, pw);
+	reader.Parse<rapidjson::kParseFullPrecisionFlag >(ss, pw);
 	const char* fJson = sb.GetString();
 	::SendMessage(curScintilla, SCI_REPLACESEL, 0, (LPARAM)fJson);
 
