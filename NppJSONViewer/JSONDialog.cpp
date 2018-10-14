@@ -433,11 +433,16 @@ void JSONDialog::showContextMenu(LONG x, LONG y) {
 
 	if (command == IDM_TREEITEM_COPY) 
 	{
+		POINT point;
+		point.x = x;
+		point.y = y;
+		ScreenToClient(hTree, &point);
 		TVHITTESTINFO hitTestInfo;
-		hitTestInfo.pt.x = x;
-		hitTestInfo.pt.y = y;
-		HTREEITEM treeItem = TreeView_HitTest(this->getHSelf(), &hitTestInfo);
-		MessageBox(this->getHSelf(), L"Copy", L"Copy", MB_OK);
+		hitTestInfo.pt.x = point.x;
+		hitTestInfo.pt.y = point.y;
+		HTREEITEM treeItem = TreeView_HitTest(hTree, &hitTestInfo);
+		if(treeItem != NULL)
+			MessageBox(this->getHSelf(), L"Copy", L"Copy", MB_OK);
 	}
 }
 
