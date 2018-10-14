@@ -26,6 +26,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "resource.h"
 #include "json.h"
 
+struct NodeData {
+	wchar_t *path;
+};
+
 class JSONDialog : public DockingDlgInterface
 {
 	char *curJSON;
@@ -33,14 +37,14 @@ class JSONDialog : public DockingDlgInterface
 	//void drawTree();
 	void drawTreeSaxParse();
 	HTREEITEM initTree(HWND hWndDlg);
-	HTREEITEM insertToTree(HWND hWndDlg,HTREEITEM parent,const char *text);
+	HTREEITEM insertToTree(HWND hWndDlg,HTREEITEM parent,const char *text, const char* path);
 	//void populateTree (HWND hWndDlg, HTREEITEM tree_root, json_t * json_root, int level);
 	void populateTreeUsingSax(HWND hWndDlg, HTREEITEM tree_root, char * json);
 	void showContextMenu(LONG x, LONG y);
 public :
 	JSONDialog() : DockingDlgInterface(IDD_TREE){};
 
-	HTREEITEM insertToTree(HTREEITEM parent, const char *text);
+	HTREEITEM insertToTree(HTREEITEM parent, const char *text, const char* path);
 
     virtual void display(bool toShow = true) const {
         DockingDlgInterface::display(toShow);

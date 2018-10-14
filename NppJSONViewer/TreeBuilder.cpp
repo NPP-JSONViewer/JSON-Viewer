@@ -51,11 +51,11 @@ bool TreeBuilder::Bool(bool b) {
 	return this->String(FALSE_STR, sizeof(FALSE_STR), true);
 }
 
-bool TreeBuilder::Int(int i) { cout << "Int(" << i << ")" << endl; return true; }
-bool TreeBuilder::Uint(unsigned u) { cout << "Uint(" << u << ")" << endl; return true; }
-bool TreeBuilder::Int64(int64_t i) { cout << "Int64(" << i << ")" << endl; return true; }
-bool TreeBuilder::Uint64(uint64_t u) { cout << "Uint64(" << u << ")" << endl; return true; }
-bool TreeBuilder::Double(double d) { cout << "Double(" << d << ")" << endl; return true; }
+bool TreeBuilder::Int(int i) { return true; }
+bool TreeBuilder::Uint(unsigned u) {  return true; }
+bool TreeBuilder::Int64(int64_t i) {  return true; }
+bool TreeBuilder::Uint64(uint64_t u) { return true; }
+bool TreeBuilder::Double(double d) {  return true; }
 
 bool TreeBuilder::RawNumber(const char *str, SizeType length, bool copy) {
 	return this->String(str, length, copy);
@@ -64,6 +64,7 @@ bool TreeBuilder::RawNumber(const char *str, SizeType length, bool copy) {
 bool TreeBuilder::String(const char* str, SizeType length, bool copy) {
 	// copy and process
 	TreeNode *parent = this->stack.top();
+	string path = parent->path;
 	char *value = NULL;
 	int len;
 	if (!parent->isArray) {
@@ -71,6 +72,7 @@ bool TreeBuilder::String(const char* str, SizeType length, bool copy) {
 		value = new char[len];
 		snprintf(value, len, "%s : %s", this->lastKey, str);
 		value[len - 1] = '\0';
+		path = path.append(this->lastKey).append("/");
 		delete[] this->lastKey;
 		this->lastKey = NULL;
 	}
@@ -80,11 +82,12 @@ bool TreeBuilder::String(const char* str, SizeType length, bool copy) {
 		value = new char[len];
 		snprintf(value, len, "%s : %s", strCount.c_str(), str);
 		value[len - 1] = '\0';
+		path = path.append(strCount).append("/");
 		parent->counter++;
 	}
 
 	// insert
-	this->dlg->insertToTree(parent->subRoot, value);
+	this->dlg->insertToTree(parent->subRoot, value, path.c_str());
 
 	//clear
 	delete[] value;
@@ -98,6 +101,7 @@ bool TreeBuilder::StartObject() {
 		parent->isArray = false;
 		parent->subRoot = treeRoot;
 		parent->counter = 0;
+		parent->path = string("/");
 		this->stack.push(parent);
 	}
 	else {
@@ -106,13 +110,16 @@ bool TreeBuilder::StartObject() {
 
 	if (this->lastKey != NULL || parent->isArray) {
 		HTREEITEM newNode;
+		string path = parent->path;
 		if (!parent->isArray) {
-			newNode = this->dlg->insertToTree(parent->subRoot, this->lastKey);
+			path = path.append(this->lastKey).append("/");
+			newNode = this->dlg->insertToTree(parent->subRoot, this->lastKey, path.c_str());
 			delete this->lastKey;
 			this->lastKey = NULL;
 		}
 		else {
-			newNode = this->dlg->insertToTree(parent->subRoot, SSTR(parent->counter).c_str());
+			path = path.append(SSTR(parent->counter)).append("/");
+			newNode = this->dlg->insertToTree(parent->subRoot, SSTR(parent->counter).c_str(), path.c_str());
 		}
 
 		parent->counter++;
@@ -120,6 +127,7 @@ bool TreeBuilder::StartObject() {
 		newTreeNode->isArray = false;
 		newTreeNode->subRoot = newNode;
 		newTreeNode->counter = 0;
+		newTreeNode->path = path;
 		this->stack.push(newTreeNode);
 	}
 	return true;
@@ -148,6 +156,7 @@ bool TreeBuilder::StartArray() {
 		parent->isArray = false;
 		parent->subRoot = treeRoot;
 		parent->counter = 0;
+		parent->path = string("/");
 		this->stack.push(parent);
 	}
 	else {
@@ -156,19 +165,23 @@ bool TreeBuilder::StartArray() {
 
 	if (this->lastKey != NULL || parent->isArray) {
 		HTREEITEM newNode;
+		string path = parent->path;
 		if (!parent->isArray) {
-			newNode = this->dlg->insertToTree(parent->subRoot, this->lastKey);
+			path = path.append(this->lastKey).append("/");
+			newNode = this->dlg->insertToTree(parent->subRoot, this->lastKey, path.c_str());
 			delete this->lastKey;
 			this->lastKey = NULL;
 		}
 		else {
-			newNode = this->dlg->insertToTree(parent->subRoot, SSTR(parent->counter).c_str());
+			path = path.append(SSTR(parent->counter)).append("/");
+			newNode = this->dlg->insertToTree(parent->subRoot, SSTR(parent->counter).c_str(), path.c_str());
 		}
 		parent->counter++;
 		TreeNode *newTreeNode = new TreeNode;
 		newTreeNode->isArray = true;
 		newTreeNode->subRoot = newNode;
 		newTreeNode->counter = 0;
+		newTreeNode->path = path;
 		this->stack.push(newTreeNode);
 	}
 	return true;

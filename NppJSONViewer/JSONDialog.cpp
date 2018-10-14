@@ -43,7 +43,7 @@ HTREEITEM JSONDialog::initTree(HWND hWndDlg)
 
 	tvinsert.hParent = NULL;
 	tvinsert.hInsertAfter = TVI_ROOT;
-	tvinsert.item.mask = TVIF_TEXT;
+	tvinsert.item.mask = TVIF_TEXT|TVIF_PARAM;
 
 	tvinsert.item.pszText = L"JSON";
 	HTREEITEM item = (HTREEITEM)SendDlgItemMessage(hWndDlg, IDC_TREE1, TVM_INSERTITEM, 0, (LPARAM)&tvinsert);
@@ -51,16 +51,26 @@ HTREEITEM JSONDialog::initTree(HWND hWndDlg)
 	return item;
 }
 
+NodeData *makeNodeData(const char *path) {
+	NodeData *nodeData = new NodeData;
+	int len = strlen(path) + 1;
+	wchar_t *pathCopy = new wchar_t[len];
+	memset(pathCopy, 0, len);
+	MultiByteToWideChar(CP_UTF8, NULL, path, -1, pathCopy, len);
+	nodeData->path = pathCopy;
+	return nodeData;
+}
+
 /*
 inserts a node in the tree
 */
-HTREEITEM JSONDialog::insertToTree(HWND hWndDlg, HTREEITEM parent, const char *text)
+HTREEITEM JSONDialog::insertToTree(HWND hWndDlg, HTREEITEM parent, const char *text, const char *path)
 {
 	TV_INSERTSTRUCT tvinsert;
 	HTREEITEM item = NULL;
 	tvinsert.hParent = parent;
 	tvinsert.hInsertAfter = TVI_LAST;
-	tvinsert.item.mask = TVIF_TEXT;
+	tvinsert.item.mask = TVIF_TEXT|TVIF_PARAM;
 
 	int len = strlen(text) + 1;
 	wchar_t *w_msg = new wchar_t[len];
@@ -68,9 +78,9 @@ HTREEITEM JSONDialog::insertToTree(HWND hWndDlg, HTREEITEM parent, const char *t
 	{
 		memset(w_msg, 0, len);
 		MultiByteToWideChar(CP_UTF8, NULL, text, -1, w_msg, len);
-
+		
 		tvinsert.item.pszText = w_msg;
-		tvinsert.item.lParam = 42;
+		tvinsert.item.lParam = (LPARAM)makeNodeData(path);
 		item = (HTREEITEM)SendDlgItemMessage(hWndDlg, IDC_TREE1, TVM_INSERTITEM, 0, (LPARAM)&tvinsert);
 		delete[] w_msg; // fix memory leak
 	}
@@ -78,8 +88,8 @@ HTREEITEM JSONDialog::insertToTree(HWND hWndDlg, HTREEITEM parent, const char *t
 	return item;
 }
 
-HTREEITEM JSONDialog::insertToTree(HTREEITEM parent, const char *text) {
-	return this->insertToTree(this->getHSelf(), parent, text);
+HTREEITEM JSONDialog::insertToTree(HTREEITEM parent, const char *text, const char* path) {
+	return this->insertToTree(this->getHSelf(), parent, text, path);
 }
 
 void JSONDialog::setJSON(char* json)
@@ -344,7 +354,7 @@ void JSONDialog::drawTreeSaxParse()
 	tree_root = initTree(this->getHSelf());
 
 	if (strlen(curJSON) == 0) {
-		insertToTree(this->getHSelf(), tree_root, "Error:Please select a JSON String.");
+		insertToTree(this->getHSelf(), tree_root, "Error:Please select a JSON String.", "/");
 		TreeView_Expand(GetDlgItem(this->getHSelf(), IDC_TREE1), tree_root, TVE_EXPAND);
 		return;
 	}
@@ -441,8 +451,17 @@ void JSONDialog::showContextMenu(LONG x, LONG y) {
 		hitTestInfo.pt.x = point.x;
 		hitTestInfo.pt.y = point.y;
 		HTREEITEM treeItem = TreeView_HitTest(hTree, &hitTestInfo);
+		TVITEM item = { 0 };
+		item.hItem = treeItem; 
+		TCHAR buf[MAX_PATH];
+		item.cchTextMax = MAX_PATH;
+		item.pszText = buf;
+		item.mask = TVIF_TEXT|TVIF_PARAM;
+		TreeView_GetItem(hTree, &item);
+		NodeData *nodeData = (NodeData*)item.lParam;
+
 		if(treeItem != NULL)
-			MessageBox(this->getHSelf(), L"Copy", L"Copy", MB_OK);
+			MessageBox(this->getHSelf(), L"Copy", nodeData->path, MB_OK);
 	}
 }
 

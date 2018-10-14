@@ -12,6 +12,7 @@ struct TreeNode {
 	HTREEITEM subRoot;
 	bool isArray;
 	int counter;
+	std::string path;
 };
 
 
