@@ -41,11 +41,13 @@ const char* NULL_STR = "null";
 const char* TRUE_STR = "true";
 const char* FALSE_STR = "false";
 
-bool TreeBuilder::Null() {
+bool TreeBuilder::Null()
+{
 	return this->String(NULL_STR, sizeof(NULL_STR), true);
 }
 
-bool TreeBuilder::Bool(bool b) {
+bool TreeBuilder::Bool(bool b)
+{
 	if (b)
 		return this->String(TRUE_STR, sizeof(TRUE_STR), true);
 	return this->String(FALSE_STR, sizeof(FALSE_STR), true);
@@ -57,16 +59,19 @@ bool TreeBuilder::Int64(int64_t i) { cout << "Int64(" << i << ")" << endl; retur
 bool TreeBuilder::Uint64(uint64_t u) { cout << "Uint64(" << u << ")" << endl; return true; }
 bool TreeBuilder::Double(double d) { cout << "Double(" << d << ")" << endl; return true; }
 
-bool TreeBuilder::RawNumber(const char *str, SizeType length, bool copy) {
+bool TreeBuilder::RawNumber(const char *str, SizeType length, bool copy)
+{
 	return this->String(str, length, copy);
 }
 
-bool TreeBuilder::String(const char* str, SizeType length, bool copy) {
+bool TreeBuilder::String(const char* str, SizeType length, bool /*copy*/)
+{
 	// copy and process
 	TreeNode *parent = this->stack.top();
 	char *value = NULL;
-	int len;
-	if (!parent->isArray) {
+	size_t len = 0;
+	if (!parent->isArray)
+	{
 		len = strlen(this->lastKey) + 3 + length + 1;
 		value = new char[len];
 		snprintf(value, len, "%s : %s", this->lastKey, str);
@@ -74,7 +79,8 @@ bool TreeBuilder::String(const char* str, SizeType length, bool copy) {
 		delete[] this->lastKey;
 		this->lastKey = NULL;
 	}
-	else {
+	else
+	{
 		string strCount = SSTR(parent->counter);
 		len = strCount.size() + 3 + length + 1;
 		value = new char[len];
@@ -91,27 +97,33 @@ bool TreeBuilder::String(const char* str, SizeType length, bool copy) {
 	return true;
 }
 
-bool TreeBuilder::StartObject() {
+bool TreeBuilder::StartObject()
+{
 	TreeNode *parent;
-	if (this->stack.empty()) {
+	if (this->stack.empty())
+	{
 		parent = new TreeNode;
 		parent->isArray = false;
 		parent->subRoot = treeRoot;
 		parent->counter = 0;
 		this->stack.push(parent);
 	}
-	else {
+	else
+	{
 		parent = this->stack.top();
 	}
 
-	if (this->lastKey != NULL || parent->isArray) {
+	if (this->lastKey != NULL || parent->isArray)
+	{
 		HTREEITEM newNode;
-		if (!parent->isArray) {
+		if (!parent->isArray)
+		{
 			newNode = this->dlg->insertToTree(parent->subRoot, this->lastKey);
 			delete this->lastKey;
 			this->lastKey = NULL;
 		}
-		else {
+		else
+		{
 			newNode = this->dlg->insertToTree(parent->subRoot, SSTR(parent->counter).c_str());
 		}
 
@@ -125,8 +137,10 @@ bool TreeBuilder::StartObject() {
 	return true;
 }
 
-bool TreeBuilder::EndObject(SizeType memberCount) {
-	if (!this->stack.empty()) {
+bool TreeBuilder::EndObject(SizeType /*memberCount*/)
+{
+	if (!this->stack.empty())
+	{
 		TreeNode *node = this->stack.top();
 		this->stack.pop();
 		delete node;
@@ -134,34 +148,41 @@ bool TreeBuilder::EndObject(SizeType memberCount) {
 	return true;
 }
 
-bool TreeBuilder::Key(const char* str, SizeType length, bool copy) {
+bool TreeBuilder::Key(const char* str, SizeType length, bool /*copy*/)
+{
 	this->lastKey = new char[length + 1];
 	strncpy(this->lastKey, str, length);
 	this->lastKey[length] = '\0';
 	return true;
 }
 
-bool TreeBuilder::StartArray() {
+bool TreeBuilder::StartArray()
+{
 	TreeNode *parent;
-	if (this->stack.empty()) {
+	if (this->stack.empty())
+	{
 		parent = new TreeNode;
 		parent->isArray = false;
 		parent->subRoot = treeRoot;
 		parent->counter = 0;
 		this->stack.push(parent);
 	}
-	else {
+	else
+	{
 		parent = this->stack.top();
 	}
 
-	if (this->lastKey != NULL || parent->isArray) {
+	if (this->lastKey != NULL || parent->isArray)
+	{
 		HTREEITEM newNode;
-		if (!parent->isArray) {
+		if (!parent->isArray)
+		{
 			newNode = this->dlg->insertToTree(parent->subRoot, this->lastKey);
 			delete this->lastKey;
 			this->lastKey = NULL;
 		}
-		else {
+		else
+		{
 			newNode = this->dlg->insertToTree(parent->subRoot, SSTR(parent->counter).c_str());
 		}
 		parent->counter++;
@@ -174,23 +195,14 @@ bool TreeBuilder::StartArray() {
 	return true;
 }
 
-bool TreeBuilder::EndArray(SizeType elementCount) {
-	if (!this->stack.empty()) {
+bool TreeBuilder::EndArray(SizeType /*elementCount*/)
+{
+	if (!this->stack.empty())
+	{
 		TreeNode *node = this->stack.top();
 		this->stack.pop();
 		delete node;
 	}
 	return true;
-}
-
-TreeBuilder::TreeBuilder(JSONDialog *dlg, HTREEITEM treeRoot) {
-	this->dlg = dlg;
-	this->lastKey = NULL;
-	this->treeRoot = treeRoot;
-}
-
-
-TreeBuilder::~TreeBuilder()
-{
 }
 

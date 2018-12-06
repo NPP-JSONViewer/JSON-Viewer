@@ -17,8 +17,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifndef DOCKINGDLGINTERFACE_H
-#define DOCKINGDLGINTERFACE_H
+#pragma once
 
 #include "StaticDialog.h"
 #include "dockingResource.h"
@@ -29,9 +28,9 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 class DockingDlgInterface : public StaticDialog
 {
 public:
-	DockingDlgInterface(): StaticDialog() {};
-	DockingDlgInterface(int dlgID): StaticDialog(), _dlgID(dlgID) {};
-	
+	DockingDlgInterface() : StaticDialog() {};
+	DockingDlgInterface(int dlgID) : StaticDialog(), _dlgID(dlgID) {};
+
 	virtual void init(HINSTANCE hInst, HWND parent)
 	{
 		StaticDialog::init(hInst, parent);
@@ -39,85 +38,83 @@ public:
 		lstrcpy(_moduleName, PathFindFileName(_moduleName));
 	}
 
-    void create(tTbData * data, bool isRTL = false){
+	void create(tTbData * data, bool isRTL = false)
+	{
 		StaticDialog::create(_dlgID, isRTL);
 		::GetWindowText(_hSelf, _pluginName, sizeof(_pluginName));
 
-        // user information
-		data->hClient		= _hSelf;
-		data->pszName		= _pluginName;
+		// user information
+		data->hClient = _hSelf;
+		data->pszName = _pluginName;
 
 		// supported features by plugin
-		data->uMask			= 0;
+		data->uMask = 0;
 
 		// additional info
-		data->pszAddInfo	= NULL;
+		data->pszAddInfo = NULL;
 		_data = data;
 
-	};
+	}
 
-	virtual void updateDockingDlg(void) {
+	virtual void updateDockingDlg(void)
+	{
 		::SendMessage(_hParent, NPPM_DMMUPDATEDISPINFO, 0, (LPARAM)_hSelf);
 	}
 
-    virtual void destroy() {
-    };
+	virtual void destroy() {}
 
-	virtual void display(bool toShow = true) const {
-		::SendMessage(_hParent, toShow?NPPM_DMMSHOW:NPPM_DMMHIDE, 0, (LPARAM)_hSelf);
-	};
+	virtual void display(bool toShow = true) const
+	{
+		::SendMessage(_hParent, toShow ? NPPM_DMMSHOW : NPPM_DMMHIDE, 0, (LPARAM)_hSelf);
+	}
 
-	const TCHAR * getPluginFileName() const {
-		return _moduleName;
-	};
+	const TCHAR * getPluginFileName() const { return _moduleName; }
 
-protected :
+protected:
 	virtual INT_PTR CALLBACK run_dlgProc(UINT message, WPARAM /*wParam*/, LPARAM lParam)
 	{
-		switch (message) 
+		switch (message)
 		{
 
-			case WM_NOTIFY: 
-			{
-				LPNMHDR	pnmh	= (LPNMHDR)lParam;
+		case WM_NOTIFY:
+		{
+			LPNMHDR	pnmh = (LPNMHDR)lParam;
 
-				if (pnmh->hwndFrom == _hParent)
+			if (pnmh->hwndFrom == _hParent)
+			{
+				switch (LOWORD(pnmh->code))
 				{
-					switch (LOWORD(pnmh->code))
-					{
-						case DMN_CLOSE:
-						{
-							break;
-						}
-						case DMN_FLOAT:
-						{
-							_isFloating = true;
-							break;
-						}
-						case DMN_DOCK:
-						{
-							_isFloating = false;
-							break;
-						}
-						default:
-							break;
-					}
+				case DMN_CLOSE:
+				{
+					break;
 				}
-				break;
+				case DMN_FLOAT:
+				{
+					_isFloating = true;
+					break;
+				}
+				case DMN_DOCK:
+				{
+					_isFloating = false;
+					break;
+				}
+				default:
+					break;
+				}
 			}
-			default:
-				break;
+			break;
+		}
+		default:
+			break;
 		}
 		return FALSE;
 	};
-	
-	// Handles
-    HWND			_HSource;
-	tTbData*		_data;
-	int				_dlgID;
-	bool            _isFloating;
-	TCHAR            _moduleName[MAX_PATH];
-	TCHAR			_pluginName[MAX_PATH];
-};
 
-#endif // DOCKINGDLGINTERFACE_H
+	// Handles
+	HWND			_HSource = nullptr;
+	tTbData*		_data = nullptr;
+	int				_dlgID = 0;
+	bool            _isFloating = false;
+	TCHAR            _moduleName[MAX_PATH] = {};
+	TCHAR			_pluginName[MAX_PATH] = {};
+};

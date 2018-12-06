@@ -98,6 +98,7 @@
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <SDLCheck>true</SDLCheck>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>
     <Link>
       <AdditionalDependencies>shlwapi.lib;comctl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -116,6 +117,7 @@
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <SDLCheck>true</SDLCheck>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>
     <Link>
       <AdditionalDependencies>shlwapi.lib;comctl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -136,6 +138,7 @@
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <SDLCheck>true</SDLCheck>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>
     <Link>
       <AdditionalDependencies>shlwapi.lib;comctl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -159,6 +162,7 @@
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <SDLCheck>true</SDLCheck>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>
     <Link>
       <AdditionalDependencies>shlwapi.lib;comctl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
