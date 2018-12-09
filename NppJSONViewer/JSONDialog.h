@@ -37,7 +37,7 @@ class JSONDialog : public DockingDlgInterface
 	//void populateTree (HWND hWndDlg, HTREEITEM tree_root, json_t * json_root, int level);
 	void populateTreeUsingSax(HWND hWndDlg, HTREEITEM tree_root, char * json);
 public :
-	JSONDialog() : DockingDlgInterface(IDD_TREE){};
+	JSONDialog() : DockingDlgInterface(IDD_TREEDLG){};
 
 	HTREEITEM insertToTree(HTREEITEM parent, const char *text);
 

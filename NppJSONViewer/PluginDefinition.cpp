@@ -19,6 +19,7 @@
 #include "menuCmdID.h"
 #include "JSONDialog.h"
 #include "Hyperlinks.h"
+#include "utils.h"
 #include "rapidjson/prettywriter.h"
 #include "rapidjson/stringbuffer.h"
 #include "rapidjson/reader.h"
@@ -81,11 +82,24 @@ void commandMenuInit()
 	setCommand(2, TEXT("&About"), openAboutDlg, NULL, false);
 }
 
+void setVersion(HWND hwndDlg)
+{
+	std::wstring version;
+
+	// Get module path
+	wchar_t moduleFileName[MAX_PATH + 1] = {};
+	::GetModuleFileName((HINSTANCE)&__ImageBase, moduleFileName, _MAX_PATH);
+
+	version = getVersion(moduleFileName);
+	::SetWindowText(::GetDlgItem(hwndDlg, IDC_VERSION), version.c_str());
+}
+
 INT_PTR CALLBACK abtDlgProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM /*lParam*/)
 {
 	switch (uMsg)
 	{
 	case WM_INITDIALOG:
+		setVersion(hwndDlg);
 		ConvertStaticToHyperlink(hwndDlg, IDC_WEB);
 		return TRUE;
 	case WM_COMMAND:
