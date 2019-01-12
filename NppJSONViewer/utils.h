@@ -9,3 +9,4 @@
 EXTERN_C IMAGE_DOS_HEADER __ImageBase;
 
 std::wstring getVersion(std::wstring filePath);
+

@@ -242,7 +242,7 @@ void formatSelectedJSON() {
 	rapidjson::StringBuffer sb;
 	rapidjson::PrettyWriter<rapidjson::StringBuffer> pw(sb);
 	bool useTabs = ::SendMessage(curScintilla, SCI_GETUSETABS, 0, 0);
-	int indentLen = useTabs ? 1 : ::SendMessage(curScintilla, SCI_GETTABWIDTH, 0, 0);
+	unsigned indentLen = useTabs ? 1 : static_cast<unsigned>(::SendMessage(curScintilla, SCI_GETTABWIDTH, 0, 0));
 	char indentChar = useTabs ? '\t' : ' ';
 	pw.SetIndent(indentChar, indentLen);
 	rapidjson::StringStream ss(curJSON);

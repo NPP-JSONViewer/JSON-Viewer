@@ -17,13 +17,13 @@ struct TreeNode {
 
 class TreeBuilder : public BaseReaderHandler<UTF8<>, TreeBuilder>
 {
-	JSONDialog *dlg;
+	JSONDialog *dlg = nullptr;
 	std::stack<TreeNode*> stack;
-	HTREEITEM treeRoot;
-	char *lastKey;
+	HTREEITEM treeRoot = nullptr;
+	char *lastKey = nullptr;
 public:
-	TreeBuilder(JSONDialog *dlg, HTREEITEM treeRoot);
-	~TreeBuilder();
+	TreeBuilder(JSONDialog *dlg, HTREEITEM treeRoot) : dlg(dlg), treeRoot(treeRoot) {}
+	~TreeBuilder() = default;
 
 	bool Null();
 	bool Bool(bool b);

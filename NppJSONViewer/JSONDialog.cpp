@@ -61,12 +61,12 @@ HTREEITEM JSONDialog::insertToTree(HWND hWndDlg,HTREEITEM parent, const char *te
 	tvinsert.hInsertAfter=TVI_LAST;
 	tvinsert.item.mask=TVIF_TEXT;
 
-	int len = strlen(text) + 1;
+	auto len = strlen(text) + 1;
 	wchar_t *w_msg = new wchar_t[len];
 	if (w_msg)
 	{
 		memset(w_msg, 0, len);
-		MultiByteToWideChar(CP_UTF8, NULL, text, -1, w_msg, len);
+		MultiByteToWideChar(CP_UTF8, NULL, text, -1, w_msg, static_cast<int>(len));
 
 		tvinsert.item.pszText = w_msg;
 		item = (HTREEITEM)SendDlgItemMessage(hWndDlg, IDC_TREE, TVM_INSERTITEM, 0, (LPARAM)&tvinsert);
@@ -88,14 +88,16 @@ void JSONDialog::setJSON(char* json)
 		drawTreeSaxParse();
 }
 
-void JSONDialog::populateTreeUsingSax(HWND hWndDlg, HTREEITEM tree_root, char *json) {
+void JSONDialog::populateTreeUsingSax(HWND /*hWndDlg*/, HTREEITEM tree_root, char *json)
+{
 	//Stopwatch sw;
 	//sw.Start();
 	TreeBuilder handler(this, tree_root);
 	rapidjson::Reader reader;
 	
 	rapidjson::StringStream ss(json);
-	if (!reader.Parse<rapidjson::kParseNumbersAsStringsFlag>(ss, handler)) {
+	if (!reader.Parse<rapidjson::kParseNumbersAsStringsFlag>(ss, handler)) 
+	{
 		::MessageBox(nppData._nppHandle, TEXT("Could not parse!!"), TEXT("JSON Viewer"), MB_OK | MB_ICONERROR);
 
 		//mark the error position
@@ -341,7 +343,8 @@ void JSONDialog::drawTreeSaxParse()
 	HTREEITEM tree_root;
 	tree_root = initTree(this->getHSelf());
 
-	if (strlen(curJSON) == 0) {
+	if (strlen(curJSON) == 0) 
+	{
 		insertToTree(this->getHSelf(), tree_root, "Error:Please select a JSON String.");
 		TreeView_Expand(GetDlgItem(this->getHSelf(), IDC_TREE), tree_root, TVE_EXPAND);
 		return;
