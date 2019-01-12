@@ -34,9 +34,9 @@ Delete all items from the tree and creates the root node
 HTREEITEM JSONDialog::initTree(HWND hWndDlg)
 {
 
-	int TreeCount=TreeView_GetCount(GetDlgItem(this->getHSelf(),IDC_TREE1));
+	int TreeCount=TreeView_GetCount(GetDlgItem(this->getHSelf(),IDC_TREE));
 	if(TreeCount>0)
-		TreeView_DeleteAllItems(GetDlgItem(this->getHSelf(),IDC_TREE1));
+		TreeView_DeleteAllItems(GetDlgItem(this->getHSelf(),IDC_TREE));
 
 	TV_INSERTSTRUCT tvinsert;    
 
@@ -45,7 +45,7 @@ HTREEITEM JSONDialog::initTree(HWND hWndDlg)
 	tvinsert.item.mask=TVIF_TEXT;
 
 	tvinsert.item.pszText=L"JSON";
-	HTREEITEM item=(HTREEITEM)SendDlgItemMessage(hWndDlg,IDC_TREE1,TVM_INSERTITEM,0,(LPARAM)&tvinsert);
+	HTREEITEM item=(HTREEITEM)SendDlgItemMessage(hWndDlg,IDC_TREE,TVM_INSERTITEM,0,(LPARAM)&tvinsert);
 
 	return item;		
 }
@@ -69,7 +69,7 @@ HTREEITEM JSONDialog::insertToTree(HWND hWndDlg,HTREEITEM parent, const char *te
 		MultiByteToWideChar(CP_UTF8, NULL, text, -1, w_msg, static_cast<int>(len));
 
 		tvinsert.item.pszText = w_msg;
-		item = (HTREEITEM)SendDlgItemMessage(hWndDlg, IDC_TREE1, TVM_INSERTITEM, 0, (LPARAM)&tvinsert);
+		item = (HTREEITEM)SendDlgItemMessage(hWndDlg, IDC_TREE, TVM_INSERTITEM, 0, (LPARAM)&tvinsert);
 		delete[] w_msg; // fix memory leak
 	}
 
@@ -346,12 +346,12 @@ void JSONDialog::drawTreeSaxParse()
 	if (strlen(curJSON) == 0) 
 	{
 		insertToTree(this->getHSelf(), tree_root, "Error:Please select a JSON String.");
-		TreeView_Expand(GetDlgItem(this->getHSelf(), IDC_TREE1), tree_root, TVE_EXPAND);
+		TreeView_Expand(GetDlgItem(this->getHSelf(), IDC_TREE), tree_root, TVE_EXPAND);
 		return;
 	}
 	
 	populateTreeUsingSax(this->getHSelf(), tree_root, curJSON);
-	TreeView_Expand(GetDlgItem(this->getHSelf(), IDC_TREE1), tree_root, TVE_EXPAND);
+	TreeView_Expand(GetDlgItem(this->getHSelf(), IDC_TREE), tree_root, TVE_EXPAND);
 }
 
 
@@ -431,14 +431,14 @@ INT_PTR CALLBACK JSONDialog::run_dlgProc(UINT message, WPARAM wParam, LPARAM lPa
 	switch (message) 
 	{
 	case WM_INITDIALOG:
-		hTree=GetDlgItem(this->getHSelf(),IDC_TREE1);// tree control
+		hTree=GetDlgItem(this->getHSelf(),IDC_TREE);// tree control
 		drawTreeSaxParse();
 		return TRUE;
 
 	case WM_SIZE:
 		width=LOWORD(lParam);
 		height=HIWORD(lParam);
-		SetWindowPos(GetDlgItem(this->getHSelf(),IDC_TREE1),HWND_TOP,0,0,width,height,SWP_SHOWWINDOW);
+		SetWindowPos(GetDlgItem(this->getHSelf(),IDC_TREE),HWND_TOP,0,0,width,height,SWP_SHOWWINDOW);
 		return TRUE;
 
 	default :
