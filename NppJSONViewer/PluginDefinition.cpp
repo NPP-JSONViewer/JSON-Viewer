@@ -219,7 +219,8 @@ void openJSONDialog()
 	delete[] curJSON;
 }
 
-void formatSelectedJSON() {
+void formatSelectedJSON()
+{
 	// Get the current scintilla
 	int which = -1;
 	::SendMessage(nppData._nppHandle, NPPM_GETCURRENTSCINTILLA, 0, (LPARAM)&which);
@@ -248,9 +249,25 @@ void formatSelectedJSON() {
 	rapidjson::StringStream ss(curJSON);
 	rapidjson::Reader reader;
 
-	reader.Parse<rapidjson::kParseFullPrecisionFlag >(ss, pw);
-	const char* fJson = sb.GetString();
-	::SendMessage(curScintilla, SCI_REPLACESEL, 0, (LPARAM)fJson);
+	if (reader.Parse<rapidjson::kParseFullPrecisionFlag >(ss, pw))
+	{
+		const char* fJson = sb.GetString();
+		::SendMessage(curScintilla, SCI_REPLACESEL, 0, (LPARAM)fJson);
+	}
+	else
+	{
+		// Mark the error position
+		// Get the current scintilla
+		start = ::SendMessage(curScintilla, SCI_GETSELECTIONSTART, 0, 0);
+
+		size_t errPosition = start + reader.GetErrorOffset();
+		::SendMessage(curScintilla, SCI_SETSEL, errPosition, errPosition + end);
+
+		// Intimate user
+		::MessageBox(nppData._nppHandle,
+			TEXT("There was an error while parsing JSON, refer the current selection for possible problematic area."),
+			TEXT("JSON Viewer"), MB_OK | MB_ICONERROR);
+	}
 
 	delete[] curJSON;
 }
