@@ -17,8 +17,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
-#ifndef JSONDIALOG_H
-#define JSONDIALOG_H
+#pragma once
 
 #include "DockingDlgInterface.h"
 #include "PluginInterface.h"
@@ -28,31 +27,31 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 class JSONDialog : public DockingDlgInterface
 {
-	char *curJSON;
-	HANDLE hTree;
+	char *curJSON = nullptr;
+	HANDLE hTree = nullptr;
 	//void drawTree();
 	void drawTreeSaxParse();
 	HTREEITEM initTree(HWND hWndDlg);
-	HTREEITEM insertToTree(HWND hWndDlg,HTREEITEM parent,const char *text);
+	HTREEITEM insertToTree(HWND hWndDlg, HTREEITEM parent, const char *text);
 	//void populateTree (HWND hWndDlg, HTREEITEM tree_root, json_t * json_root, int level);
 	void populateTreeUsingSax(HWND hWndDlg, HTREEITEM tree_root, char * json);
-public :
-	JSONDialog() : DockingDlgInterface(IDD_TREE){};
+public:
+	JSONDialog() : DockingDlgInterface(IDD_TREE) {};
 
 	HTREEITEM insertToTree(HTREEITEM parent, const char *text);
 
-    virtual void display(bool toShow = true) const {
-        DockingDlgInterface::display(toShow);
-    };
+	virtual void display(bool toShow = true) const
+	{
+		DockingDlgInterface::display(toShow);
+	}
 
-	void setParent(HWND parent2set){
+	void setParent(HWND parent2set)
+	{
 		_hParent = parent2set;
-	};
+	}
 
 	void setJSON(char *json);
 
-protected :
+protected:
 	virtual INT_PTR CALLBACK run_dlgProc(UINT message, WPARAM wParam, LPARAM lParam);
 };
-
-#endif //JSONDIALOG_H

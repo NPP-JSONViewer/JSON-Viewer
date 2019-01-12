@@ -2165,7 +2165,7 @@ lexer (const char *buffer, const char **p, unsigned int *state, rcstring ** text
 			break;
 
 		default:
-			fprintf (stderr, "JSON: *state missing: %d\n", *state);
+			fprintf (stderr, "JSON: *state missing: %u\n", *state);
 			return LEX_INVALID_CHARACTER;
 		}
 
@@ -4237,8 +4237,7 @@ state27:			/* sibling followup */
 		}
 		return JSON_OK;
 	}
-
-	return JSON_UNKNOWN_PROBLEM;
+	//return JSON_UNKNOWN_PROBLEM; // unreachable code
 }
 
 
