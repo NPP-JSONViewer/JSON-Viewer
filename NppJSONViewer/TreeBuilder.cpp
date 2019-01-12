@@ -43,14 +43,14 @@ const char* FALSE_STR = "false";
 
 bool TreeBuilder::Null()
 {
-	return this->String(NULL_STR, sizeof(NULL_STR), true);
+	return this->String(NULL_STR, static_cast<SizeType>(strlen(NULL_STR)), true);
 }
 
 bool TreeBuilder::Bool(bool b)
 {
 	if (b)
-		return this->String(TRUE_STR, sizeof(TRUE_STR), true);
-	return this->String(FALSE_STR, sizeof(FALSE_STR), true);
+		return this->String(TRUE_STR, static_cast<SizeType>(strlen(TRUE_STR)), true);
+	return this->String(FALSE_STR, static_cast<SizeType>(strlen(FALSE_STR)), true);
 }
 
 bool TreeBuilder::Int(int i) { cout << "Int(" << i << ")" << endl; return true; }
