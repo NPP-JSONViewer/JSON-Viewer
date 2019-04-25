@@ -162,10 +162,11 @@ bool TreeBuilder::StartArray()
 	if (this->stack.empty())
 	{
 		parent = new TreeNode;
-		parent->isArray = false;
+		parent->isArray = true;
 		parent->subRoot = treeRoot;
 		parent->counter = 0;
 		this->stack.push(parent);
+		return true;
 	}
 	else
 	{
