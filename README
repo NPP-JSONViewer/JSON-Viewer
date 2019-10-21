@@ -8,7 +8,7 @@ This plugin is meant to display a JSON string in a Treeview. It also marks the e
 ============
 Instruction:
 ============
-1. Paste the file "NPPJSONViewer.dll" to Notepad++ plugin folder
+1. Paste the file "NPPJSONViewer.dll" to Notepad++ plugins\NPPJSONViewer folder
 2. open a document containing a JSON string
 3. Select JSON fragment and navigate to plugins/JSON Viewer/show JSON Viewer or press "Ctrl+Alt+Shift+J"
 4. Voila!! if the JSON is valid, it will be shown in a Treeview
