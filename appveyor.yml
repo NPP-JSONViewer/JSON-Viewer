@@ -4,7 +4,7 @@ image: Visual Studio 2019
 
 environment:
   matrix:
-  - PlatformToolset: v142
+  - PlatformToolset: v142_xp
 
 platform:
     - x64
