@@ -78,14 +78,14 @@ void commandMenuInit()
 	formatJSONsk->_isShift = TRUE;
 	formatJSONsk->_key = 'M';
 
-	ShortcutKey* stringifyJSONsk = new ShortcutKey();
-	stringifyJSONsk->_isAlt = TRUE;
-	stringifyJSONsk->_isCtrl = TRUE;
-	stringifyJSONsk->_isShift = TRUE;
-	stringifyJSONsk->_key = 'S';
+	ShortcutKey* compressJSONsk = new ShortcutKey();
+	compressJSONsk->_isAlt = TRUE;
+	compressJSONsk->_isCtrl = TRUE;
+	compressJSONsk->_isShift = TRUE;
+	compressJSONsk->_key = 'C';
 	setCommand(0, TEXT("Show &JSON Viewer"), openJSONDialog, openJSONsk, false);
 	setCommand(1, TEXT("&Format JSON"), formatSelectedJSON, formatJSONsk, false);
-	setCommand(2, TEXT("&Stringify JSON"), stringifySelectedJSON, stringifyJSONsk, false);
+	setCommand(2, TEXT("&Compress JSON"), compressSelectedJSON, compressJSONsk, false);
 	setCommand(3, TEXT("&About"), openAboutDlg, NULL, false);
 }
 
@@ -280,7 +280,7 @@ void formatSelectedJSON()
 	delete[] curJSON;
 }
 
-void stringifySelectedJSON()
+void compressSelectedJSON()
 {
 	// Get the current scintilla
 	int which = -1;
