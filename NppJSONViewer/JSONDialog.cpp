@@ -114,6 +114,8 @@ void JSONDialog::populateTreeUsingSax(HWND /*hWndDlg*/, HTREEITEM tree_root, cha
 		::SendMessage(curScintilla, SCI_SETSEL, errPosition, errPosition + 1);
 	}
 	
+  ::SendMessage(nppData._nppHandle, NPPM_SETCURRENTLANGTYPE, 0, LangType::L_JSON);
+
 	//sw.Stop();
 	//long long elapsed = sw.ElapsedMilliseconds();
 	//std::wstringstream s;
