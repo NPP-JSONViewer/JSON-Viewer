@@ -66,32 +66,40 @@ bool TreeBuilder::RawNumber(const char *str, SizeType length, bool copy)
 
 bool TreeBuilder::String(const char* str, SizeType length, bool /*copy*/)
 {
-	// copy and process
-	TreeNode *parent = this->stack.top();
-	char *value = NULL;
-	size_t len = 0;
-	if (!parent->isArray)
-	{
-		len = strlen(this->lastKey) + 3 + length + 1;
-		value = new char[len];
-		snprintf(value, len, "%s : %s", this->lastKey, str);
-		value[len - 1] = '\0';
-		delete[] this->lastKey;
-		this->lastKey = NULL;
-	}
-	else
-	{
-		string strCount = SSTR(parent->counter);
-		len = strCount.size() + 3 + length + 1;
-		value = new char[len];
-		snprintf(value, len, "%s : %s", strCount.c_str(), str);
-		value[len - 1] = '\0';
-		parent->counter++;
-	}
+  // handle case, when there is only a value in input
+  char* value = NULL;
+  size_t len = 0;
+  if (this->stack.empty()) {
+    len = length + 1; // 1 for null
+    value = new char[len];
+    snprintf(value, len, "%s", str);
+    value[len - 1] = '\0';
+    this->dlg->insertToTree(treeRoot, value);
+  }
+  else {
+    TreeNode* parent = this->stack.top();
+    if (!parent->isArray)
+    {
+      len = strlen(this->lastKey) + 3 + length + 1;
+      value = new char[len];
+      snprintf(value, len, "%s : %s", this->lastKey, str);
+      value[len - 1] = '\0';
+      delete[] this->lastKey;
+      this->lastKey = NULL;
+    }
+    else
+    {
+      string strCount = SSTR(parent->counter);
+      len = strCount.size() + 3 + length + 1;
+      value = new char[len];
+      snprintf(value, len, "%s : %s", strCount.c_str(), str);
+      value[len - 1] = '\0';
+      parent->counter++;
+    }
 
-	// insert
-	this->dlg->insertToTree(parent->subRoot, value);
-
+    // insert
+    this->dlg->insertToTree(parent->subRoot, value);
+  }
 	//clear
 	delete[] value;
 	return true;
