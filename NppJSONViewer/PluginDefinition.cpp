@@ -276,7 +276,8 @@ void formatSelectedJSON()
 	{
 		const char* fJson = sb.GetString();
 		::SendMessage(curScintilla, SCI_REPLACESEL, 0, (LPARAM)fJson);
-	}
+    ::SendMessage(nppData._nppHandle, NPPM_SETCURRENTLANGTYPE, 0, LangType::L_JSON);
+  }
 	else
 	{
 		// Mark the error position
