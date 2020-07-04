@@ -77,9 +77,16 @@ void commandMenuInit()
 	formatJSONsk->_isCtrl = TRUE;
 	formatJSONsk->_isShift = TRUE;
 	formatJSONsk->_key = 'M';
+
+	ShortcutKey* compressJSONsk = new ShortcutKey();
+	compressJSONsk->_isAlt = TRUE;
+	compressJSONsk->_isCtrl = TRUE;
+	compressJSONsk->_isShift = TRUE;
+	compressJSONsk->_key = 'C';
 	setCommand(0, TEXT("Show &JSON Viewer"), openJSONDialog, openJSONsk, false);
 	setCommand(1, TEXT("&Format JSON"), formatSelectedJSON, formatJSONsk, false);
-	setCommand(2, TEXT("&About"), openAboutDlg, NULL, false);
+	setCommand(2, TEXT("&Compress JSON"), compressSelectedJSON, compressJSONsk, false);
+	setCommand(3, TEXT("&About"), openAboutDlg, NULL, false);
 }
 
 void setVersion(HWND hwndDlg)
@@ -131,6 +138,7 @@ void commandMenuCleanUp()
 	// Don't forget to deallocate your shortcut here
 	delete funcItem[0]._pShKey;
 	delete funcItem[1]._pShKey;
+	delete funcItem[2]._pShKey;
 }
 
 
@@ -261,6 +269,55 @@ void formatSelectedJSON()
 
 	pw.SetIndent(indentChar, indentLen);
   
+	rapidjson::StringStream ss(curJSON);
+	rapidjson::Reader reader;
+
+	if (reader.Parse<rapidjson::kParseFullPrecisionFlag >(ss, pw))
+	{
+		const char* fJson = sb.GetString();
+		::SendMessage(curScintilla, SCI_REPLACESEL, 0, (LPARAM)fJson);
+	}
+	else
+	{
+		// Mark the error position
+		// Get the current scintilla
+		start = ::SendMessage(curScintilla, SCI_GETSELECTIONSTART, 0, 0);
+
+		size_t errPosition = start + reader.GetErrorOffset();
+		::SendMessage(curScintilla, SCI_SETSEL, errPosition, errPosition + end);
+
+		// Intimate user
+		::MessageBox(nppData._nppHandle,
+			TEXT("There was an error while parsing JSON, refer the current selection for possible problematic area."),
+			TEXT("JSON Viewer"), MB_OK | MB_ICONERROR);
+	}
+
+	delete[] curJSON;
+}
+
+void compressSelectedJSON()
+{
+	// Get the current scintilla
+	int which = -1;
+	::SendMessage(nppData._nppHandle, NPPM_GETCURRENTSCINTILLA, 0, (LPARAM)&which);
+	if (which == -1)
+		return;
+
+	HWND curScintilla = (which == 0) ? nppData._scintillaMainHandle : nppData._scintillaSecondHandle;
+	size_t start = ::SendMessage(curScintilla, SCI_GETSELECTIONSTART, 0, 0);
+	size_t end = ::SendMessage(curScintilla, SCI_GETSELECTIONEND, 0, 0);
+	if (end < start)
+	{
+		size_t tmp = start;
+		start = end;
+		end = tmp;
+	}
+
+	size_t asciiTextLen = end - start;
+	selectAllIfUnselectedAndSetCurJSON(asciiTextLen, curScintilla);
+
+	rapidjson::StringBuffer sb;
+	rapidjson::Writer<rapidjson::StringBuffer> pw(sb);
 	rapidjson::StringStream ss(curJSON);
 	rapidjson::Reader reader;
 
