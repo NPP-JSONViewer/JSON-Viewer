@@ -245,7 +245,22 @@ void formatSelectedJSON()
 	bool useTabs = ::SendMessage(curScintilla, SCI_GETUSETABS, 0, 0);
 	unsigned indentLen = useTabs ? 1 : static_cast<unsigned>(::SendMessage(curScintilla, SCI_GETTABWIDTH, 0, 0));
 	char indentChar = useTabs ? '\t' : ' ';
+
+  int eolMode = ::SendMessage(curScintilla, SCI_GETEOLMODE, 0, 0);
+  switch (eolMode) {
+    case 0:
+      pw.SetLineEnding(rapidjson::LineEndingOption::kCrLf);
+      break;
+    case 1:
+      pw.SetLineEnding(rapidjson::LineEndingOption::kCr);
+      break;
+    default:
+      pw.SetLineEnding(rapidjson::LineEndingOption::kLf);
+      break;
+  }
+
 	pw.SetIndent(indentChar, indentLen);
+  
 	rapidjson::StringStream ss(curJSON);
 	rapidjson::Reader reader;
 

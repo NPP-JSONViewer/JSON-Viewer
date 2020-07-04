@@ -37,6 +37,12 @@ enum PrettyFormatOptions {
     kFormatSingleLineArray = 1  //!< Format arrays on a single line.
 };
 
+enum LineEndingOption {
+  kLf = 0, // default line ending \n
+  kCrLf = 1, // \r\n for windows
+  kCr = 2 // \r for Mac
+};
+
 //! Writer with indentation and spacing.
 /*!
     \tparam OutputStream Type of ouptut os.
@@ -56,7 +62,7 @@ public:
         \param levelDepth Initial capacity of stack.
     */
     explicit PrettyWriter(OutputStream& os, StackAllocator* allocator = 0, size_t levelDepth = Base::kDefaultLevelDepth) : 
-        Base(os, allocator, levelDepth), indentChar_(' '), indentCharCount_(4), formatOptions_(kFormatDefault) {}
+        Base(os, allocator, levelDepth), indentChar_(' '), indentCharCount_(4), formatOptions_(kFormatDefault),  lineEndingOption_(kLf) {}
 
 
     explicit PrettyWriter(StackAllocator* allocator = 0, size_t levelDepth = Base::kDefaultLevelDepth) : 
@@ -77,6 +83,11 @@ public:
         indentChar_ = indentChar;
         indentCharCount_ = indentCharCount;
         return *this;
+    }
+
+    PrettyWriter& SetLineEnding(LineEndingOption lineEndingOption) {
+      lineEndingOption_ = lineEndingOption;
+      return *this;
     }
 
     //! Set pretty writer formatting options.
@@ -143,7 +154,7 @@ public:
         bool empty = Base::level_stack_.template Pop<typename Base::Level>(1)->valueCount == 0;
 
         if (!empty) {
-            Base::os_->Put('\n');
+            WriteLineEnding();
             WriteIndent();
         }
         bool ret = Base::WriteEndObject();
@@ -167,7 +178,7 @@ public:
         bool empty = Base::level_stack_.template Pop<typename Base::Level>(1)->valueCount == 0;
 
         if (!empty && !(formatOptions_ & kFormatSingleLineArray)) {
-            Base::os_->Put('\n');
+            WriteLineEnding();
             WriteIndent();
         }
         bool ret = Base::WriteEndArray();
@@ -218,7 +229,7 @@ protected:
                 }
 
                 if (!(formatOptions_ & kFormatSingleLineArray)) {
-                    Base::os_->Put('\n');
+                    WriteLineEnding();
                     WriteIndent();
                 }
             }
@@ -226,7 +237,7 @@ protected:
                 if (level->valueCount > 0) {
                     if (level->valueCount % 2 == 0) {
                         Base::os_->Put(',');
-                        Base::os_->Put('\n');
+                        WriteLineEnding();
                     }
                     else {
                         Base::os_->Put(':');
@@ -234,7 +245,7 @@ protected:
                     }
                 }
                 else
-                    Base::os_->Put('\n');
+                    WriteLineEnding();
 
                 if (level->valueCount % 2 == 0)
                     WriteIndent();
@@ -254,10 +265,25 @@ protected:
         PutN(*Base::os_, static_cast<typename OutputStream::Ch>(indentChar_), count);
     }
 
+    void WriteLineEnding() {
+      switch (lineEndingOption_) {
+        case kCrLf: 
+          Base::os_->Put('\r');
+          Base::os_->Put('\n');
+          break;
+        case kCr:
+          Base::os_->Put('\r');
+          break;
+        default:
+          Base::os_->Put('\n');
+          break;
+      }
+    }
+
     Ch indentChar_;
     unsigned indentCharCount_;
     PrettyFormatOptions formatOptions_;
-
+    LineEndingOption lineEndingOption_;
 private:
     // Prohibit copy constructor & assignment operator.
     PrettyWriter(const PrettyWriter&);
