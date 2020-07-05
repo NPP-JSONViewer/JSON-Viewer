@@ -1,0 +1,3 @@
+[submodule "NppJSONViewer/external/rapidjson"]
+	path = NppJSONViewer/external/rapidjson
+	url = https://github.com/kapilratnani/rapidjson
