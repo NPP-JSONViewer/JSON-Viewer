@@ -28,6 +28,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 //using win32::Stopwatch;
 extern NppData nppData;
 
+
 /*
 Delete all items from the tree and creates the root node
 */
@@ -96,7 +97,10 @@ void JSONDialog::populateTreeUsingSax(HWND /*hWndDlg*/, HTREEITEM tree_root, cha
 	rapidjson::Reader reader;
 	
 	rapidjson::StringStream ss(json);
-	if (!reader.Parse<rapidjson::kParseNumbersAsStringsFlag>(ss, handler)) 
+	if (!reader.Parse<
+    rapidjson::kParseNumbersAsStringsFlag|rapidjson::kParseCommentsFlag|
+    rapidjson::kParseEscapedApostropheFlag|rapidjson::kParseNanAndInfFlag|rapidjson::kParseTrailingCommasFlag
+  >(ss, handler)) 
 	{
 		::MessageBox(nppData._nppHandle, TEXT("Could not parse!!"), TEXT("JSON Viewer"), MB_OK | MB_ICONERROR);
 
