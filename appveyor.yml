@@ -25,6 +25,7 @@ build:
 build_script:
     - cd "%APPVEYOR_BUILD_FOLDER%"
     - cd NppJSONViewer
+    - git submodule update --init --recursive
     - msbuild NppJSONViewer.sln /m /p:configuration="%configuration%" /p:platform="%platform_input%" /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
 
 artifacts:
