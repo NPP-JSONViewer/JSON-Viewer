@@ -21,6 +21,7 @@ This plugin is meant to display a JSON string in a Treeview. It also marks the e
 5. issue-72 tab setting from notepad++ settings are not honored
 6. issue-73 Display tree for Array of Object 
 7. issue-80 use line ending setting from editor
+8. Relaxed parsing. Supports trailling commas, comments(only parsing), NaN and infinity JS literals.
   
 ### 1.34
 1. Fix Access Violation issue #51
