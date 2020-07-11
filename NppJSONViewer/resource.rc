@@ -113,8 +113,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 1,34,0,0
- PRODUCTVERSION 1,34,0,0
+ FILEVERSION 1,40,0,0
+ PRODUCTVERSION 1,40,0,0
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -132,11 +132,11 @@ BEGIN
             VALUE "Comments", "JSONViewer plugin for Notepad++"
             VALUE "CompanyName", "Kapil Ratnani"
             VALUE "FileDescription", "Notepad++ plugin"
-            VALUE "FileVersion", "1.34.0.0"
+            VALUE "FileVersion", "1.40.0.0"
             VALUE "InternalName", "JSONViewer"
             VALUE "OriginalFilename", "NPPJSONViewer.dll"
             VALUE "ProductName", "JSONViewer plugin for Notepad++"
-            VALUE "ProductVersion", "1.34.0.0"
+            VALUE "ProductVersion", "1.40.0.0"
             VALUE "SpecialBuild", "UNICODE"
         END
     END
