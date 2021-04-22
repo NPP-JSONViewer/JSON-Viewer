@@ -9,6 +9,7 @@ environment:
 platform:
     - x64
     - Win32
+    - ARM64
 
 configuration:
     - Release
@@ -17,6 +18,7 @@ configuration:
 install:
     - if "%platform%"=="x64" set platform_input=x64
     - if "%platform%"=="Win32" set platform_input=Win32
+    - if "%platform%"=="ARM64" set platform_input=ARM64
     
 build:
     parallel: true                  # enable MSBuild parallel builds
@@ -33,3 +35,5 @@ artifacts:
       name: x64
     - path: NppJSONViewer\Win32\Release\NPPJSONViewer.dll
       name: Win32
+    - path: NppJSONViewer\ARM64\Release\NPPJSONViewer.dll
+      name: ARM64
