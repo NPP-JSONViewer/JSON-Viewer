@@ -1,4 +1,4 @@
-# JSONViewer 1.40
+# JSONViewer 1.40 [Maintainer Wanted]
 
 This plugin is meant to display a JSON string in a Treeview. It also marks the error position in case of parsing errors. That's it!!! The plugin can be used in Notepad++.
 
