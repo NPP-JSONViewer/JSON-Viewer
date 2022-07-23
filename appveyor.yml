@@ -1,10 +1,10 @@
-version: 1.34.{build}
-image: Visual Studio 2019
+version: 2.0.1.{build}
+image: Visual Studio 2022
 
 
 environment:
   matrix:
-  - PlatformToolset: v142_xp
+  - PlatformToolset: v143
 
 platform:
     - x64
@@ -31,9 +31,9 @@ build_script:
     - msbuild NppJSONViewer.sln /m /p:configuration="%configuration%" /p:platform="%platform_input%" /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
 
 artifacts:
-    - path: NppJSONViewer\x64\Release\NPPJSONViewer.dll
+    - path: NppJSONViewer\Build\Bin\x64\Release\NPPJSONViewer.dll
       name: x64
-    - path: NppJSONViewer\Win32\Release\NPPJSONViewer.dll
+    - path: NppJSONViewer\Build\Bin\Win32\Release\NPPJSONViewer.dll
       name: Win32
-    - path: NppJSONViewer\ARM64\Release\NPPJSONViewer.dll
+    - path: NppJSONViewer\Build\Bin\ARM64\Release\NPPJSONViewer.dll
       name: ARM64
