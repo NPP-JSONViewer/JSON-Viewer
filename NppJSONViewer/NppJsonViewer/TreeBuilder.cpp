@@ -1,8 +1,12 @@
 #include "TreeBuilder.h"
 #include <iostream>
+#include <sstream>
 #include "JSONDialog.h"
-#include "utils.h"
+
 using namespace std;
+
+template<typename T>
+constexpr auto SSTR(T x) { return (std::ostringstream() << std::dec << x).str(); }
 
 /*
 	1. on Start Object

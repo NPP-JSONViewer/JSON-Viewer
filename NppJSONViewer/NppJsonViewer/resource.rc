@@ -50,33 +50,46 @@ END
 // Dialog
 //
 
-IDD_ABOUTDLG DIALOGEX 0, 0, 270, 122
+IDD_ABOUTDLG DIALOGEX 0, 0, 285, 155
 STYLE DS_ABSALIGN | DS_SETFONT | DS_MODALFRAME | DS_3DLOOK | DS_FIXEDSYS | DS_CENTER | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
 EXSTYLE WS_EX_WINDOWEDGE
 CAPTION "About JSON Viewer"
 FONT 8, "MS Shell Dlg", 400, 0, 0x1
 BEGIN
-    DEFPUSHBUTTON   "OK",IDOK,110,100,50,14
-    GROUPBOX        "JSON Viewer",IDC_STATIC,11,7,245,90,BS_CENTER
-    LTEXT           "Author:",IDC_STATIC,23,21,24,8
-    LTEXT           "Kapil Ratnani",IDC_STATIC,100,21,43,8
-    LTEXT           "Version:",IDC_STATIC,23,35,26,8
-    LTEXT           "x.x.x.x",IDC_VERSION,100,35,41,9
-    LTEXT           "Licence:",IDC_STATIC,23,48,28,8
-    LTEXT           "GPL",IDC_STATIC,100,48,15,8
-    LTEXT           "Special thanks to:",IDC_STATIC,23,63,58,8
-    LTEXT           "Don Ho for Notepad++",IDC_STATIC,100,63,152,8
-    LTEXT           "Website:",IDC_STATIC,23,78,29,8
-    LTEXT           "https://github.com/kapilratnani/JSON-Viewer",IDC_WEB,100,78,154,8,SS_NOTIFY
+    DEFPUSHBUTTON   "OK",IDOK,110,133,50,14
+    GROUPBOX        "JSON Viewer",IDC_GB_TITLE,13,7,260,124,BS_CENTER
+    LTEXT           "Hopefully a decent JSON plugin-in for Notepad++ which can validate, format and compress any JSON file.",IDC_STATIC,20,18,250,18
+    LTEXT           "Developed by:",IDC_STATIC,20,45,70,8
+    LTEXT           "Kapil Ratnani",IDC_STATIC,89,45,180,8
+    LTEXT           "Maintained by:",IDC_STATIC,20,55,70,8
+    CONTROL         "Rajendra Singh    <a href=""mailto:singh.rajen15@gmail.com"">[singh.rajen15@gmail.com]</a>",IDC_SYSLINK_EMAIL,
+                    "SysLink",WS_TABSTOP,89,55,180,8
+    LTEXT           "Source Code:",IDC_STATIC,20,75,70,8
+    CONTROL         "<a href=""https://github.com/kapilratnani/JSON-Viewer"">https://github.com/kapilratnani/JSON-Viewer</a>",IDC_WEB_SOURCE,
+                    "SysLink",WS_TABSTOP,89,75,180,8
+    LTEXT           "Report an issue:",IDC_STATIC,20,85,70,8
+    CONTROL         "<a href=""https://github.com/kapilratnani/JSON-Viewer/issues/new"">https://github.com/kapilratnani/JSON-Viewer/issues/new</a>",IDC_WEB_ISSUE,
+                    "SysLink",WS_TABSTOP,89,85,180,8
+    LTEXT           "License:",IDC_STATIC,20,105,70,8
+    LTEXT           "GPL",IDC_STATIC,89,105,180,8
+    LTEXT           "Special thanks to:",IDC_STATIC,20,115,70,8
+    LTEXT           "Don Ho for Notepad++",IDC_STATIC,89,115,180,8
 END
 
-IDD_TREEDLG DIALOGEX 0, 0, 208, 322
+IDD_TREEDLG DIALOGEX 0, 0, 187, 320
 STYLE DS_SETFONT | DS_3DLOOK | DS_FIXEDSYS | DS_CENTER | WS_CHILD | WS_VISIBLE | WS_CAPTION | WS_VSCROLL | WS_HSCROLL
 EXSTYLE WS_EX_TOPMOST | WS_EX_TOOLWINDOW
 CAPTION "JSON Viewer"
 FONT 8, "MS Shell Dlg", 400, 0, 0x1
 BEGIN
-    CONTROL         "",IDC_TREE,"SysTreeView32",TVS_HASBUTTONS | TVS_HASLINES | TVS_DISABLEDRAGDROP | TVS_SHOWSELALWAYS | TVS_FULLROWSELECT | TVS_SINGLEEXPAND | WS_TABSTOP,1,0,208,322
+    PUSHBUTTON      "",IDC_BTN_REFRESH,2,2,16,12,BS_ICON
+    PUSHBUTTON      "",IDC_BTN_VALIDATE,20,2,16,12,BS_ICON
+    PUSHBUTTON      "",IDC_BTN_FORMAT,38,2,16,12,BS_ICON
+    CONTROL         "",IDC_DIVIDER,"Static",SS_ETCHEDVERT,56,1,2,16
+    EDITTEXT        IDC_EDT_SEARCH,60,2,99,12,ES_AUTOHSCROLL
+    PUSHBUTTON      "",IDC_BTN_SEARCH,160,2,16,12,BS_ICON
+    CONTROL         "",IDC_TREE,"SysTreeView32",TVS_HASBUTTONS | TVS_HASLINES | TVS_DISABLEDRAGDROP | TVS_SHOWSELALWAYS | TVS_FULLROWSELECT | TVS_SINGLEEXPAND | WS_TABSTOP,2,20,175,272
+    EDITTEXT        IDC_EDT_NODEPATH,2,296,175,12,ES_AUTOHSCROLL | ES_READONLY
 END
 
 
@@ -91,15 +104,14 @@ BEGIN
     IDD_ABOUTDLG, DIALOG
     BEGIN
         LEFTMARGIN, 4
-        RIGHTMARGIN, 261
+        RIGHTMARGIN, 281
         TOPMARGIN, 7
-        BOTTOMMARGIN, 114
+        BOTTOMMARGIN, 147
     END
 
     IDD_TREEDLG, DIALOG
     BEGIN
         LEFTMARGIN, 7
-        RIGHTMARGIN, 195
         TOPMARGIN, 7
         BOTTOMMARGIN, 308
     END
@@ -113,8 +125,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 1,41,0,0
- PRODUCTVERSION 1,41,0,0
+ FILEVERSION 2,1,0,0
+ PRODUCTVERSION 2,1,0,0
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -129,14 +141,14 @@ BEGIN
     BEGIN
         BLOCK "040901b5"
         BEGIN
-            VALUE "Comments", "JSONViewer plugin for Notepad++"
+            VALUE "Comments", "JSON Viewer plugin for Notepad++"
             VALUE "CompanyName", "Kapil Ratnani"
-            VALUE "FileDescription", "Notepad++ plugin"
-            VALUE "FileVersion", "1.41.0.0"
+            VALUE "FileDescription", "Notepad++ plugin for JSON file"
+            VALUE "FileVersion", "2.1.0.0"
             VALUE "InternalName", "JSONViewer"
             VALUE "OriginalFilename", "NPPJSONViewer.dll"
             VALUE "ProductName", "JSONViewer plugin for Notepad++"
-            VALUE "ProductVersion", "1.41.0.0"
+            VALUE "ProductVersion", "2.1.0.0"
             VALUE "SpecialBuild", "UNICODE"
         END
     END
@@ -162,7 +174,82 @@ BEGIN
     0
 END
 
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Menu
+//
+
+IDR_TREEITEM_MENU MENU
+BEGIN
+    POPUP ""
+    BEGIN
+        MENUITEM "Copy",                        IDM_COPY_TREEITEM
+        MENUITEM SEPARATOR
+        MENUITEM "Copy Node Name",              IDM_COPY_NODENAME
+        MENUITEM "Copy Node Value",             IDM_COPY_NODEVALUE
+        MENUITEM "Copy Node Path",              IDM_COPY_NODEPATH
+        MENUITEM SEPARATOR
+        MENUITEM "Expand All",                  IDM_EXPANDALL
+        MENUITEM "Collapse All",                IDM_COLLAPSEALL
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDI_ICON_REFRESH        ICON                    "res\\Refresh.ico"
+
+IDI_ICON_SEARCH         ICON                    "res\\search.ico"
+
+IDI_ICON_FORMAT         ICON                    "res\\format.ico"
+
+IDI_ICON_VALIDATE       ICON                    "res\\validate.ico"
+
+IDI_ICON_TOOLBAR        ICON                    "res\\Icon.ico"
+
 #endif    // Neutral resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+/////////////////////////////////////////////////////////////////////////////
+// English (India) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENN)
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_INDIA
+#pragma code_page(1252)
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE 
+BEGIN
+    "#include ""winres.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE 
+BEGIN
+    "\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+#endif    // English (India) resources
 /////////////////////////////////////////////////////////////////////////////
 
 

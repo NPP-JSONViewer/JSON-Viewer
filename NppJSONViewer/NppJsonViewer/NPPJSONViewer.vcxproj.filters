@@ -21,13 +21,10 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Hyperlinks.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="JSONDialog.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="NppPlugin.cpp">
+    <ClCompile Include="dllmain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="PluginDefinition.cpp">
@@ -36,17 +33,29 @@
     <ClCompile Include="TreeBuilder.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="utils.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\external\npp\StaticDialog.cpp">
       <Filter>ThirdParty\npp</Filter>
     </ClCompile>
+    <ClCompile Include="NppJsonPlugin.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ShortcutCommand.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="JsonTreeViewDlg.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ScintillaEditor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TreeViewCtrl.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="AboutDlg.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Hyperlinks.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="JSONDialog.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -57,9 +66,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="StopWatch.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="utils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="TreeBuilder.h">
@@ -92,10 +98,48 @@
     <ClInclude Include="..\external\npp\Window.h">
       <Filter>ThirdParty\npp</Filter>
     </ClInclude>
+    <ClInclude Include="NppJsonPlugin.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ShortcutCommand.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="JsonTreeViewDlg.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ScintillaEditor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TreeViewCtrl.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AboutDlg.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Define.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc">
       <Filter>Resource Files</Filter>
     </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="res\Refresh.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\search.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\format.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\validate.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\Icon.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>

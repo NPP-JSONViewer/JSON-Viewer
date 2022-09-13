@@ -18,12 +18,12 @@
 #include "PluginDefinition.h"
 #include "menuCmdID.h"
 #include "JSONDialog.h"
-#include "Hyperlinks.h"
-#include "utils.h"
 #include "rapidjson/prettywriter.h"
 #include "rapidjson/stringbuffer.h"
 #include "rapidjson/reader.h"
 #include "rapidjson/document.h"
+
+#include <string>
 
 HANDLE g_hMod;
 CHAR* curJSON = NULL;
@@ -89,16 +89,16 @@ void commandMenuInit()
   setCommand(3, TEXT("&About"), openAboutDlg, NULL, false);
 }
 
-void setVersion(HWND hwndDlg)
+void setVersion(HWND /*hwndDlg*/)
 {
   std::wstring version;
 
-  // Get module path
-  wchar_t moduleFileName[MAX_PATH + 1] = {};
-  ::GetModuleFileName((HINSTANCE)&__ImageBase, moduleFileName, _MAX_PATH);
+  //// Get module path
+  //wchar_t moduleFileName[MAX_PATH + 1] = {};
+  //::GetModuleFileName((HINSTANCE)&__ImageBase, moduleFileName, _MAX_PATH);
 
-  version = getVersion(moduleFileName);
-  ::SetWindowText(::GetDlgItem(hwndDlg, IDC_VERSION), version.c_str());
+  //version = getVersion(moduleFileName);
+  //::SetWindowText(::GetDlgItem(hwndDlg, IDC_VERSION), version.c_str());
 }
 
 INT_PTR CALLBACK abtDlgProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM /*lParam*/)
@@ -107,7 +107,7 @@ INT_PTR CALLBACK abtDlgProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM /*lPa
   {
   case WM_INITDIALOG:
     setVersion(hwndDlg);
-    ConvertStaticToHyperlink(hwndDlg, IDC_WEB);
+    //ConvertStaticToHyperlink(hwndDlg, IDC_WEB);
     return TRUE;
   case WM_COMMAND:
     switch (LOWORD(wParam))
@@ -116,9 +116,9 @@ INT_PTR CALLBACK abtDlgProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM /*lPa
     case IDOK:
       EndDialog(hwndDlg, wParam);
       return TRUE;
-    case IDC_WEB:
+    /*case IDC_WEB:
       ShellExecute(hwndDlg, TEXT("open"), TEXT("https://github.com/kapilratnani/JSON-Viewer"), NULL, NULL, SW_SHOWNORMAL);
-      return TRUE;
+      return TRUE;*/
     }
   }
   return FALSE;

@@ -1,0 +1,240 @@
+#include "TreeViewCtrl.h"
+#include "Define.h"
+#include "resource.h"
+#include "StringHelper.h"
+
+
+void TreeViewCtrl::OnInit(HWND hParent)
+{
+	m_hParent = hParent;
+	m_hTree = GetDlgItem(m_hParent, IDC_TREE);
+}
+
+auto TreeViewCtrl::InitTree() -> HTREEITEM
+{
+	int TreeCount = TreeView_GetCount(m_hTree);
+	if (TreeCount > 0)
+		TreeView_DeleteAllItems(m_hTree);
+
+	return InsertNode(JSON_ROOT, -1, TVI_ROOT);
+}
+
+auto TreeViewCtrl::InsertNode(const std::wstring& text, LPARAM lparam, HTREEITEM parentNode) -> HTREEITEM
+{
+	TV_INSERTSTRUCT tvinsert;
+
+	if (parentNode == TVI_ROOT)
+	{
+		tvinsert.hParent = NULL;
+		tvinsert.hInsertAfter = TVI_ROOT;
+	}
+	else
+	{
+		tvinsert.hParent = parentNode;
+		tvinsert.hInsertAfter = TVI_LAST;
+	}
+
+	tvinsert.item.mask = TVIF_HANDLE | TVIF_TEXT | TVIF_PARAM;
+	tvinsert.item.pszText = const_cast<LPTSTR>(text.c_str());
+	tvinsert.item.lParam = lparam;
+
+	HTREEITEM item = reinterpret_cast<HTREEITEM>
+		(SendDlgItemMessage(m_hParent, IDC_TREE, TVM_INSERTITEM, 0, reinterpret_cast<LPARAM>(&tvinsert)));
+
+	return item;
+}
+
+void TreeViewCtrl::InsertItem(const void* jsonNode, HTREEITEM node)
+{
+	if (!jsonNode || !node)
+		return;
+
+	/*std::wstring txtToInsert = StringHelper::ToWstring(jsonNode->key);
+	JsonNodeType valType = jsonNode->type;
+
+	if (valType == JsonNodeType::UNKNOWN || valType == JsonNodeType::NUMBER || valType == JsonNodeType::BOOL)
+	{
+		txtToInsert += TEXT(" : ");
+		txtToInsert += StringHelper::ToWstring(jsonNode->value);
+		InsertNode(txtToInsert, jsonNode->pos.line, node);
+	}
+	else if (valType == JsonNodeType::STRING)
+	{
+		txtToInsert += TEXT(" : ");
+		txtToInsert += TEXT("\"");
+		txtToInsert += StringHelper::ToWstring(jsonNode->value);
+		txtToInsert += TEXT("\"");
+		InsertNode(txtToInsert, jsonNode->pos.line, node);
+	}
+	else if (valType == JsonNodeType::OBJECT || valType == JsonNodeType::ARRAY)
+	{
+		if (valType == JsonNodeType::OBJECT)
+			txtToInsert += TEXT(" : [Object]");
+		if (valType == JsonNodeType::ARRAY)
+			txtToInsert += TEXT(" : [Array]");
+
+		HTREEITEM newNode = InsertNode(txtToInsert, jsonNode->pos.line, node);
+
+		for (auto jsonNextNode : jsonNode->childs)
+		{
+			if (jsonNextNode)
+				InsertItem(jsonNextNode, newNode);
+		}
+	}*/
+}
+
+bool TreeViewCtrl::IsExpanded(HTREEITEM node) const
+{
+	return TreeView_GetItemState(m_hTree, node, TVIS_EXPANDED) & TVIS_EXPANDED;
+}
+
+bool TreeViewCtrl::IsThisOrAnyChildExpanded(HTREEITEM node) const
+{
+	if (node)
+	{
+		HTREEITEM root = TreeView_GetRoot(m_hTree);
+		if (node != root && IsExpanded(node))
+			return true;
+		
+		HTREEITEM htiChild = TreeView_GetNextItem(m_hTree, node, TVGN_CHILD);
+		while (htiChild)
+		{
+			if (IsThisOrAnyChildExpanded(htiChild))
+				return true;
+			htiChild = TreeView_GetNextItem(m_hTree, htiChild, TVGN_NEXT);
+		}
+	}
+	return false;
+}
+
+bool TreeViewCtrl::IsThisOrAnyChildCollapsed(HTREEITEM node) const
+{
+	if (node)
+	{
+		if (!IsExpanded(node) && HasChild(node))
+			return true;
+
+		HTREEITEM htiChild = TreeView_GetNextItem(m_hTree, node, TVGN_CHILD);
+		while (htiChild)
+		{
+			if (IsThisOrAnyChildCollapsed(htiChild))
+				return true;
+			htiChild = TreeView_GetNextItem(m_hTree, htiChild, TVGN_NEXT);
+		}
+	}
+	return false;
+}
+
+void TreeViewCtrl::Expand(HTREEITEM node)
+{
+	ExpandOrCollpase(node, TVE_EXPAND);
+}
+
+void TreeViewCtrl::Collapse(HTREEITEM node)
+{
+	ExpandOrCollpase(node, TVE_COLLAPSE);
+}
+
+void TreeViewCtrl::ExpandOrCollpase(HTREEITEM node, UINT_PTR code)
+{
+	TreeView_Expand(m_hTree, node, code);
+}
+
+BOOL TreeViewCtrl::ScreenToTreeView(LPPOINT lpPoint)
+{
+	return ScreenToClient(m_hTree, lpPoint);
+}
+
+HTREEITEM TreeViewCtrl::HitTest(LPTVHITTESTINFO lpHTInfo)
+{
+	return TreeView_HitTest(m_hTree, lpHTInfo);
+}
+
+HTREEITEM TreeViewCtrl::GetRoot()
+{
+	return TreeView_GetRoot(m_hTree);
+}
+
+bool TreeViewCtrl::SelectItem(HTREEITEM hti, bool firstVisible)
+{
+	UINT flag = TVGN_CARET;
+	if (firstVisible)
+		flag = TVGN_FIRSTVISIBLE;
+	return TreeView_Select(m_hTree, hti, flag) ? true : false;
+}
+
+bool TreeViewCtrl::HasChild(HTREEITEM hti) const
+{
+	HTREEITEM htiChild = NULL;
+	htiChild = TreeView_GetChild(m_hTree, hti);
+	return htiChild ? true : false;
+}
+
+auto TreeViewCtrl::GetNodePath(HTREEITEM /*hti*/) -> std::wstring
+{
+	return std::wstring(TEXT("Not Implemented..."));
+}
+
+HTREEITEM TreeViewCtrl::GetSelection()
+{
+	return TreeView_GetSelection(m_hTree);
+}
+
+bool TreeViewCtrl::IsItemVisible(HTREEITEM hti)
+{
+	RECT rect = {};
+	BOOL ret = TreeView_GetItemRect(m_hTree, hti, &rect, FALSE);
+	if (ret == FALSE || rect.top < 0)
+		return false;
+
+	return true;
+}
+
+HTREEITEM TreeViewCtrl::GetParentItem(HTREEITEM hti)
+{
+	return TreeView_GetParent(m_hTree, hti);
+}
+
+/*
+ * Get next item of current item on the TreeView.
+ * If current item has a child (or chidren) item, next will be the first child item.
+ * If current item has no child, next will be its sibling item.
+ * If current item has no child and no sibling, next will be its parent's (parent's parent's ...) sibling item.
+ * If current item's parent is ROOT and has no sibling item, it will return NULL.
+ */
+HTREEITEM TreeViewCtrl::NextItem(HTREEITEM htiCurrent, HTREEITEM htiNextRoot)
+{
+	HTREEITEM htiNext = nullptr;
+
+	// Does it has child.
+	htiNext = TreeView_GetChild(m_hTree, htiCurrent);
+	if (htiNext)
+		return htiNext;
+
+	// Has no child. So find its sibling.
+	htiNext = TreeView_GetNextSibling(m_hTree, htiCurrent);
+	if (htiNext)
+		return htiNext;
+
+	// Has no child and no sibling. Find its parent's (parent's parent's ...) sibling.
+	HTREEITEM htiParent = htiCurrent;
+	while ((htiParent = TreeView_GetParent(m_hTree, htiParent)) != htiNextRoot)
+	{
+		htiNext = TreeView_GetNextSibling(m_hTree, htiParent);
+		if (htiNext)
+			return htiNext;
+	}
+
+	return nullptr;
+}
+
+bool TreeViewCtrl::GetTVItem(HTREEITEM hti, TCHAR * buf, int bufSize, TVITEM * tvi)
+{
+	tvi->mask = TVIF_HANDLE | TVIF_TEXT | TVIF_PARAM;
+	tvi->cchTextMax = bufSize;
+	tvi->pszText = buf;
+	tvi->hItem = hti;
+	tvi->lParam = -1;
+
+	return TreeView_GetItem(m_hTree, tvi) ? true : false;
+}
