@@ -145,7 +145,7 @@ void commandMenuCleanUp()
 //
 // This function help you to initialize your plugin commands
 //
-bool setCommand(size_t index, TCHAR* cmdName, PFUNCPLUGINCMD pFunc, ShortcutKey* sk, bool check0nInit)
+bool setCommand(size_t index, const TCHAR* cmdName, PFUNCPLUGINCMD pFunc, ShortcutKey* sk, bool check0nInit)
 {
   if (index >= nbFunc)
     return false;
@@ -179,7 +179,7 @@ void showJSONDialog(char* json)
     data.uMask = DWS_DF_CONT_LEFT;
 
     data.pszModuleName = jsonDialog.getPluginFileName();
-    data.pszName = L"JSON Viewer";
+    data.pszName = const_cast<wchar_t*>(L"JSON Viewer");
 
     // the dlgDlg should be the index of funcItem where the current function pointer is
     data.dlgID = 0;

@@ -45,7 +45,7 @@ HTREEITEM JSONDialog::initTree(HWND hWndDlg)
 	tvinsert.hInsertAfter=TVI_ROOT;
 	tvinsert.item.mask=TVIF_TEXT;
 
-	tvinsert.item.pszText=L"JSON";
+	tvinsert.item.pszText = const_cast<wchar_t*>(L"JSON");
 	HTREEITEM item=(HTREEITEM)SendDlgItemMessage(hWndDlg,IDC_TREE,TVM_INSERTITEM,0,(LPARAM)&tvinsert);
 
 	return item;		
