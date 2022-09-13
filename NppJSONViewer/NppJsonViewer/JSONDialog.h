@@ -23,7 +23,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "PluginInterface.h"
 #include <commctrl.h>
 #include "resource.h"
-#include "json.h"
 
 class JSONDialog : public DockingDlgInterface
 {

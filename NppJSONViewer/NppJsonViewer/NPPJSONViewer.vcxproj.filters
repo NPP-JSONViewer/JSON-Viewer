@@ -24,9 +24,6 @@
     <ClCompile Include="Hyperlinks.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="json.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="JSONDialog.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -48,9 +45,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Hyperlinks.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="json.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="JSONDialog.h">

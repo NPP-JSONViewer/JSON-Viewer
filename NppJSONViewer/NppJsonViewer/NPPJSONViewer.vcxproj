@@ -242,7 +242,6 @@
   <ItemGroup>
     <ClCompile Include="..\external\npp\StaticDialog.cpp" />
     <ClCompile Include="Hyperlinks.cpp" />
-    <ClCompile Include="json.c" />
     <ClCompile Include="JSONDialog.cpp" />
     <ClCompile Include="NppPlugin.cpp" />
     <ClCompile Include="PluginDefinition.cpp" />
@@ -260,7 +259,6 @@
     <ClInclude Include="..\external\npp\StaticDialog.h" />
     <ClInclude Include="..\external\npp\Window.h" />
     <ClInclude Include="Hyperlinks.h" />
-    <ClInclude Include="json.h" />
     <ClInclude Include="JSONDialog.h" />
     <ClInclude Include="PluginDefinition.h" />
     <ClInclude Include="resource.h" />
