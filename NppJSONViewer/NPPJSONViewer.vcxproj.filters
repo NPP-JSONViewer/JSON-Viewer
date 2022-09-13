@@ -13,6 +13,12 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx</Extensions>
     </Filter>
+    <Filter Include="ThirdParty">
+      <UniqueIdentifier>{3a31aa3c-9f15-4a33-bf5c-b9153d1e757a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ThirdParty\npp">
+      <UniqueIdentifier>{5b794f9e-baf6-4faf-98a6-741b4918d410}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Hyperlinks.cpp">
@@ -30,26 +36,17 @@
     <ClCompile Include="PluginDefinition.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="StaticDialog.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="TreeBuilder.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="utils.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="external\npp\StaticDialog.cpp">
+      <Filter>ThirdParty\npp</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Docking.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="DockingDlgInterface.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="dockingResource.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Hyperlinks.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -59,25 +56,7 @@
     <ClInclude Include="JSONDialog.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="menuCmdID.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Notepad_plus_msgs.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="PluginDefinition.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="PluginInterface.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Scintilla.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="StaticDialog.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Window.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="resource.h">
@@ -91,6 +70,33 @@
     </ClInclude>
     <ClInclude Include="TreeBuilder.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="external\npp\Docking.h">
+      <Filter>ThirdParty\npp</Filter>
+    </ClInclude>
+    <ClInclude Include="external\npp\DockingDlgInterface.h">
+      <Filter>ThirdParty\npp</Filter>
+    </ClInclude>
+    <ClInclude Include="external\npp\dockingResource.h">
+      <Filter>ThirdParty\npp</Filter>
+    </ClInclude>
+    <ClInclude Include="external\npp\menuCmdID.h">
+      <Filter>ThirdParty\npp</Filter>
+    </ClInclude>
+    <ClInclude Include="external\npp\Notepad_plus_msgs.h">
+      <Filter>ThirdParty\npp</Filter>
+    </ClInclude>
+    <ClInclude Include="external\npp\PluginInterface.h">
+      <Filter>ThirdParty\npp</Filter>
+    </ClInclude>
+    <ClInclude Include="external\npp\Scintilla.h">
+      <Filter>ThirdParty\npp</Filter>
+    </ClInclude>
+    <ClInclude Include="external\npp\StaticDialog.h">
+      <Filter>ThirdParty\npp</Filter>
+    </ClInclude>
+    <ClInclude Include="external\npp\Window.h">
+      <Filter>ThirdParty\npp</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
