@@ -87,6 +87,16 @@ float CUtility::GetDesktopScale(HWND hWnd)
 	return fScale;
 }
 
+short CUtility::GetXFromLPARAM(LPARAM lp)
+{
+	return static_cast<short>(LOWORD(lp));
+}
+
+short CUtility::GetYFromLPARAM(LPARAM lp)
+{
+	return static_cast<short>(HIWORD(lp));
+}
+
 std::wstring CUtility::GetEditCtrlText(HWND hWnd)
 {
 	auto length = Edit_GetTextLength(hWnd);

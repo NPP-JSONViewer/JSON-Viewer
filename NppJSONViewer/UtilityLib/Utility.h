@@ -16,6 +16,9 @@ public:
 
 	static float GetDesktopScale(HWND hWnd);
 
+	static short GetXFromLPARAM(LPARAM lp);
+	static short GetYFromLPARAM(LPARAM lp);
+
 	static auto GetEditCtrlText(HWND hWnd)->std::wstring;
 	static void SetEditCtrlText(HWND hWnd, const std::wstring& txt);
 

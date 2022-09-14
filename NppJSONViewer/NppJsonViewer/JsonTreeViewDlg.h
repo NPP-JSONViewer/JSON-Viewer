@@ -27,8 +27,9 @@ private:
 
 	void ClickJsonTree(LPARAM lParam);
 	void ClickJsonTreeItem(HTREEITEM htiNode);
-	void ClickJsonTreeItemRight(HTREEITEM htiNode, LPPOINT lppScreen);
+	void HandleRightClick(HTREEITEM htiNode, LPPOINT lppScreen);
 
+	void ShowContextMenu(int x, int y);
 	void ContextMenuExpand(bool bExpand);
 
 	int ShowMessage(const std::wstring& title, const std::wstring& msg, int flag, bool bForceShow = false);

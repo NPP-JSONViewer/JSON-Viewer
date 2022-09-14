@@ -4,6 +4,7 @@
 //#include "JsonParser.h"
 #include "ScintillaEditor.h"
 
+
 JsonTreeViewDlg::JsonTreeViewDlg(HINSTANCE hIntance, const NppData& nppData, int nCmdId) :
 	m_NppData(nppData),
 	DockingDlgInterface(IDD_TREEDLG),
@@ -216,11 +217,10 @@ void JsonTreeViewDlg::ClickJsonTree(LPARAM lParam)
 	switch (lpnmh->code)
 	{
 	case NM_CLICK:
-	case NM_RCLICK:
 	{
-		BOOL bRightClick = FALSE;
+		// Let's play safe here
 		if (lpnmh->code == NM_RCLICK)
-			bRightClick = TRUE;
+			break;
 
 		DWORD dwPos = GetMessagePos();
 		POINT ptScreen, ptClient;
@@ -236,16 +236,10 @@ void JsonTreeViewDlg::ClickJsonTree(LPARAM lParam)
 		if (!hItem)
 			return; // No hit
 
-		if (!bRightClick && (ht.flags & TVHT_ONITEMLABEL))
+		if (ht.flags & TVHT_ONITEMLABEL)
 		{
 			// Left click
 			ClickJsonTreeItem(hItem);
-		}
-		else if (bRightClick && (ht.flags & (TVHT_ONITEM | TVHT_ONITEMBUTTON)))
-		{
-			// Right click
-			ClickJsonTreeItem(hItem);
-			ClickJsonTreeItemRight(hItem, &ptScreen);
 		}
 	}
 	break;
@@ -270,7 +264,7 @@ void JsonTreeViewDlg::ClickJsonTreeItem(HTREEITEM htiNode)
 	//m_hTreeView->GotoScintillaLine(htiNode, m_iSelStartLine);
 }
 
-void JsonTreeViewDlg::ClickJsonTreeItemRight(HTREEITEM htiNode, LPPOINT lppScreen)
+void JsonTreeViewDlg::HandleRightClick(HTREEITEM htiNode, LPPOINT lppScreen)
 {
 	// Select it
 	m_hTreeView->SelectItem(htiNode);
@@ -332,6 +326,38 @@ void JsonTreeViewDlg::ClickJsonTreeItemRight(HTREEITEM htiNode, LPPOINT lppScree
 
 		// Clean up
 		DestroyMenu(hMenuPopup);
+	}
+}
+
+void JsonTreeViewDlg::ShowContextMenu(int x, int y)
+{
+	POINT p{
+		  .x = x
+		, .y = y
+	};
+
+	TVHITTESTINFO tvHitInfo{
+		  .pt = p
+		, .flags = 0
+		, .hItem = nullptr
+	};
+
+	m_hTreeView->ScreenToTreeView(&(tvHitInfo.pt));
+
+	// Detect if the given position is on the element TVITEM
+	HTREEITEM hTreeItem = m_hTreeView->HitTest(&tvHitInfo);
+
+	if (hTreeItem != nullptr)
+	{
+		// Make item selected
+		m_hTreeView->SelectItem(hTreeItem);
+
+		if (tvHitInfo.flags & (TVHT_ONITEM | TVHT_ONITEMBUTTON))
+		{
+			// Right click
+			ClickJsonTreeItem(hTreeItem);
+			HandleRightClick(hTreeItem, &p);
+		}
 	}
 }
 
@@ -451,6 +477,12 @@ INT_PTR JsonTreeViewDlg::run_dlgProc(UINT message, WPARAM wParam, LPARAM lParam)
 	{
 		bool bVisible = wParam;
 		ToggleMenuItemState(bVisible);
+		return TRUE;
+	}
+
+	case WM_CONTEXTMENU:
+	{
+		ShowContextMenu(CUtility::GetXFromLPARAM(lParam), CUtility::GetYFromLPARAM(lParam));
 		return TRUE;
 	}
 
