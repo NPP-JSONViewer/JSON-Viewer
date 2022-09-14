@@ -99,7 +99,7 @@ void NppJsonPlugin::InitCommandMenu()
 	m_shortcutCommands.SetCommand(CallBackID::FORMAT, MENU_FORMAT_JSON, Callback::FormatJson, false);
 
 	m_shortcutCommands.SetShortCut(CallBackID::COMPRESS, { true, true, true, 'C' });
-	m_shortcutCommands.SetCommand(CallBackID::COMPRESS, MENU_COMPRESS_JSON, Callback::FormatJson, false);
+	m_shortcutCommands.SetCommand(CallBackID::COMPRESS, MENU_COMPRESS_JSON, Callback::CompressJson, false);
 
 	m_shortcutCommands.SetCommand(CallBackID::SEP_1, MENU_SEPERATOR, NULL, true);
 
@@ -139,6 +139,17 @@ void NppJsonPlugin::ShowJsonDocPanelDlg()
 }
 
 void NppJsonPlugin::FormatJson()
+{
+	auto nCmdId = m_shortcutCommands.GetCommandID(CallBackID::FORMAT);
+
+	if (!m_pAboutDlg)
+		m_pAboutDlg = std::make_unique<AboutDlg>(reinterpret_cast<HINSTANCE>(m_hModule), m_NppData._nppHandle, nCmdId);
+	bool isShown = m_pAboutDlg->ShowDlg(true);
+
+	ToggleMenuItemState(nCmdId, isShown);
+}
+
+void NppJsonPlugin::CompressJson()
 {
 	auto nCmdId = m_shortcutCommands.GetCommandID(CallBackID::FORMAT);
 

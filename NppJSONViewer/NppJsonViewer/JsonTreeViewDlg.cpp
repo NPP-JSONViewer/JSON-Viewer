@@ -387,6 +387,12 @@ void JsonTreeViewDlg::ToggleMenuItemState(bool bVisible)
 	::SendMessage(_hParent, NPPM_SETMENUITEMCHECK, static_cast<WPARAM>(m_nDlgId), bVisible);
 }
 
+void JsonTreeViewDlg::ShowControls(const std::vector<DWORD>& ids, bool enable)
+{
+	for (auto id : ids)
+		ShowWindow(GetDlgItem(getHSelf(), id), enable ? SW_HIDE : SW_HIDE);
+}
+
 void JsonTreeViewDlg::EnableControls(const std::vector<DWORD>& ids, bool enable)
 {
 	for (auto id : ids)
@@ -493,6 +499,9 @@ INT_PTR JsonTreeViewDlg::run_dlgProc(UINT message, WPARAM wParam, LPARAM lParam)
 	}
 
 	default:
+		// TODO: Temporarily hide controls which are not implemented 
+		std::vector<DWORD> toHide = { IDC_BTN_SEARCH, IDC_EDT_SEARCH, IDC_EDT_NODEPATH };
+		ShowControls(toHide, false);
 		return DockingDlgInterface::run_dlgProc(message, wParam, lParam);
 	}
 }

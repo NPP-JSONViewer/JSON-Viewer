@@ -36,6 +36,7 @@ private:
 
 	void ToggleMenuItemState(bool bVisible);
 
+	void ShowControls(const std::vector<DWORD>& ids, bool enable);
 	void EnableControls(const std::vector<DWORD>& ids, bool enable);
 
 protected:

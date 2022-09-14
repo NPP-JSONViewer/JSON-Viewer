@@ -41,6 +41,7 @@ private:
 
 		static void ShowJsonDocPanelDlg() { m_pNppJsonPlugin->ShowJsonDocPanelDlg(); }
 		static void FormatJson() { m_pNppJsonPlugin->FormatJson(); }
+		static void CompressJson() { m_pNppJsonPlugin->CompressJson(); }
 		static void OpenOptionDlg() { m_pNppJsonPlugin->OpenOptionDlg(); }
 		static void ShowAboutDlg() { m_pNppJsonPlugin->ShowAboutDlg(); }
 	};
@@ -53,6 +54,7 @@ private:
 
 	void ShowJsonDocPanelDlg();
 	void FormatJson();
+	void CompressJson();
 	void OpenOptionDlg();
 	void ShowAboutDlg();
 
