@@ -1,7 +1,7 @@
 #include "JsonTreeViewDlg.h"
 #include "Define.h"
 #include "Utility.h"
-//#include "JsonParser.h"
+#include "TreeBuilder.h"
 #include "ScintillaEditor.h"
 
 
@@ -183,29 +183,68 @@ void JsonTreeViewDlg::DrawJsonTree()
 	HTREEITEM rootNode = nullptr;
 	rootNode = m_hTreeView->InitTree();
 
-	//std::string txtForParsing = m_Editor->GetJsonText();
-	//CJsonParser jsonParser(txtForParsing);
+	const std::string txtForParsing = m_Editor->GetJsonText();
 
-	//if (jsonParser.GetType() == JsonNodeType::UNKNOWN)
-	//{
-	//	m_hTreeView->InsertNode(JSON_ERR_PARSE, -1, rootNode);
-	//	ShowMessage(JSON_ERROR_TITLE, JSON_ERR_PARSE, MB_OK);
-	//}
-	//else
-	//{
-	//	// Draw all the nodes here
-	//	JsonNode& jsonNode = jsonParser.GetNode();
-	//	for (const auto node : jsonNode.childs)
-	//	{
-	//		if (node)
-	//			m_hTreeView->InsertItem(node, rootNode);
-	//	}
-	//}
+	if (txtForParsing.empty())
+	{
+		m_hTreeView->InsertNode(L"Error: Please select a JSON String.", NULL, rootNode);
+	}
+	else
+	{
+		PopulateTreeUsingSax(rootNode, txtForParsing);
+	}
 
 	m_hTreeView->Expand(rootNode);
 
 	// Enable all buttons and treeView
 	EnableControls(ctrls, true);
+}
+
+void JsonTreeViewDlg::PopulateTreeUsingSax(HTREEITEM tree_root, const std::string& jsonText)
+{
+	TreeBuilder handler(this, tree_root);
+	rapidjson::Reader reader;
+
+	rapidjson::StringStream ss(jsonText.c_str());
+	if (!reader.Parse< rapidjson::kParseNumbersAsStringsFlag | rapidjson::kParseCommentsFlag |
+		rapidjson::kParseEscapedApostropheFlag | rapidjson::kParseNanAndInfFlag | rapidjson::kParseTrailingCommasFlag>(ss, handler))
+	{
+		::MessageBox(m_NppData._nppHandle, TEXT("Could not parse!!"), TEXT("JSON Viewer"), MB_OK | MB_ICONERROR);
+
+		// Mark the error position
+		size_t errPosition = reader.GetErrorOffset();
+		m_Editor->MarkErrorPosistion(errPosition);
+	}
+
+	m_Editor->SetLangAsJson();
+}
+
+HTREEITEM JsonTreeViewDlg::InsertToTree(HWND hWndDlg, HTREEITEM parent, const char* text)
+{
+	TV_INSERTSTRUCT tvinsert;
+	HTREEITEM item = NULL;
+	tvinsert.hParent = parent;
+	tvinsert.hInsertAfter = TVI_LAST;
+	tvinsert.item.mask = TVIF_TEXT;
+
+	auto len = strlen(text) + 1;
+	wchar_t* w_msg = new wchar_t[len];
+	if (w_msg)
+	{
+		memset(w_msg, 0, len);
+		MultiByteToWideChar(CP_UTF8, NULL, text, -1, w_msg, static_cast<int>(len));
+
+		tvinsert.item.pszText = w_msg;
+		item = (HTREEITEM)SendDlgItemMessage(hWndDlg, IDC_TREE, TVM_INSERTITEM, 0, (LPARAM)&tvinsert);
+		delete[] w_msg; // fix memory leak
+	}
+
+	return item;
+}
+
+HTREEITEM JsonTreeViewDlg::InsertToTree(HTREEITEM parent, const char* text)
+{
+	return InsertToTree(getHSelf(), parent, text);
 }
 
 void JsonTreeViewDlg::ClickJsonTree(LPARAM lParam)

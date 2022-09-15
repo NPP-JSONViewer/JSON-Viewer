@@ -1,7 +1,7 @@
 #include "TreeBuilder.h"
 #include <iostream>
 #include <sstream>
-#include "JSONDialog.h"
+#include "JsonTreeViewDlg.h"
 
 using namespace std;
 
@@ -63,47 +63,47 @@ bool TreeBuilder::Int64(int64_t i) { cout << "Int64(" << i << ")" << endl; retur
 bool TreeBuilder::Uint64(uint64_t u) { cout << "Uint64(" << u << ")" << endl; return true; }
 bool TreeBuilder::Double(double d) { cout << "Double(" << d << ")" << endl; return true; }
 
-bool TreeBuilder::RawNumber(const char *str, SizeType length, bool copy)
+bool TreeBuilder::RawNumber(const char* str, SizeType length, bool copy)
 {
 	return this->String(str, length, copy);
 }
 
 bool TreeBuilder::String(const char* str, SizeType length, bool /*copy*/)
 {
-  // handle case, when there is only a value in input
-  char* value = NULL;
-  size_t len = 0;
-  if (this->stack.empty()) {
-    len = length + 1; // 1 for null
-    value = new char[len];
-    snprintf(value, len, "%s", str);
-    value[len - 1] = '\0';
-    this->dlg->insertToTree(treeRoot, value);
-  }
-  else {
-    TreeNode* parent = this->stack.top();
-    if (!parent->isArray)
-    {
-      len = strlen(this->lastKey) + 3 + length + 1;
-      value = new char[len];
-      snprintf(value, len, "%s : %s", this->lastKey, str);
-      value[len - 1] = '\0';
-      delete[] this->lastKey;
-      this->lastKey = NULL;
-    }
-    else
-    {
-      string strCount = SSTR(parent->counter);
-      len = strCount.size() + 3 + length + 1;
-      value = new char[len];
-      snprintf(value, len, "%s : %s", strCount.c_str(), str);
-      value[len - 1] = '\0';
-      parent->counter++;
-    }
+	// handle case, when there is only a value in input
+	char* value = NULL;
+	size_t len = 0;
+	if (this->m_stack.empty()) {
+		len = length + 1; // 1 for null
+		value = new char[len];
+		snprintf(value, len, "%s", str);
+		value[len - 1] = '\0';
+		this->m_dlg->InsertToTree(m_treeRoot, value);
+	}
+	else {
+		TreeNode* parent = this->m_stack.top();
+		if (!parent->isArray)
+		{
+			len = strlen(this->m_lastKey) + 3 + length + 1;
+			value = new char[len];
+			snprintf(value, len, "%s : %s", this->m_lastKey, str);
+			value[len - 1] = '\0';
+			delete[] this->m_lastKey;
+			this->m_lastKey = NULL;
+		}
+		else
+		{
+			string strCount = SSTR(parent->counter);
+			len = strCount.size() + 3 + length + 1;
+			value = new char[len];
+			snprintf(value, len, "%s : %s", strCount.c_str(), str);
+			value[len - 1] = '\0';
+			parent->counter++;
+		}
 
-    // insert
-    this->dlg->insertToTree(parent->subRoot, value);
-  }
+		// insert
+		this->m_dlg->InsertToTree(parent->subRoot, value);
+	}
 	//clear
 	delete[] value;
 	return true;
@@ -111,50 +111,50 @@ bool TreeBuilder::String(const char* str, SizeType length, bool /*copy*/)
 
 bool TreeBuilder::StartObject()
 {
-	TreeNode *parent;
-	if (this->stack.empty())
+	TreeNode* parent;
+	if (this->m_stack.empty())
 	{
 		parent = new TreeNode;
 		parent->isArray = false;
-		parent->subRoot = treeRoot;
+		parent->subRoot = m_treeRoot;
 		parent->counter = 0;
-		this->stack.push(parent);
+		this->m_stack.push(parent);
 	}
 	else
 	{
-		parent = this->stack.top();
+		parent = this->m_stack.top();
 	}
 
-	if (this->lastKey != NULL || parent->isArray)
+	if (this->m_lastKey != NULL || parent->isArray)
 	{
 		HTREEITEM newNode;
 		if (!parent->isArray)
 		{
-			newNode = this->dlg->insertToTree(parent->subRoot, this->lastKey);
-			delete this->lastKey;
-			this->lastKey = NULL;
+			newNode = this->m_dlg->InsertToTree(parent->subRoot, this->m_lastKey);
+			delete this->m_lastKey;
+			this->m_lastKey = NULL;
 		}
 		else
 		{
-			newNode = this->dlg->insertToTree(parent->subRoot, SSTR(parent->counter).c_str());
+			newNode = this->m_dlg->InsertToTree(parent->subRoot, SSTR(parent->counter).c_str());
 		}
 
 		parent->counter++;
-		TreeNode *newTreeNode = new TreeNode;
+		TreeNode* newTreeNode = new TreeNode;
 		newTreeNode->isArray = false;
 		newTreeNode->subRoot = newNode;
 		newTreeNode->counter = 0;
-		this->stack.push(newTreeNode);
+		this->m_stack.push(newTreeNode);
 	}
 	return true;
 }
 
 bool TreeBuilder::EndObject(SizeType /*memberCount*/)
 {
-	if (!this->stack.empty())
+	if (!this->m_stack.empty())
 	{
-		TreeNode *node = this->stack.top();
-		this->stack.pop();
+		TreeNode* node = this->m_stack.top();
+		this->m_stack.pop();
 		delete node;
 	}
 	return true;
@@ -162,58 +162,58 @@ bool TreeBuilder::EndObject(SizeType /*memberCount*/)
 
 bool TreeBuilder::Key(const char* str, SizeType length, bool /*copy*/)
 {
-	this->lastKey = new char[length + 1];
-	strncpy(this->lastKey, str, length);
-	this->lastKey[length] = '\0';
+	this->m_lastKey = new char[length + 1];
+	strncpy(this->m_lastKey, str, length);
+	this->m_lastKey[length] = '\0';
 	return true;
 }
 
 bool TreeBuilder::StartArray()
 {
-	TreeNode *parent;
-	if (this->stack.empty())
+	TreeNode* parent;
+	if (this->m_stack.empty())
 	{
 		parent = new TreeNode;
 		parent->isArray = true;
-		parent->subRoot = treeRoot;
+		parent->subRoot = m_treeRoot;
 		parent->counter = 0;
-		this->stack.push(parent);
+		this->m_stack.push(parent);
 		return true;
 	}
 	else
 	{
-		parent = this->stack.top();
+		parent = this->m_stack.top();
 	}
 
-	if (this->lastKey != NULL || parent->isArray)
+	if (this->m_lastKey != NULL || parent->isArray)
 	{
 		HTREEITEM newNode;
 		if (!parent->isArray)
 		{
-			newNode = this->dlg->insertToTree(parent->subRoot, this->lastKey);
-			delete this->lastKey;
-			this->lastKey = NULL;
+			newNode = m_dlg->InsertToTree(parent->subRoot, this->m_lastKey);
+			delete this->m_lastKey;
+			this->m_lastKey = NULL;
 		}
 		else
 		{
-			newNode = this->dlg->insertToTree(parent->subRoot, SSTR(parent->counter).c_str());
+			newNode = this->m_dlg->InsertToTree(parent->subRoot, SSTR(parent->counter).c_str());
 		}
 		parent->counter++;
-		TreeNode *newTreeNode = new TreeNode;
+		TreeNode* newTreeNode = new TreeNode;
 		newTreeNode->isArray = true;
 		newTreeNode->subRoot = newNode;
 		newTreeNode->counter = 0;
-		this->stack.push(newTreeNode);
+		this->m_stack.push(newTreeNode);
 	}
 	return true;
 }
 
 bool TreeBuilder::EndArray(SizeType /*elementCount*/)
 {
-	if (!this->stack.empty())
+	if (!this->m_stack.empty())
 	{
-		TreeNode *node = this->stack.top();
-		this->stack.pop();
+		TreeNode* node = this->m_stack.top();
+		this->m_stack.pop();
 		delete node;
 	}
 	return true;

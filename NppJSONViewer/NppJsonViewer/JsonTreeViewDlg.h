@@ -17,6 +17,10 @@ public:
 
 	void ShowDlg(bool bShow);
 
+	// TODO : move to treeviewctrl class
+	HTREEITEM InsertToTree(HWND hWndDlg, HTREEITEM parent, const char* text);
+	HTREEITEM InsertToTree(HTREEITEM parent, const char* text);
+
 private:
 	void PrepareButtons();
 	void SetIconAndTooltip(eButton ctrlType, const std::wstring& toolTip);
@@ -24,6 +28,7 @@ private:
 	void AdjustDocPanelSize(int nWidth, int nHeight);
 
 	void DrawJsonTree();
+	void PopulateTreeUsingSax(HTREEITEM tree_root, const std::string& jsonText);
 
 	void ClickJsonTree(LPARAM lParam);
 	void ClickJsonTreeItem(HTREEITEM htiNode);

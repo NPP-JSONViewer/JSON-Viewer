@@ -1,6 +1,6 @@
 #include "ScintillaEditor.h"
 #include <cassert>
-//#include <algorithm>
+#include <memory>
 
 ScintillaEditor::ScintillaEditor(const NppData& nppData) :
 	m_NppData(nppData)
@@ -22,20 +22,34 @@ std::string ScintillaEditor::GetJsonText()
 
 	// Get only selected text if any else select all text
 	size_t asciiTextLen = m_nEndPos - m_nStartPos;
-	char* chSelectedText = nullptr;
 	if (asciiTextLen == 0)
 	{
 		asciiTextLen = ::SendMessage(m_hScintilla, SCI_GETLENGTH, 0, 0);
 		::SendMessage(m_hScintilla, SCI_SETSELECTIONSTART, 0, 0);
 		::SendMessage(m_hScintilla, SCI_SETSELECTIONEND, asciiTextLen, 0);
 	}
-	chSelectedText = new CHAR[asciiTextLen + 1];
-	::SendMessage(m_hScintilla, SCI_GETSELTEXT, 0, reinterpret_cast<LPARAM>(chSelectedText));
+	std::unique_ptr<CHAR[]> chSelectedText = std::make_unique<CHAR[]>(asciiTextLen + 1);
+	::SendMessage(m_hScintilla, SCI_GETSELTEXT, 0, reinterpret_cast<LPARAM>(chSelectedText.get()));
 
 	// Update selection position
 	RefreshSelectionPos();
 
-	return std::string(chSelectedText);
+	return chSelectedText.get();
+}
+
+void ScintillaEditor::SetLangAsJson() const
+{
+	::SendMessage(m_hScintilla, NPPM_SETCURRENTLANGTYPE, 0, LangType::L_JSON);
+}
+
+void ScintillaEditor::MarkErrorPosistion(int endPos) const
+{
+	// Get current selected position
+	size_t start = ::SendMessage(m_hScintilla, SCI_GETSELECTIONSTART, 0, 0);
+
+	size_t errPosition = start + endPos;
+
+	::SendMessage(m_hScintilla, SCI_SETSEL, errPosition, errPosition + 1);
 }
 
 void ScintillaEditor::RefreshSelectionPos()

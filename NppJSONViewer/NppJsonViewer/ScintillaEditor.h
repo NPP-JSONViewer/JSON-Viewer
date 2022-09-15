@@ -9,6 +9,8 @@ public:
 	~ScintillaEditor() = default;
 
 	std::string GetJsonText();
+	void SetLangAsJson() const;
+	void MarkErrorPosistion(int endPos) const;
 
 private:
 	void RefreshSelectionPos();

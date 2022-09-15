@@ -5,7 +5,7 @@
 #include<Windows.h>
 #include <commctrl.h>
 
-class JSONDialog;
+class JsonTreeViewDlg;
 using namespace rapidjson;
 
 struct TreeNode {
@@ -17,12 +17,12 @@ struct TreeNode {
 
 class TreeBuilder : public BaseReaderHandler<UTF8<>, TreeBuilder>
 {
-	JSONDialog *dlg = nullptr;
-	std::stack<TreeNode*> stack;
-	HTREEITEM treeRoot = nullptr;
-	char *lastKey = nullptr;
+	JsonTreeViewDlg* m_dlg = nullptr;
+	std::stack<TreeNode*> m_stack;
+	HTREEITEM m_treeRoot = nullptr;
+	char* m_lastKey = nullptr;
 public:
-	TreeBuilder(JSONDialog *dlg, HTREEITEM treeRoot) : dlg(dlg), treeRoot(treeRoot) {}
+	TreeBuilder(JsonTreeViewDlg* dlg, HTREEITEM treeRoot) : m_dlg(dlg), m_treeRoot(treeRoot) {}
 	~TreeBuilder() = default;
 
 	bool Null();
@@ -39,6 +39,5 @@ public:
 	bool EndObject(SizeType memberCount);
 	bool StartArray();
 	bool EndArray(SizeType elementCount);
-
 };
 

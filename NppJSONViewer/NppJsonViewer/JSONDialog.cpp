@@ -89,8 +89,13 @@ void JSONDialog::setJSON(char* json)
 		drawTreeSaxParse();
 }
 
-void JSONDialog::populateTreeUsingSax(HWND /*hWndDlg*/, HTREEITEM tree_root, char *json)
+void JSONDialog::populateTreeUsingSax(HTREEITEM tree_root, char *json)
 {
+
+#if 1
+	UNREFERENCED_PARAMETER(tree_root);
+	UNREFERENCED_PARAMETER(json);
+#else
 	//Stopwatch sw;
 	//sw.Start();
 	TreeBuilder handler(this, tree_root);
@@ -126,6 +131,7 @@ void JSONDialog::populateTreeUsingSax(HWND /*hWndDlg*/, HTREEITEM tree_root, cha
 	//s << "tree_time:" << elapsed << " ms";
 
 	//::MessageBox(nppData._nppHandle, s.str().c_str(), TEXT("JSON Viewer"), MB_OK);
+#endif
 }
 
 /*
@@ -144,7 +150,7 @@ void JSONDialog::drawTreeSaxParse()
 		return;
 	}
 	
-	populateTreeUsingSax(this->getHSelf(), tree_root, curJSON);
+	populateTreeUsingSax(tree_root, curJSON);
 	TreeView_Expand(GetDlgItem(this->getHSelf(), IDC_TREE), tree_root, TVE_EXPAND);
 }
 
