@@ -35,13 +35,16 @@ public:
 	bool SelectItem(HTREEITEM hti, bool firstVisible = false);
 	bool HasChild(HTREEITEM hti) const;
 
-	HTREEITEM GetSelection();
+	HTREEITEM GetSelection() const;
 
 	bool IsItemVisible(HTREEITEM hti);
 
 	HTREEITEM NextItem(HTREEITEM htiCurrent) { return NextItem(htiCurrent, nullptr); }
 	HTREEITEM NextItem(HTREEITEM htiCurrent, HTREEITEM htiNextRoot);
 
+	auto GetNodeName(HTREEITEM hti)->std::wstring;
+	auto GetNodeKey(HTREEITEM hti)->std::wstring;
+	auto GetNodeValue(HTREEITEM hti)->std::wstring;
 	auto GetNodePath(HTREEITEM hti)->std::wstring;
 
 private:

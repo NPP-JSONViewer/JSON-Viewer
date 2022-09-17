@@ -3,6 +3,7 @@
 #include "Utility.h"
 #include "StringHelper.h"
 #include "TreeBuilder.h"
+#include "RapidJsonHandler.h"
 #include "ScintillaEditor.h"
 #include "JsonHandler.h"
 #include <format>
@@ -87,7 +88,7 @@ void JsonViewDlg::CompressJson()
 			, res.error_code
 			, res.error_str
 		);
-		
+
 		::MessageBox(m_NppData._nppHandle, StringHelper::ToWstring(err).c_str(), TEXT("JSON Viewer"), MB_OK | MB_ICONERROR);
 	}
 }
@@ -237,7 +238,8 @@ void JsonViewDlg::DrawJsonTree()
 
 void JsonViewDlg::PopulateTreeUsingSax(HTREEITEM tree_root, const std::string& jsonText)
 {
-	TreeBuilder handler(this, tree_root);
+	//TreeBuilder handler(this, tree_root);
+	RapidJsonHandler handler(this, tree_root);
 	rapidjson::Reader reader;
 
 	rapidjson::StringStream ss(jsonText.c_str());
@@ -362,6 +364,7 @@ void JsonViewDlg::HandleRightClick(HTREEITEM htiNode, LPPOINT lppScreen)
 
 		if (m_hTreeView->HasChild(htiNode))
 		{
+			bEnableCopyName = false;
 			bEnableCopyValue = false;
 			bEnableCollapse = m_hTreeView->IsThisOrAnyChildExpanded(htiNode);
 			bEnableExpand = m_hTreeView->IsThisOrAnyChildCollapsed(htiNode);
@@ -451,6 +454,46 @@ void JsonViewDlg::ContextMenuExpand(bool bExpand)
 	}
 }
 
+auto JsonViewDlg::CopyName() const -> std::wstring
+{
+	HTREEITEM selectedNode = m_hTreeView->GetSelection();
+	if (selectedNode)
+	{
+		return m_hTreeView->GetNodeName(selectedNode);
+	}
+	return std::wstring();
+}
+
+auto JsonViewDlg::CopyKey() const -> std::wstring
+{
+	HTREEITEM selectedNode = m_hTreeView->GetSelection();
+	if (selectedNode)
+	{
+		return m_hTreeView->GetNodeKey(selectedNode);
+	}
+	return std::wstring();
+}
+
+auto JsonViewDlg::CopyValue() const -> std::wstring
+{
+	HTREEITEM selectedNode = m_hTreeView->GetSelection();
+	if (selectedNode)
+	{
+		return m_hTreeView->GetNodeValue(selectedNode);
+	}
+	return std::wstring();
+}
+
+auto JsonViewDlg::CopyPath() const -> std::wstring
+{
+	HTREEITEM selectedNode = m_hTreeView->GetSelection();
+	if (selectedNode)
+	{
+		return m_hTreeView->GetNodePath(selectedNode);
+	}
+	return std::wstring();
+}
+
 int JsonViewDlg::ShowMessage(const std::wstring& title, const std::wstring& msg, int flag, bool bForceShow)
 {
 	return (!m_isSilent || bForceShow) ? ::MessageBox(_hParent, msg.c_str(), title.c_str(), flag) : IDOK;
@@ -513,10 +556,6 @@ INT_PTR JsonViewDlg::run_dlgProc(UINT message, WPARAM wParam, LPARAM lParam)
 			DrawJsonTree();
 			break;
 
-		case IDC_BTN_SEARCH:
-			MessageBox(_hSelf, L"IDC_BTN_SEARCH", L"OK", MB_OK);
-			break;
-
 		case IDC_BTN_FORMAT:
 			MessageBox(_hSelf, L"IDC_BTN_FORMAT", L"OK", MB_OK);
 			break;
@@ -525,21 +564,25 @@ INT_PTR JsonViewDlg::run_dlgProc(UINT message, WPARAM wParam, LPARAM lParam)
 			MessageBox(_hSelf, L"IDC_BTN_VALIDATE", L"OK", MB_OK);
 			break;
 
+		case IDC_BTN_SEARCH:
+			MessageBox(_hSelf, L"IDC_BTN_SEARCH", L"OK", MB_OK);
+			break;
+
 			// context menu entries
 		case IDM_COPY_TREEITEM:
-			MessageBox(_hSelf, L"IDM_COPY_TREEITEM", L"OK", MB_OK);
+			CUtility::CopyToClipboard(CopyName(), _hSelf);
 			break;
 
 		case IDM_COPY_NODENAME:
-			MessageBox(_hSelf, L"IDM_COPY_NODENAME", L"OK", MB_OK);
+			CUtility::CopyToClipboard(CopyKey(), _hSelf);
 			break;
 
 		case IDM_COPY_NODEVALUE:
-			MessageBox(_hSelf, L"IDM_COPY_NODEVALUE", L"OK", MB_OK);
+			CUtility::CopyToClipboard(CopyValue(), _hSelf);
 			break;
 
 		case IDM_COPY_NODEPATH:
-			MessageBox(_hSelf, L"IDM_COPY_NODEPATH", L"OK", MB_OK);
+			CUtility::CopyToClipboard(CopyPath(), _hSelf);
 			break;
 
 		case IDM_EXPANDALL:

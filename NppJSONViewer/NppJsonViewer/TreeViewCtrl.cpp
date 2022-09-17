@@ -95,7 +95,7 @@ bool TreeViewCtrl::IsThisOrAnyChildExpanded(HTREEITEM node) const
 		HTREEITEM root = TreeView_GetRoot(m_hTree);
 		if (node != root && IsExpanded(node))
 			return true;
-		
+
 		HTREEITEM htiChild = TreeView_GetNextItem(m_hTree, node, TVGN_CHILD);
 		while (htiChild)
 		{
@@ -170,12 +170,51 @@ bool TreeViewCtrl::HasChild(HTREEITEM hti) const
 	return htiChild ? true : false;
 }
 
+auto TreeViewCtrl::GetNodeName(HTREEITEM hti) -> std::wstring
+{
+	if (!hti)
+		return TEXT("");
+
+	TCHAR textBuffer[MAX_PATH]{ };
+	TVITEM tvItem{};
+	tvItem.hItem = hti;
+	tvItem.mask = TVIF_TEXT;
+	tvItem.pszText = textBuffer;
+	tvItem.cchTextMax = MAX_PATH;
+	SendMessage(m_hTree, TVM_GETITEM, 0, reinterpret_cast<LPARAM>(&tvItem));
+	return tvItem.pszText;
+}
+
+auto TreeViewCtrl::GetNodeKey(HTREEITEM hti) -> std::wstring
+{
+	std::wstring retVal = GetNodeName(hti);
+
+	auto pos = retVal.find(L" : ");
+	if (pos != std::wstring::npos)
+	{
+		retVal = retVal.substr(0, pos);
+	}
+	return retVal;
+}
+
+auto TreeViewCtrl::GetNodeValue(HTREEITEM hti) -> std::wstring
+{
+	std::wstring retVal = GetNodeName(hti);
+
+	auto pos = retVal.find(L" : ");
+	if (pos != std::wstring::npos)
+	{
+		retVal = retVal.substr(pos + 3);
+	}
+	return retVal;
+}
+
 auto TreeViewCtrl::GetNodePath(HTREEITEM /*hti*/) -> std::wstring
 {
 	return std::wstring(TEXT("Not Implemented..."));
 }
 
-HTREEITEM TreeViewCtrl::GetSelection()
+HTREEITEM TreeViewCtrl::GetSelection() const
 {
 	return TreeView_GetSelection(m_hTree);
 }
@@ -228,7 +267,7 @@ HTREEITEM TreeViewCtrl::NextItem(HTREEITEM htiCurrent, HTREEITEM htiNextRoot)
 	return nullptr;
 }
 
-bool TreeViewCtrl::GetTVItem(HTREEITEM hti, TCHAR * buf, int bufSize, TVITEM * tvi)
+bool TreeViewCtrl::GetTVItem(HTREEITEM hti, TCHAR* buf, int bufSize, TVITEM* tvi)
 {
 	tvi->mask = TVIF_HANDLE | TVIF_TEXT | TVIF_PARAM;
 	tvi->cchTextMax = bufSize;

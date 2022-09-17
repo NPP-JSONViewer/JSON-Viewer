@@ -36,8 +36,14 @@ private:
 	void ClickJsonTreeItem(HTREEITEM htiNode);
 	void HandleRightClick(HTREEITEM htiNode, LPPOINT lppScreen);
 
+	// Context menu related functions
 	void ShowContextMenu(int x, int y);
 	void ContextMenuExpand(bool bExpand);
+
+	auto CopyName() const->std::wstring;
+	auto CopyKey() const->std::wstring;
+	auto CopyValue() const->std::wstring;
+	auto CopyPath() const->std::wstring;
 
 	int ShowMessage(const std::wstring& title, const std::wstring& msg, int flag, bool bForceShow = false);
 

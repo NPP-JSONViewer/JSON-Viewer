@@ -73,14 +73,16 @@ bool TreeBuilder::String(const char* str, SizeType length, bool /*copy*/)
 	// handle case, when there is only a value in input
 	char* value = NULL;
 	size_t len = 0;
-	if (this->m_stack.empty()) {
+	if (this->m_stack.empty())
+	{
 		len = length + 1; // 1 for null
 		value = new char[len];
 		snprintf(value, len, "%s", str);
 		value[len - 1] = '\0';
 		this->m_dlg->InsertToTree(m_treeRoot, value);
 	}
-	else {
+	else
+	{
 		TreeNode* parent = this->m_stack.top();
 		if (!parent->isArray)
 		{

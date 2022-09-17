@@ -42,5 +42,7 @@ public:
 
 	static bool OpenFileDlg(std::wstring& filePath, const std::wstring& dlgTitle, const std::vector<wchar_t>& dlgFilter, DWORD flags = 0);
 
+	static bool CopyToClipboard(const std::wstring& str2cpy, HWND hwnd);
+
 };
 
