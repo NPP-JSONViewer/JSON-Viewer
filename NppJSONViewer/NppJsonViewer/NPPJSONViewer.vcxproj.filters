@@ -42,7 +42,7 @@
     <ClCompile Include="ShortcutCommand.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="JsonTreeViewDlg.cpp">
+    <ClCompile Include="JsonViewDlg.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ScintillaEditor.cpp">
@@ -104,7 +104,7 @@
     <ClInclude Include="ShortcutCommand.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="JsonTreeViewDlg.h">
+    <ClInclude Include="JsonViewDlg.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ScintillaEditor.h">

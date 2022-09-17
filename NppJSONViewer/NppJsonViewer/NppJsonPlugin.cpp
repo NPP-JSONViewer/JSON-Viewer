@@ -128,7 +128,7 @@ void NppJsonPlugin::ShowJsonDocPanelDlg()
 
 	if (!m_pTreeViewDocPanel)
 	{
-		m_pTreeViewDocPanel = std::make_unique<JsonTreeViewDlg>(reinterpret_cast<HINSTANCE>(m_hModule), m_NppData, nCmdId);
+		m_pTreeViewDocPanel = std::make_unique<JsonViewDlg>(reinterpret_cast<HINSTANCE>(m_hModule), m_NppData, nCmdId);
 	}
 
 	if (m_pTreeViewDocPanel)	// Hope it is constructed by now.

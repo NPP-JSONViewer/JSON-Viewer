@@ -8,12 +8,12 @@
 #include <memory>
 #include <vector>
 
-class JsonTreeViewDlg : public DockingDlgInterface
+class JsonViewDlg : public DockingDlgInterface
 {
 	enum class eButton { eRefresh, eValidate, eFormat, eSearch };
 public:
-	JsonTreeViewDlg(HINSTANCE hIntance, const NppData& nppData, int nCmdId);
-	virtual ~JsonTreeViewDlg();
+	JsonViewDlg(HINSTANCE hIntance, const NppData& nppData, int nCmdId);
+	virtual ~JsonViewDlg();
 
 	void ShowDlg(bool bShow);
 

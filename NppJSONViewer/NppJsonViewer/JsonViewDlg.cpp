@@ -1,11 +1,11 @@
-#include "JsonTreeViewDlg.h"
+#include "JsonViewDlg.h"
 #include "Define.h"
 #include "Utility.h"
 #include "TreeBuilder.h"
 #include "ScintillaEditor.h"
 
 
-JsonTreeViewDlg::JsonTreeViewDlg(HINSTANCE hIntance, const NppData& nppData, int nCmdId) :
+JsonViewDlg::JsonViewDlg(HINSTANCE hIntance, const NppData& nppData, int nCmdId) :
 	m_NppData(nppData),
 	DockingDlgInterface(IDD_TREEDLG),
 	m_nDlgId(nCmdId),
@@ -16,7 +16,7 @@ JsonTreeViewDlg::JsonTreeViewDlg(HINSTANCE hIntance, const NppData& nppData, int
 	_hInst = hIntance;
 }
 
-JsonTreeViewDlg::~JsonTreeViewDlg()
+JsonViewDlg::~JsonViewDlg()
 {
 	for (HICON hIcon : m_hBtnIcon)
 	{
@@ -25,7 +25,7 @@ JsonTreeViewDlg::~JsonTreeViewDlg()
 	}
 }
 
-void JsonTreeViewDlg::ShowDlg(bool bShow)
+void JsonViewDlg::ShowDlg(bool bShow)
 {
 	if (!isCreated())
 	{
@@ -57,7 +57,7 @@ void JsonTreeViewDlg::ShowDlg(bool bShow)
 	DockingDlgInterface::display(bShow);
 }
 
-void JsonTreeViewDlg::PrepareButtons()
+void JsonViewDlg::PrepareButtons()
 {
 	// Refresh Button
 	SetIconAndTooltip(eButton::eRefresh, TOOLTIP_REFRESH);
@@ -72,7 +72,7 @@ void JsonTreeViewDlg::PrepareButtons()
 	SetIconAndTooltip(eButton::eSearch, TOOLTIP_SEARCH);
 }
 
-void JsonTreeViewDlg::SetIconAndTooltip(eButton ctrlType, const std::wstring& toolTip)
+void JsonViewDlg::SetIconAndTooltip(eButton ctrlType, const std::wstring& toolTip)
 {
 	int nCtrlID = 0;
 	int iconResID = 0;
@@ -114,7 +114,7 @@ void JsonTreeViewDlg::SetIconAndTooltip(eButton ctrlType, const std::wstring& to
 	CUtility::CreateToolTip(_hSelf, nCtrlID, toolTip, _hInst);
 }
 
-void JsonTreeViewDlg::AdjustDocPanelSize(int nWidth, int nHeight)
+void JsonViewDlg::AdjustDocPanelSize(int nWidth, int nHeight)
 {
 	// Calculate desktop scale.
 	float fDeskScale = CUtility::GetDesktopScale(_hSelf);
@@ -174,7 +174,7 @@ void JsonTreeViewDlg::AdjustDocPanelSize(int nWidth, int nHeight)
 	}
 }
 
-void JsonTreeViewDlg::DrawJsonTree()
+void JsonViewDlg::DrawJsonTree()
 {
 	// Disable all buttons and treeView
 	std::vector<DWORD> ctrls = { IDC_BTN_REFRESH , IDC_BTN_VALIDATE, IDC_BTN_FORMAT, IDC_BTN_SEARCH, IDC_EDT_SEARCH };
@@ -200,7 +200,7 @@ void JsonTreeViewDlg::DrawJsonTree()
 	EnableControls(ctrls, true);
 }
 
-void JsonTreeViewDlg::PopulateTreeUsingSax(HTREEITEM tree_root, const std::string& jsonText)
+void JsonViewDlg::PopulateTreeUsingSax(HTREEITEM tree_root, const std::string& jsonText)
 {
 	TreeBuilder handler(this, tree_root);
 	rapidjson::Reader reader;
@@ -219,7 +219,7 @@ void JsonTreeViewDlg::PopulateTreeUsingSax(HTREEITEM tree_root, const std::strin
 	m_Editor->SetLangAsJson();
 }
 
-HTREEITEM JsonTreeViewDlg::InsertToTree(HWND hWndDlg, HTREEITEM parent, const char* text)
+HTREEITEM JsonViewDlg::InsertToTree(HWND hWndDlg, HTREEITEM parent, const char* text)
 {
 	TV_INSERTSTRUCT tvinsert;
 	HTREEITEM item = NULL;
@@ -242,12 +242,12 @@ HTREEITEM JsonTreeViewDlg::InsertToTree(HWND hWndDlg, HTREEITEM parent, const ch
 	return item;
 }
 
-HTREEITEM JsonTreeViewDlg::InsertToTree(HTREEITEM parent, const char* text)
+HTREEITEM JsonViewDlg::InsertToTree(HTREEITEM parent, const char* text)
 {
 	return InsertToTree(getHSelf(), parent, text);
 }
 
-void JsonTreeViewDlg::ClickJsonTree(LPARAM lParam)
+void JsonViewDlg::ClickJsonTree(LPARAM lParam)
 {
 	LPNMHDR lpnmh = reinterpret_cast<LPNMHDR>(lParam);
 	if (!lpnmh || lpnmh->idFrom != IDC_TREE)
@@ -296,14 +296,14 @@ void JsonTreeViewDlg::ClickJsonTree(LPARAM lParam)
 	}
 }
 
-void JsonTreeViewDlg::ClickJsonTreeItem(HTREEITEM htiNode)
+void JsonViewDlg::ClickJsonTreeItem(HTREEITEM htiNode)
 {
 	std::wstring nodePath = m_hTreeView->GetNodePath(htiNode);
 	SetDlgItemText(_hSelf, IDC_EDT_NODEPATH, nodePath.c_str());
 	//m_hTreeView->GotoScintillaLine(htiNode, m_iSelStartLine);
 }
 
-void JsonTreeViewDlg::HandleRightClick(HTREEITEM htiNode, LPPOINT lppScreen)
+void JsonViewDlg::HandleRightClick(HTREEITEM htiNode, LPPOINT lppScreen)
 {
 	// Select it
 	m_hTreeView->SelectItem(htiNode);
@@ -368,7 +368,7 @@ void JsonTreeViewDlg::HandleRightClick(HTREEITEM htiNode, LPPOINT lppScreen)
 	}
 }
 
-void JsonTreeViewDlg::ShowContextMenu(int x, int y)
+void JsonViewDlg::ShowContextMenu(int x, int y)
 {
 	POINT p{
 		  .x = x
@@ -400,7 +400,7 @@ void JsonTreeViewDlg::ShowContextMenu(int x, int y)
 	}
 }
 
-void JsonTreeViewDlg::ContextMenuExpand(bool bExpand)
+void JsonViewDlg::ContextMenuExpand(bool bExpand)
 {
 	HTREEITEM htiSelected = m_hTreeView->GetSelection();
 	if (htiSelected == NULL)
@@ -416,29 +416,29 @@ void JsonTreeViewDlg::ContextMenuExpand(bool bExpand)
 	}
 }
 
-int JsonTreeViewDlg::ShowMessage(const std::wstring& title, const std::wstring& msg, int flag, bool bForceShow)
+int JsonViewDlg::ShowMessage(const std::wstring& title, const std::wstring& msg, int flag, bool bForceShow)
 {
 	return (!m_isSilent || bForceShow) ? ::MessageBox(_hParent, msg.c_str(), title.c_str(), flag) : IDOK;
 }
 
-void JsonTreeViewDlg::ToggleMenuItemState(bool bVisible)
+void JsonViewDlg::ToggleMenuItemState(bool bVisible)
 {
 	::SendMessage(_hParent, NPPM_SETMENUITEMCHECK, static_cast<WPARAM>(m_nDlgId), bVisible);
 }
 
-void JsonTreeViewDlg::ShowControls(const std::vector<DWORD>& ids, bool enable)
+void JsonViewDlg::ShowControls(const std::vector<DWORD>& ids, bool enable)
 {
 	for (auto id : ids)
 		ShowWindow(GetDlgItem(getHSelf(), id), enable ? SW_HIDE : SW_HIDE);
 }
 
-void JsonTreeViewDlg::EnableControls(const std::vector<DWORD>& ids, bool enable)
+void JsonViewDlg::EnableControls(const std::vector<DWORD>& ids, bool enable)
 {
 	for (auto id : ids)
 		EnableWindow(GetDlgItem(getHSelf(), id), enable ? TRUE : FALSE);
 }
 
-INT_PTR JsonTreeViewDlg::run_dlgProc(UINT message, WPARAM wParam, LPARAM lParam)
+INT_PTR JsonViewDlg::run_dlgProc(UINT message, WPARAM wParam, LPARAM lParam)
 {
 	switch (message)
 	{
@@ -539,8 +539,8 @@ INT_PTR JsonTreeViewDlg::run_dlgProc(UINT message, WPARAM wParam, LPARAM lParam)
 
 	default:
 		// TODO: Temporarily hide controls which are not implemented 
-		std::vector<DWORD> toHide = { IDC_BTN_SEARCH, IDC_EDT_SEARCH, IDC_EDT_NODEPATH };
-		ShowControls(toHide, false);
+		//std::vector<DWORD> toHide = { IDC_BTN_SEARCH, IDC_EDT_SEARCH, IDC_EDT_NODEPATH };
+		//ShowControls(toHide, false);
 		return DockingDlgInterface::run_dlgProc(message, wParam, lParam);
 	}
 }

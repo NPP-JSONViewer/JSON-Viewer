@@ -256,7 +256,7 @@
     <ClCompile Include="AboutDlg.cpp" />
     <ClCompile Include="JSONDialog.cpp" />
     <ClCompile Include="dllmain.cpp" />
-    <ClCompile Include="JsonTreeViewDlg.cpp" />
+    <ClCompile Include="JsonViewDlg.cpp" />
     <ClCompile Include="NppJsonPlugin.cpp" />
     <ClCompile Include="PluginDefinition.cpp" />
     <ClCompile Include="ScintillaEditor.cpp" />
@@ -277,7 +277,7 @@
     <ClInclude Include="AboutDlg.h" />
     <ClInclude Include="Define.h" />
     <ClInclude Include="JSONDialog.h" />
-    <ClInclude Include="JsonTreeViewDlg.h" />
+    <ClInclude Include="JsonViewDlg.h" />
     <ClInclude Include="NppJsonPlugin.h" />
     <ClInclude Include="PluginDefinition.h" />
     <ClInclude Include="resource.h" />

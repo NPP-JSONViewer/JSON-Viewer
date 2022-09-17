@@ -5,7 +5,7 @@
 #include<Windows.h>
 #include <commctrl.h>
 
-class JsonTreeViewDlg;
+class JsonViewDlg;
 using namespace rapidjson;
 
 struct TreeNode {
@@ -17,12 +17,12 @@ struct TreeNode {
 
 class TreeBuilder : public BaseReaderHandler<UTF8<>, TreeBuilder>
 {
-	JsonTreeViewDlg* m_dlg = nullptr;
+	JsonViewDlg* m_dlg = nullptr;
 	std::stack<TreeNode*> m_stack;
 	HTREEITEM m_treeRoot = nullptr;
 	char* m_lastKey = nullptr;
 public:
-	TreeBuilder(JsonTreeViewDlg* dlg, HTREEITEM treeRoot) : m_dlg(dlg), m_treeRoot(treeRoot) {}
+	TreeBuilder(JsonViewDlg* dlg, HTREEITEM treeRoot) : m_dlg(dlg), m_treeRoot(treeRoot) {}
 	~TreeBuilder() = default;
 
 	bool Null();

@@ -3,7 +3,7 @@
 #include <string>
 #include <memory>
 #include "Define.h"
-#include "JsonTreeViewDlg.h"
+#include "JsonViewDlg.h"
 #include "Notepad_plus_msgs.h"
 #include "ShortcutCommand.h"
 #include "AboutDlg.h"
@@ -63,7 +63,7 @@ private:
 	toolbarIcons						m_hMenuIcon = {};
 	ShortcutCommand						m_shortcutCommands;
 	NppData								m_NppData = {};
-	std::unique_ptr<JsonTreeViewDlg>	m_pTreeViewDocPanel = nullptr;
+	std::unique_ptr<JsonViewDlg>	m_pTreeViewDocPanel = nullptr;
 	std::unique_ptr<AboutDlg>			m_pAboutDlg = nullptr;
 };
 

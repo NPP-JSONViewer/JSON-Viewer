@@ -1,7 +1,7 @@
 #include "TreeBuilder.h"
 #include <iostream>
 #include <sstream>
-#include "JsonTreeViewDlg.h"
+#include "JsonViewDlg.h"
 
 using namespace std;
 
