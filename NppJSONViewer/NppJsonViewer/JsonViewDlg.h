@@ -16,6 +16,8 @@ public:
 	virtual ~JsonViewDlg();
 
 	void ShowDlg(bool bShow);
+	void FormatJson();
+	void CompressJson();
 
 	// TODO : move to treeviewctrl class
 	HTREEITEM InsertToTree(HWND hWndDlg, HTREEITEM parent, const char* text);

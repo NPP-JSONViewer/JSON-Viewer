@@ -1,8 +1,11 @@
 #include "JsonViewDlg.h"
 #include "Define.h"
 #include "Utility.h"
+#include "StringHelper.h"
 #include "TreeBuilder.h"
 #include "ScintillaEditor.h"
+#include "JsonHandler.h"
+#include <format>
 
 
 JsonViewDlg::JsonViewDlg(HINSTANCE hIntance, const NppData& nppData, int nCmdId) :
@@ -55,6 +58,38 @@ void JsonViewDlg::ShowDlg(bool bShow)
 	}
 
 	DockingDlgInterface::display(bShow);
+}
+
+void JsonViewDlg::FormatJson()
+{
+}
+
+void JsonViewDlg::CompressJson()
+{
+	// Get the current scintilla
+	const auto selectedText = m_Editor->GetJsonText();
+
+	Result res = JsonHandler().GetCompressedJson(selectedText);
+
+	if (res.success)
+	{
+		m_Editor->ReplaceSelection(res.response);
+	}
+	else
+	{
+		// Mark the error position
+		size_t start = m_Editor->GetSelectionStart() + res.error_pos;
+		size_t end = start + m_Editor->GetSelectionEnd();
+		m_Editor->MakeSelection(start, end);
+
+		// Intimate user
+		std::string err = std::format("There was an error while parsing JSON, refer the current selection for possible problematic area.\n\nError: ({} - {})"
+			, res.error_code
+			, res.error_str
+		);
+		
+		::MessageBox(m_NppData._nppHandle, StringHelper::ToWstring(err).c_str(), TEXT("JSON Viewer"), MB_OK | MB_ICONERROR);
+	}
 }
 
 void JsonViewDlg::PrepareButtons()
@@ -209,11 +244,12 @@ void JsonViewDlg::PopulateTreeUsingSax(HTREEITEM tree_root, const std::string& j
 	if (!reader.Parse< rapidjson::kParseNumbersAsStringsFlag | rapidjson::kParseCommentsFlag |
 		rapidjson::kParseEscapedApostropheFlag | rapidjson::kParseNanAndInfFlag | rapidjson::kParseTrailingCommasFlag>(ss, handler))
 	{
-		::MessageBox(m_NppData._nppHandle, TEXT("Could not parse!!"), TEXT("JSON Viewer"), MB_OK | MB_ICONERROR);
-
 		// Mark the error position
-		size_t errPosition = reader.GetErrorOffset();
-		m_Editor->MarkErrorPosistion(errPosition);
+		size_t start = m_Editor->GetSelectionStart();
+		size_t errPosition = start + reader.GetErrorOffset();
+		m_Editor->MakeSelection(errPosition, errPosition + 1);
+
+		::MessageBox(m_NppData._nppHandle, TEXT("Could not parse!!"), TEXT("JSON Viewer"), MB_OK | MB_ICONERROR);
 	}
 
 	m_Editor->SetLangAsJson();
@@ -300,7 +336,6 @@ void JsonViewDlg::ClickJsonTreeItem(HTREEITEM htiNode)
 {
 	std::wstring nodePath = m_hTreeView->GetNodePath(htiNode);
 	SetDlgItemText(_hSelf, IDC_EDT_NODEPATH, nodePath.c_str());
-	//m_hTreeView->GotoScintillaLine(htiNode, m_iSelStartLine);
 }
 
 void JsonViewDlg::HandleRightClick(HTREEITEM htiNode, LPPOINT lppScreen)

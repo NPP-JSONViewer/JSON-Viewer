@@ -93,7 +93,7 @@ void NppJsonPlugin::SetMenuIcon()
 void NppJsonPlugin::InitCommandMenu()
 {
 	m_shortcutCommands.SetShortCut(CallBackID::SHOW_DOC_PANEL, { true, true, true, 'J' });
-	m_shortcutCommands.SetCommand(CallBackID::SHOW_DOC_PANEL, MENU_SHOW_JSON_PANEL, Callback::ShowJsonDocPanelDlg, false);
+	m_shortcutCommands.SetCommand(CallBackID::SHOW_DOC_PANEL, MENU_SHOW_JSON_PANEL, Callback::ShowJsonDlg, false);
 
 	m_shortcutCommands.SetShortCut(CallBackID::FORMAT, { true, true, true, 'M' });
 	m_shortcutCommands.SetCommand(CallBackID::FORMAT, MENU_FORMAT_JSON, Callback::FormatJson, false);
@@ -122,19 +122,19 @@ void NppJsonPlugin::ToggleMenuItemState(int nCmdId, bool bVisible)
 	::SendMessage(m_NppData._nppHandle, NPPM_SETMENUITEMCHECK, static_cast<WPARAM>(nCmdId), bVisible);
 }
 
-void NppJsonPlugin::ShowJsonDocPanelDlg()
+void NppJsonPlugin::ShowJsonDlg()
 {
 	auto nCmdId = m_shortcutCommands.GetCommandID(CallBackID::SHOW_DOC_PANEL);
 
-	if (!m_pTreeViewDocPanel)
+	if (!m_pJsonViewDlg)
 	{
-		m_pTreeViewDocPanel = std::make_unique<JsonViewDlg>(reinterpret_cast<HINSTANCE>(m_hModule), m_NppData, nCmdId);
+		m_pJsonViewDlg = std::make_unique<JsonViewDlg>(reinterpret_cast<HINSTANCE>(m_hModule), m_NppData, nCmdId);
 	}
 
-	if (m_pTreeViewDocPanel)	// Hope it is constructed by now.
+	if (m_pJsonViewDlg)	// Hope it is constructed by now.
 	{
-		bool bVisible = !m_pTreeViewDocPanel->isVisible();
-		m_pTreeViewDocPanel->ShowDlg(bVisible);
+		bool bVisible = !m_pJsonViewDlg->isVisible();
+		m_pJsonViewDlg->ShowDlg(bVisible);
 	}
 }
 
@@ -142,22 +142,30 @@ void NppJsonPlugin::FormatJson()
 {
 	auto nCmdId = m_shortcutCommands.GetCommandID(CallBackID::FORMAT);
 
-	if (!m_pAboutDlg)
-		m_pAboutDlg = std::make_unique<AboutDlg>(reinterpret_cast<HINSTANCE>(m_hModule), m_NppData._nppHandle, nCmdId);
-	bool isShown = m_pAboutDlg->ShowDlg(true);
+	if (!m_pJsonViewDlg)
+	{
+		m_pJsonViewDlg = std::make_unique<JsonViewDlg>(reinterpret_cast<HINSTANCE>(m_hModule), m_NppData, nCmdId);
+	}
 
-	ToggleMenuItemState(nCmdId, isShown);
+	if (m_pJsonViewDlg)	// Hope it is constructed by now.
+	{
+		m_pJsonViewDlg->FormatJson();
+	}
 }
 
 void NppJsonPlugin::CompressJson()
 {
 	auto nCmdId = m_shortcutCommands.GetCommandID(CallBackID::FORMAT);
 
-	if (!m_pAboutDlg)
-		m_pAboutDlg = std::make_unique<AboutDlg>(reinterpret_cast<HINSTANCE>(m_hModule), m_NppData._nppHandle, nCmdId);
-	bool isShown = m_pAboutDlg->ShowDlg(true);
+	if (!m_pJsonViewDlg)
+	{
+		m_pJsonViewDlg = std::make_unique<JsonViewDlg>(reinterpret_cast<HINSTANCE>(m_hModule), m_NppData, nCmdId);
+	}
 
-	ToggleMenuItemState(nCmdId, isShown);
+	if (m_pJsonViewDlg)	// Hope it is constructed by now.
+	{
+		m_pJsonViewDlg->CompressJson();
+	}
 }
 
 void NppJsonPlugin::OpenOptionDlg()

@@ -10,7 +10,12 @@ public:
 
 	std::string GetJsonText();
 	void SetLangAsJson() const;
-	void MarkErrorPosistion(int endPos) const;
+
+	void ReplaceSelection(const std::string& text) const;
+
+	void MakeSelection(int start, int end) const;
+	auto GetSelectionStart() const->size_t { return m_nStartPos; }
+	auto GetSelectionEnd() const->size_t { return m_nEndPos; }
 
 private:
 	void RefreshSelectionPos();

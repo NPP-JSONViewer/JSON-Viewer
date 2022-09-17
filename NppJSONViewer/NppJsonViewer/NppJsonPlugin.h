@@ -39,7 +39,7 @@ private:
 		Callback() = default;
 		~Callback() = default;
 
-		static void ShowJsonDocPanelDlg() { m_pNppJsonPlugin->ShowJsonDocPanelDlg(); }
+		static void ShowJsonDlg() { m_pNppJsonPlugin->ShowJsonDlg(); }
 		static void FormatJson() { m_pNppJsonPlugin->FormatJson(); }
 		static void CompressJson() { m_pNppJsonPlugin->CompressJson(); }
 		static void OpenOptionDlg() { m_pNppJsonPlugin->OpenOptionDlg(); }
@@ -52,7 +52,7 @@ private:
 
 	void ToggleMenuItemState(int nCmdId, bool bVisible);
 
-	void ShowJsonDocPanelDlg();
+	void ShowJsonDlg();
 	void FormatJson();
 	void CompressJson();
 	void OpenOptionDlg();
@@ -63,7 +63,7 @@ private:
 	toolbarIcons						m_hMenuIcon = {};
 	ShortcutCommand						m_shortcutCommands;
 	NppData								m_NppData = {};
-	std::unique_ptr<JsonViewDlg>	m_pTreeViewDocPanel = nullptr;
+	std::unique_ptr<JsonViewDlg>		m_pJsonViewDlg = nullptr;
 	std::unique_ptr<AboutDlg>			m_pAboutDlg = nullptr;
 };
 

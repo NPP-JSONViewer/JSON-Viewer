@@ -42,14 +42,14 @@ void ScintillaEditor::SetLangAsJson() const
 	::SendMessage(m_hScintilla, NPPM_SETCURRENTLANGTYPE, 0, LangType::L_JSON);
 }
 
-void ScintillaEditor::MarkErrorPosistion(int endPos) const
+void ScintillaEditor::ReplaceSelection(const std::string& text) const
 {
-	// Get current selected position
-	size_t start = ::SendMessage(m_hScintilla, SCI_GETSELECTIONSTART, 0, 0);
+	::SendMessage(m_hScintilla, SCI_REPLACESEL, 0, reinterpret_cast<LPARAM>(text.c_str()));
+}
 
-	size_t errPosition = start + endPos;
-
-	::SendMessage(m_hScintilla, SCI_SETSEL, errPosition, errPosition + 1);
+void ScintillaEditor::MakeSelection(int start, int end) const
+{
+	::SendMessage(m_hScintilla, SCI_SETSEL, start, end);
 }
 
 void ScintillaEditor::RefreshSelectionPos()
