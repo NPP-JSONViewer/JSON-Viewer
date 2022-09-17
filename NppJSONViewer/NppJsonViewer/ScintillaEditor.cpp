@@ -47,7 +47,7 @@ void ScintillaEditor::ReplaceSelection(const std::string& text) const
 	::SendMessage(m_hScintilla, SCI_REPLACESEL, 0, reinterpret_cast<LPARAM>(text.c_str()));
 }
 
-void ScintillaEditor::MakeSelection(int start, int end) const
+void ScintillaEditor::MakeSelection(size_t start, size_t end) const
 {
 	::SendMessage(m_hScintilla, SCI_SETSEL, start, end);
 }

@@ -29,7 +29,7 @@ auto JsonHandler::GetCompressedJson(const std::string& jsonText) -> const Result
 		retVal.success = false;
 		retVal.response.clear();
 		retVal.error_str = rapidjson::GetParseError_En(reader.GetParseErrorCode());
-		retVal.error_pos = reader.GetErrorOffset();
+		retVal.error_pos = static_cast<int>(reader.GetErrorOffset());
 		retVal.error_code = reader.GetParseErrorCode();
 	}
 

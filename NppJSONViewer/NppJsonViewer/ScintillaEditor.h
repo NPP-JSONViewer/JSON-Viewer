@@ -13,7 +13,7 @@ public:
 
 	void ReplaceSelection(const std::string& text) const;
 
-	void MakeSelection(int start, int end) const;
+	void MakeSelection(size_t start, size_t end) const;
 	auto GetSelectionStart() const->size_t { return m_nStartPos; }
 	auto GetSelectionEnd() const->size_t { return m_nEndPos; }
 
