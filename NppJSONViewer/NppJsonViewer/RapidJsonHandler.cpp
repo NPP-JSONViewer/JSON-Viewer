@@ -13,10 +13,9 @@ bool RapidJsonHandler::Null()
 
 	TreeNode2* parent = m_NodeStack.top();
 	parent->node.type = JsonNodeType::BOOL;
-	parent->node.key = m_szLastKey;
+	parent->node.key = m_strLastKey;
 	parent->node.value = STR_NULL;
-	delete[] m_szLastKey;
-	m_szLastKey = nullptr;
+	m_strLastKey.clear();
 
 	// Print and pop the value
 	m_dlg->InsertToTree(parent->subRoot, (parent->node.key + " : " + parent->node.value).c_str());
@@ -30,10 +29,9 @@ bool RapidJsonHandler::Bool(bool b)
 
 	TreeNode2* parent = m_NodeStack.top();
 	parent->node.type = JsonNodeType::BOOL;
-	parent->node.key = m_szLastKey;
+	parent->node.key = m_strLastKey;
 	parent->node.value = b ? STR_TRUE : STR_FALSE;
-	delete[] m_szLastKey;
-	m_szLastKey = nullptr;
+	m_strLastKey.clear();
 
 	// Print and pop the value
 	m_dlg->InsertToTree(parent->subRoot, (parent->node.key + " : " + parent->node.value).c_str());
@@ -72,10 +70,9 @@ bool RapidJsonHandler::RawNumber(const Ch* str, unsigned /*length*/, bool /*copy
 
 	TreeNode2* parent = m_NodeStack.top();
 	parent->node.type = JsonNodeType::NUMBER;
-	parent->node.key = m_szLastKey;
+	parent->node.key = m_strLastKey;
 	parent->node.value = str;
-	delete[] m_szLastKey;
-	m_szLastKey = nullptr;
+	m_strLastKey.clear();
 
 	// Print and pop the value
 	m_dlg->InsertToTree(parent->subRoot, (parent->node.key + " : " + parent->node.value).c_str());
@@ -95,10 +92,9 @@ bool RapidJsonHandler::String(const Ch* str, unsigned /*length*/, bool /*copy*/)
 
 	if (parent->node.type != JsonNodeType::ARRAY)
 	{
-		parent->node.key = m_szLastKey;
+		parent->node.key = m_strLastKey;
 		parent->node.value = str;
-		delete[] m_szLastKey;
-		m_szLastKey = nullptr;
+		m_strLastKey.clear();
 	}
 	else
 	{
@@ -116,11 +112,11 @@ bool RapidJsonHandler::String(const Ch* str, unsigned /*length*/, bool /*copy*/)
 	return true;
 }
 
-bool RapidJsonHandler::Key(const Ch* str, unsigned length, bool /*copy*/)
+bool RapidJsonHandler::Key(const Ch* str, unsigned /*length*/, bool /*copy*/)
 {
-	m_szLastKey = new char[length + 1];
-	strncpy_s(m_szLastKey, length + 1, str, length);
-	m_szLastKey[length] = '\0';
+	m_strLastKey = "\"";
+	m_strLastKey += str;
+	m_strLastKey += "\"";
 	return true;
 }
 
@@ -140,14 +136,13 @@ bool RapidJsonHandler::StartObject()
 		parent = m_NodeStack.top();
 	}
 
-	if (m_szLastKey != nullptr || parent->node.type == JsonNodeType::ARRAY)
+	if (!m_strLastKey.empty() || parent->node.type == JsonNodeType::ARRAY)
 	{
 		HTREEITEM newNode = nullptr;
 		if (parent->node.type != JsonNodeType::ARRAY)
 		{
-			newNode = m_dlg->InsertToTree(parent->subRoot, m_szLastKey);
-			delete[] m_szLastKey;
-			m_szLastKey = nullptr;
+			newNode = m_dlg->InsertToTree(parent->subRoot, m_strLastKey.c_str());
+			m_strLastKey.clear();
 		}
 		else
 		{
@@ -195,14 +190,13 @@ bool RapidJsonHandler::StartArray()
 		parent = m_NodeStack.top();
 	}
 
-	if (m_szLastKey != nullptr || parent->node.type == JsonNodeType::ARRAY)
+	if (!m_strLastKey.empty() || parent->node.type == JsonNodeType::ARRAY)
 	{
 		HTREEITEM newNode;
 		if (parent->node.type != JsonNodeType::ARRAY)
 		{
-			newNode = m_dlg->InsertToTree(parent->subRoot, m_szLastKey);
-			delete[] m_szLastKey;
-			m_szLastKey = nullptr;
+			newNode = m_dlg->InsertToTree(parent->subRoot, m_strLastKey.c_str());
+			m_strLastKey.clear();
 		}
 		else
 		{

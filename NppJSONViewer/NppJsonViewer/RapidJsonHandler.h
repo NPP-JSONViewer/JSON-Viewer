@@ -17,7 +17,7 @@ struct TreeNode2
 
 class RapidJsonHandler :public rapidjson::BaseReaderHandler<rapidjson::UTF8<>, RapidJsonHandler>
 {
-	char* m_szLastKey = nullptr;
+	std::string m_strLastKey;
 	std::stack<TreeNode2*> m_NodeStack;
 
 	JsonViewDlg* m_dlg = nullptr;

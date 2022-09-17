@@ -209,9 +209,50 @@ auto TreeViewCtrl::GetNodeValue(HTREEITEM hti) -> std::wstring
 	return retVal;
 }
 
-auto TreeViewCtrl::GetNodePath(HTREEITEM /*hti*/) -> std::wstring
+auto TreeViewCtrl::GetNodePath(HTREEITEM hti) -> std::wstring
 {
-	return std::wstring(TEXT("Not Implemented..."));
+	std::wstring wstrJsonPath;
+	HTREEITEM hitTravel = hti;
+	bool bArray = false;
+
+	while (hitTravel != NULL)
+	{
+		std::wstring nodeKey = GetNodeKey(hitTravel);
+
+		// remove " from the beinging and end
+		if (nodeKey[0] == TEXT('"'))
+			nodeKey = nodeKey.substr(1);
+		if (nodeKey[nodeKey.size() - 1] == TEXT('"'))
+			nodeKey = nodeKey.substr(0, nodeKey.size() - 1);
+
+		if (wstrJsonPath.empty())
+		{
+			wstrJsonPath = nodeKey;
+		}
+		else
+		{
+			std::wstring separator = TEXT(".");
+			if (nodeKey[0] == TEXT('['))
+			{
+				bArray = true;
+				wstrJsonPath = nodeKey + separator + wstrJsonPath;
+			}
+			else
+			{
+				if (bArray)
+				{
+					bArray = false;
+					separator.clear();
+				}
+				wstrJsonPath = nodeKey + separator + wstrJsonPath;
+			}
+		}
+
+		HTREEITEM htiParent = GetParentItem(hitTravel);
+		hitTravel = htiParent;
+	}
+
+	return wstrJsonPath;
 }
 
 HTREEITEM TreeViewCtrl::GetSelection() const
