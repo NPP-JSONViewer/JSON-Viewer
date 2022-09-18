@@ -32,12 +32,11 @@ private:
 	void DrawJsonTree();
 	void PopulateTreeUsingSax(HTREEITEM tree_root, const std::string& jsonText);
 
-	void ClickJsonTree(LPARAM lParam);
-	void ClickJsonTreeItem(HTREEITEM htiNode);
-	void HandleRightClick(HTREEITEM htiNode, LPPOINT lppScreen);
+	void UpdateNodePath(HTREEITEM htiNode);
 
 	// Context menu related functions
 	void ShowContextMenu(int x, int y);
+	void ShowContextMenu(HTREEITEM htiNode, LPPOINT lppScreen);
 	void ContextMenuExpand(bool bExpand);
 
 	auto CopyName() const->std::wstring;
@@ -51,6 +50,8 @@ private:
 
 	void ShowControls(const std::vector<DWORD>& ids, bool enable);
 	void EnableControls(const std::vector<DWORD>& ids, bool enable);
+
+	void HandleTreeEvents(LPARAM lParam);
 
 protected:
 	virtual INT_PTR CALLBACK run_dlgProc(UINT message, WPARAM wParam, LPARAM lParam);

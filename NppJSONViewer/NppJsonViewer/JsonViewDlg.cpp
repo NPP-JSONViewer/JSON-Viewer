@@ -285,62 +285,45 @@ HTREEITEM JsonViewDlg::InsertToTree(HTREEITEM parent, const char* text)
 	return InsertToTree(getHSelf(), parent, text);
 }
 
-void JsonViewDlg::ClickJsonTree(LPARAM lParam)
-{
-	LPNMHDR lpnmh = reinterpret_cast<LPNMHDR>(lParam);
-	if (!lpnmh || lpnmh->idFrom != IDC_TREE)
-		return; // Not click inside JsonTree
-
-	switch (lpnmh->code)
-	{
-	case NM_CLICK:
-	{
-		// Let's play safe here
-		if (lpnmh->code == NM_RCLICK)
-			break;
-
-		DWORD dwPos = GetMessagePos();
-		POINT ptScreen, ptClient;
-		ptScreen.x = LOWORD(dwPos);
-		ptScreen.y = HIWORD(dwPos);
-
-		ptClient = ptScreen;
-		m_hTreeView->ScreenToTreeView(&ptClient);
-
-		TVHITTESTINFO ht = {};
-		ht.pt = ptClient;
-		HTREEITEM hItem = m_hTreeView->HitTest(&ht);
-		if (!hItem)
-			return; // No hit
-
-		if (ht.flags & TVHT_ONITEMLABEL)
-		{
-			// Left click
-			ClickJsonTreeItem(hItem);
-		}
-	}
-	break;
-
-	case TVN_SELCHANGED:
-	{
-		NMTREEVIEW* pnmtv = reinterpret_cast<LPNMTREEVIEW>(lParam);
-		HTREEITEM hItem = pnmtv->itemNew.hItem;
-		if (hItem && pnmtv->action == TVC_BYKEYBOARD)
-		{
-			ClickJsonTreeItem(hItem);
-		}
-	}
-	break;
-	}
-}
-
-void JsonViewDlg::ClickJsonTreeItem(HTREEITEM htiNode)
+void JsonViewDlg::UpdateNodePath(HTREEITEM htiNode)
 {
 	std::wstring nodePath = m_hTreeView->GetNodePath(htiNode);
 	SetDlgItemText(_hSelf, IDC_EDT_NODEPATH, nodePath.c_str());
 }
 
-void JsonViewDlg::HandleRightClick(HTREEITEM htiNode, LPPOINT lppScreen)
+void JsonViewDlg::ShowContextMenu(int x, int y)
+{
+	POINT p{
+		  .x = x
+		, .y = y
+	};
+
+	TVHITTESTINFO tvHitInfo{
+		  .pt = p
+		, .flags = 0
+		, .hItem = nullptr
+	};
+
+	m_hTreeView->ScreenToTreeView(&(tvHitInfo.pt));
+
+	// Detect if the given position is on the element TVITEM
+	HTREEITEM hTreeItem = m_hTreeView->HitTest(&tvHitInfo);
+
+	if (hTreeItem != nullptr)
+	{
+		// Make item selected
+		m_hTreeView->SelectItem(hTreeItem);
+
+		if (tvHitInfo.flags & (TVHT_ONITEM | TVHT_ONITEMBUTTON))
+		{
+			// Right click
+			UpdateNodePath(hTreeItem);
+			ShowContextMenu(hTreeItem, &p);
+		}
+	}
+}
+
+void JsonViewDlg::ShowContextMenu(HTREEITEM htiNode, LPPOINT lppScreen)
 {
 	// Select it
 	m_hTreeView->SelectItem(htiNode);
@@ -403,38 +386,6 @@ void JsonViewDlg::HandleRightClick(HTREEITEM htiNode, LPPOINT lppScreen)
 
 		// Clean up
 		DestroyMenu(hMenuPopup);
-	}
-}
-
-void JsonViewDlg::ShowContextMenu(int x, int y)
-{
-	POINT p{
-		  .x = x
-		, .y = y
-	};
-
-	TVHITTESTINFO tvHitInfo{
-		  .pt = p
-		, .flags = 0
-		, .hItem = nullptr
-	};
-
-	m_hTreeView->ScreenToTreeView(&(tvHitInfo.pt));
-
-	// Detect if the given position is on the element TVITEM
-	HTREEITEM hTreeItem = m_hTreeView->HitTest(&tvHitInfo);
-
-	if (hTreeItem != nullptr)
-	{
-		// Make item selected
-		m_hTreeView->SelectItem(hTreeItem);
-
-		if (tvHitInfo.flags & (TVHT_ONITEM | TVHT_ONITEMBUTTON))
-		{
-			// Right click
-			ClickJsonTreeItem(hTreeItem);
-			HandleRightClick(hTreeItem, &p);
-		}
 	}
 }
 
@@ -516,6 +467,55 @@ void JsonViewDlg::EnableControls(const std::vector<DWORD>& ids, bool enable)
 		EnableWindow(GetDlgItem(getHSelf(), id), enable ? TRUE : FALSE);
 }
 
+void JsonViewDlg::HandleTreeEvents(LPARAM lParam)
+{
+	LPNMHDR lpnmh = reinterpret_cast<LPNMHDR>(lParam);
+	if (!lpnmh || lpnmh->idFrom != IDC_TREE)
+		return; // Not click inside JsonTree
+
+	switch (lpnmh->code)
+	{
+	case NM_CLICK:
+	{
+		// Let's play safe here
+		if (lpnmh->code == NM_RCLICK)
+			break;
+
+		DWORD dwPos = GetMessagePos();
+		POINT ptScreen, ptClient;
+		ptScreen.x = LOWORD(dwPos);
+		ptScreen.y = HIWORD(dwPos);
+
+		ptClient = ptScreen;
+		m_hTreeView->ScreenToTreeView(&ptClient);
+
+		TVHITTESTINFO ht = {};
+		ht.pt = ptClient;
+		HTREEITEM hItem = m_hTreeView->HitTest(&ht);
+		if (!hItem)
+			return; // No hit
+
+		if (ht.flags & TVHT_ONITEMLABEL)
+		{
+			// Update node path on left click
+			UpdateNodePath(hItem);
+		}
+	}
+	break;
+
+	case TVN_SELCHANGED:
+	{
+		NMTREEVIEW* pnmtv = reinterpret_cast<LPNMTREEVIEW>(lParam);
+		HTREEITEM hItem = pnmtv->itemNew.hItem;
+		if (hItem && pnmtv->action == TVC_BYKEYBOARD)
+		{
+			UpdateNodePath(hItem);
+		}
+	}
+	break;
+	}
+}
+
 INT_PTR JsonViewDlg::run_dlgProc(UINT message, WPARAM wParam, LPARAM lParam)
 {
 	switch (message)
@@ -544,6 +544,9 @@ INT_PTR JsonViewDlg::run_dlgProc(UINT message, WPARAM wParam, LPARAM lParam)
 		m_hTreeView->OnInit(getHSelf());
 
 		PrepareButtons();
+
+		// Set default node path as JSON
+		SetDlgItemText(_hSelf, IDC_EDT_NODEPATH, JSON_ROOT);
 
 		return TRUE;
 	}
@@ -611,7 +614,7 @@ INT_PTR JsonViewDlg::run_dlgProc(UINT message, WPARAM wParam, LPARAM lParam)
 
 	case WM_NOTIFY:
 	{
-		ClickJsonTree(lParam);
+		HandleTreeEvents(lParam);
 		return TRUE;
 	}
 
