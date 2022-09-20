@@ -16,10 +16,10 @@ const TCHAR MENU_OPTION[] = TEXT("&Option");
 const TCHAR MENU_ABOUT[] = TEXT("&About");
 const TCHAR MENU_SEPERATOR[] = TEXT("-SEPARATOR-");
 
-const TCHAR TOOLTIP_REFRESH[] = TEXT("-Refresh-");
-const TCHAR TOOLTIP_VALIDATE[] = TEXT("-Validate-");
-const TCHAR TOOLTIP_FORMAT[] = TEXT("-Format-");
-const TCHAR TOOLTIP_SEARCH[] = TEXT("-Search-");
+const TCHAR TOOLTIP_REFRESH[] = TEXT("Refresh JSON tree");
+const TCHAR TOOLTIP_VALIDATE[] = TEXT("Validate JSON to detect any error");
+const TCHAR TOOLTIP_FORMAT[] = TEXT("Format JSON to beautify it");
+const TCHAR TOOLTIP_SEARCH[] = TEXT("Search in JSON");
 
 const TCHAR URL_SOURCE_CODE[] = TEXT("https://github.com/kapilratnani/JSON-Viewer");
 const TCHAR URL_REPORT_ISSUE[] = TEXT("https://github.com/kapilratnani/JSON-Viewer/issues/new");
@@ -31,7 +31,9 @@ const TCHAR JSON_ERROR_TITLE[] = TEXT("JSON Viewer: Error");
 const TCHAR JSON_WARNING_TITLE[] = TEXT("JSON Viewer: Warning");
 const TCHAR JSON_INFO_TITLE[] = TEXT("JSON Viewer: Information");
 
-const TCHAR JSON_ERR_PARSE[] = TEXT("Cannot parse json. Please select a JSON String.");
+const TCHAR JSON_ERR_PARSE[] = TEXT("Cannot parse JSON. Please select a JSON String.");
+const TCHAR JSON_ERR_VALIDATE[] = TEXT("There was an error while parsing JSON. Refer the current selection for possible problematic area.");
+const TCHAR JSON_ERR_VALIDATE_SUCCESS[] = TEXT("No error found while validating JSON.");
 
 const TCHAR STR_VERSION[] = TEXT("Version: ");
 const TCHAR STR_COPY[] = TEXT("Copy");

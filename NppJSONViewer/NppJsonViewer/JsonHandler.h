@@ -19,6 +19,10 @@ public:
 	~JsonHandler() = default;
 
 	auto GetCompressedJson(const std::string& jsonText)->const Result;
-	void FormatJson(const std::string& jsonText);
+	auto FormatJson(const std::string& jsonText)->const Result;
+	auto ValidateJson(const std::string& jsonText)->const Result;
+
+private:
+	auto ParseJson(const std::string& jsonText)->const Result;
 };
 

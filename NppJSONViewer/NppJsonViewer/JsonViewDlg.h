@@ -32,6 +32,8 @@ private:
 	void DrawJsonTree();
 	void PopulateTreeUsingSax(HTREEITEM tree_root, const std::string& jsonText);
 
+	void ValidateJson();
+
 	void UpdateNodePath(HTREEITEM htiNode);
 
 	// Context menu related functions

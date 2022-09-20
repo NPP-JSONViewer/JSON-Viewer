@@ -6,7 +6,23 @@
 #include "rapidjson/document.h"
 #include "rapidjson/error/en.h"
 
-auto JsonHandler::GetCompressedJson(const std::string& jsonText) -> const Result
+auto JsonHandler::GetCompressedJson(const std::string& jsonText)-> const Result
+{
+	return ParseJson(jsonText);
+}
+
+auto JsonHandler::FormatJson(const std::string& /*jsonText*/)-> const Result
+{
+	return Result();
+}
+
+
+auto JsonHandler::ValidateJson(const std::string& jsonText)-> const Result
+{
+	return ParseJson(jsonText);
+}
+
+auto JsonHandler::ParseJson(const std::string& jsonText) -> const Result
 {
 	Result retVal{};
 
@@ -34,9 +50,5 @@ auto JsonHandler::GetCompressedJson(const std::string& jsonText) -> const Result
 	}
 
 	return retVal;
-}
-
-void JsonHandler::FormatJson(const std::string& /*jsonText*/)
-{
 }
 

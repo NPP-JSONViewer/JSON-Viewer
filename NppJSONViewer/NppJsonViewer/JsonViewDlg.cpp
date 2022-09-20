@@ -84,12 +84,34 @@ void JsonViewDlg::CompressJson()
 		m_Editor->MakeSelection(start, end);
 
 		// Intimate user
-		std::string err = std::format("There was an error while parsing JSON, refer the current selection for possible problematic area.\n\nError: ({} - {})"
-			, res.error_code
-			, res.error_str
-		);
+		std::string err = std::format("\n\nError: ({} : {})", res.error_code, res.error_str);
 
-		::MessageBox(m_NppData._nppHandle, StringHelper::ToWstring(err).c_str(), TEXT("JSON Viewer"), MB_OK | MB_ICONERROR);
+		::MessageBox(m_NppData._nppHandle, (JSON_ERR_VALIDATE + StringHelper::ToWstring(err)).c_str(), JSON_ERROR_TITLE, MB_OK | MB_ICONERROR);
+	}
+}
+
+void JsonViewDlg::ValidateJson()
+{
+	// Get the current scintilla
+	const auto selectedText = m_Editor->GetJsonText();
+
+	Result res = JsonHandler().ValidateJson(selectedText);
+
+	if (res.success)
+	{
+		::MessageBox(m_NppData._nppHandle, JSON_ERR_VALIDATE_SUCCESS, JSON_INFO_TITLE, MB_OK | MB_ICONINFORMATION);
+	}
+	else
+	{
+		// Mark the error position
+		size_t start = m_Editor->GetSelectionStart() + res.error_pos;
+		size_t end = start + m_Editor->GetSelectionEnd();
+		m_Editor->MakeSelection(start, end);
+
+		// Intimate user
+		std::string err = std::format("\n\nError: ({} : {})", res.error_code, res.error_str);
+
+		::MessageBox(m_NppData._nppHandle, (JSON_ERR_VALIDATE + StringHelper::ToWstring(err)).c_str(), JSON_ERROR_TITLE, MB_OK | MB_ICONERROR);
 	}
 }
 
@@ -223,7 +245,7 @@ void JsonViewDlg::DrawJsonTree()
 
 	if (txtForParsing.empty())
 	{
-		m_hTreeView->InsertNode(L"Error: Please select a JSON String.", NULL, rootNode);
+		m_hTreeView->InsertNode(JSON_ERR_PARSE, NULL, rootNode);
 	}
 	else
 	{
@@ -251,7 +273,7 @@ void JsonViewDlg::PopulateTreeUsingSax(HTREEITEM tree_root, const std::string& j
 		size_t errPosition = start + reader.GetErrorOffset();
 		m_Editor->MakeSelection(errPosition, errPosition + 1);
 
-		::MessageBox(m_NppData._nppHandle, TEXT("Could not parse!!"), TEXT("JSON Viewer"), MB_OK | MB_ICONERROR);
+		::MessageBox(m_NppData._nppHandle, JSON_ERR_PARSE, JSON_ERROR_TITLE, MB_OK | MB_ICONERROR);
 	}
 
 	m_Editor->SetLangAsJson();
@@ -536,7 +558,7 @@ INT_PTR JsonViewDlg::run_dlgProc(UINT message, WPARAM wParam, LPARAM lParam)
 			break;
 
 		case IDC_BTN_VALIDATE:
-			MessageBox(_hSelf, L"IDC_BTN_VALIDATE", L"OK", MB_OK);
+			ValidateJson();
 			break;
 
 		case IDC_BTN_SEARCH:
@@ -592,8 +614,8 @@ INT_PTR JsonViewDlg::run_dlgProc(UINT message, WPARAM wParam, LPARAM lParam)
 
 	default:
 		// TODO: Temporarily hide controls which are not implemented 
-		//std::vector<DWORD> toHide = { IDC_BTN_SEARCH, IDC_EDT_SEARCH, IDC_EDT_NODEPATH };
-		//ShowControls(toHide, false);
+		std::vector<DWORD> toHide = { IDC_BTN_SEARCH, IDC_EDT_SEARCH, IDC_EDT_NODEPATH };
+		ShowControls(toHide, false);
 		return DockingDlgInterface::run_dlgProc(message, wParam, lParam);
 	}
 }
