@@ -55,7 +55,7 @@ void ScintillaEditor::MakeSelection(size_t start, size_t end) const
 auto ScintillaEditor::GetEOL() const -> unsigned
 {
 	LRESULT eolMode = ::SendMessage(m_hScintilla, SCI_GETEOLMODE, 0, 0);
-	return eolMode;
+	return static_cast<unsigned>(eolMode);
 }
 
 auto ScintillaEditor::GetIndent() const -> Indent
