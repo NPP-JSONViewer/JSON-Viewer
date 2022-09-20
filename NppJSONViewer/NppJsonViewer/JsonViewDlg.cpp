@@ -63,6 +63,30 @@ void JsonViewDlg::ShowDlg(bool bShow)
 
 void JsonViewDlg::FormatJson()
 {
+	// Get the current scintilla
+	const auto eol = m_Editor->GetEOL();
+	const auto indent = m_Editor->GetIndent();
+	const auto selectedText = m_Editor->GetJsonText();
+
+	Result res = JsonHandler().FormatJson(selectedText, eol, indent.len, indent.ch);
+
+	if (res.success)
+	{
+		m_Editor->ReplaceSelection(res.response);
+		m_Editor->SetLangAsJson();
+	}
+	else
+	{
+		// Mark the error position
+		size_t start = m_Editor->GetSelectionStart() + res.error_pos;
+		size_t end = start + m_Editor->GetSelectionEnd();
+		m_Editor->MakeSelection(start, end);
+
+		// Intimate user
+		std::string err = std::format("\n\nError: ({} : {})", res.error_code, res.error_str);
+
+		::MessageBox(m_NppData._nppHandle, (JSON_ERR_VALIDATE + StringHelper::ToWstring(err)).c_str(), JSON_ERROR_TITLE, MB_OK | MB_ICONERROR);
+	}
 }
 
 void JsonViewDlg::CompressJson()
@@ -554,7 +578,7 @@ INT_PTR JsonViewDlg::run_dlgProc(UINT message, WPARAM wParam, LPARAM lParam)
 			break;
 
 		case IDC_BTN_FORMAT:
-			MessageBox(_hSelf, L"IDC_BTN_FORMAT", L"OK", MB_OK);
+			FormatJson();
 			break;
 
 		case IDC_BTN_VALIDATE:

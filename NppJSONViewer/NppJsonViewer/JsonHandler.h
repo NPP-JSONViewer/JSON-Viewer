@@ -19,7 +19,7 @@ public:
 	~JsonHandler() = default;
 
 	auto GetCompressedJson(const std::string& jsonText)->const Result;
-	auto FormatJson(const std::string& jsonText)->const Result;
+	auto FormatJson(const std::string& jsonText, unsigned eol, unsigned indentLen, char indentChar)->const Result;
 	auto ValidateJson(const std::string& jsonText)->const Result;
 
 private:

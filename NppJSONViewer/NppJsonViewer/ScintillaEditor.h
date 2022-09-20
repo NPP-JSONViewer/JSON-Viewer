@@ -2,6 +2,12 @@
 #include "Define.h"
 #include <string>
 
+struct Indent
+{
+	unsigned len = 0;
+	char ch = '\0';
+};
+
 class ScintillaEditor
 {
 public:
@@ -16,6 +22,9 @@ public:
 	void MakeSelection(size_t start, size_t end) const;
 	auto GetSelectionStart() const->size_t { return m_nStartPos; }
 	auto GetSelectionEnd() const->size_t { return m_nEndPos; }
+
+	auto GetEOL() const->unsigned;
+	auto GetIndent() const->Indent;
 
 private:
 	void RefreshSelectionPos();
