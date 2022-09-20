@@ -182,7 +182,7 @@ auto TreeViewCtrl::GetNodeName(HTREEITEM hti) -> std::wstring
 	tvItem.pszText = textBuffer;
 	tvItem.cchTextMax = MAX_PATH;
 	SendMessage(m_hTree, TVM_GETITEM, 0, reinterpret_cast<LPARAM>(&tvItem));
-	return tvItem.pszText;
+	return tvItem.pszText ? tvItem.pszText : TEXT("");
 }
 
 auto TreeViewCtrl::GetNodeKey(HTREEITEM hti) -> std::wstring
@@ -219,32 +219,35 @@ auto TreeViewCtrl::GetNodePath(HTREEITEM hti) -> std::wstring
 	{
 		std::wstring nodeKey = GetNodeKey(hitTravel);
 
-		// remove " from the beinging and end
-		if (nodeKey[0] == TEXT('"'))
-			nodeKey = nodeKey.substr(1);
-		if (nodeKey[nodeKey.size() - 1] == TEXT('"'))
-			nodeKey = nodeKey.substr(0, nodeKey.size() - 1);
+		if (!nodeKey.empty())
+		{
+			// remove " from the beinging and end
+			if (nodeKey[0] == TEXT('"'))
+				nodeKey = nodeKey.substr(1);
+			if (nodeKey[nodeKey.size() - 1] == TEXT('"'))
+				nodeKey = nodeKey.substr(0, nodeKey.size() - 1);
 
-		if (wstrJsonPath.empty())
-		{
-			wstrJsonPath = nodeKey;
-		}
-		else
-		{
-			std::wstring separator = TEXT(".");
-			if (nodeKey[0] == TEXT('['))
+			if (wstrJsonPath.empty())
 			{
-				bArray = true;
-				wstrJsonPath = nodeKey + separator + wstrJsonPath;
+				wstrJsonPath = nodeKey;
 			}
 			else
 			{
-				if (bArray)
+				std::wstring separator = TEXT(".");
+				if (nodeKey[0] == TEXT('['))
 				{
-					bArray = false;
-					separator.clear();
+					bArray = true;
+					wstrJsonPath = nodeKey + separator + wstrJsonPath;
 				}
-				wstrJsonPath = nodeKey + separator + wstrJsonPath;
+				else
+				{
+					if (bArray)
+					{
+						bArray = false;
+						separator.clear();
+					}
+					wstrJsonPath = nodeKey + separator + wstrJsonPath;
+				}
 			}
 		}
 

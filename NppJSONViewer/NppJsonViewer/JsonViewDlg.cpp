@@ -475,39 +475,11 @@ void JsonViewDlg::HandleTreeEvents(LPARAM lParam)
 
 	switch (lpnmh->code)
 	{
-	case NM_CLICK:
-	{
-		// Let's play safe here
-		if (lpnmh->code == NM_RCLICK)
-			break;
-
-		DWORD dwPos = GetMessagePos();
-		POINT ptScreen, ptClient;
-		ptScreen.x = LOWORD(dwPos);
-		ptScreen.y = HIWORD(dwPos);
-
-		ptClient = ptScreen;
-		m_hTreeView->ScreenToTreeView(&ptClient);
-
-		TVHITTESTINFO ht = {};
-		ht.pt = ptClient;
-		HTREEITEM hItem = m_hTreeView->HitTest(&ht);
-		if (!hItem)
-			return; // No hit
-
-		if (ht.flags & TVHT_ONITEMLABEL)
-		{
-			// Update node path on left click
-			UpdateNodePath(hItem);
-		}
-	}
-	break;
-
 	case TVN_SELCHANGED:
 	{
 		NMTREEVIEW* pnmtv = reinterpret_cast<LPNMTREEVIEW>(lParam);
 		HTREEITEM hItem = pnmtv->itemNew.hItem;
-		if (hItem && pnmtv->action == TVC_BYKEYBOARD)
+		if (hItem && (pnmtv->action == TVC_BYMOUSE || pnmtv->action == TVC_BYKEYBOARD))
 		{
 			UpdateNodePath(hItem);
 		}
