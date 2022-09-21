@@ -33,15 +33,21 @@ build_script:
 artifacts:
     - path: NppJSONViewer\Build\Bin\Release\x64\NPPJSONViewer.dll
       name: x64
+      type: binary
     - path: NppJSONViewer\Build\Bin\Release\x64\NPPJSONViewer.pdb
       name: x64
+      type: symbols
 
     - path: NppJSONViewer\Build\Bin\Release\Win32\NPPJSONViewer.dll
       name: Win32
+      type: binary
     - path: NppJSONViewer\Build\Bin\Release\Win32\NPPJSONViewer.pdb
       name: Win32
+      type: symbols
 
     - path: NppJSONViewer\Build\Bin\Release\ARM64\NPPJSONViewer.dll
       name: ARM64
+      type: binary
     - path: NppJSONViewer\Build\Bin\Release\ARM64\NPPJSONViewer.pdb
       name: ARM64
+      type: symbols
