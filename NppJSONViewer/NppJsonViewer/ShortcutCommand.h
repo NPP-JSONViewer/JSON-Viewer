@@ -7,7 +7,7 @@ enum class CallBackID :int { SHOW_DOC_PANEL = 0, FORMAT, COMPRESS, SEP_1, OPTION
 class ShortcutCommand
 {
 public:
-	ShortcutCommand(int nCommandCount);
+	explicit ShortcutCommand(int nCommandCount);
 	~ShortcutCommand() = default;
 
 	auto GetCommandID(CallBackID id) const->int { return m_pFuncItem[At(id)]._cmdID; }

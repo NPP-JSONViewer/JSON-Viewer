@@ -223,9 +223,9 @@ auto TreeViewCtrl::GetNodePath(HTREEITEM hti) -> std::wstring
 		{
 			// remove " from the beinging and end
 			if (nodeKey[0] == TEXT('"'))
-				nodeKey = nodeKey.substr(1);
+				nodeKey.erase(0, 1);
 			if (nodeKey[nodeKey.size() - 1] == TEXT('"'))
-				nodeKey = nodeKey.substr(0, nodeKey.size() - 1);
+				nodeKey.pop_back();
 
 			if (wstrJsonPath.empty())
 			{

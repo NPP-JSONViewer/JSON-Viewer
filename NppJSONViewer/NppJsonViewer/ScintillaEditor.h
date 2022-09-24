@@ -11,7 +11,7 @@ struct Indent
 class ScintillaEditor
 {
 public:
-	ScintillaEditor(const NppData& nppData);
+	explicit ScintillaEditor(const NppData& nppData);
 	~ScintillaEditor() = default;
 
 	std::string GetJsonText();

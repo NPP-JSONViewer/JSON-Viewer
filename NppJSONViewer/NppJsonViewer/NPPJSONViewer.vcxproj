@@ -254,16 +254,13 @@
   <ItemGroup>
     <ClCompile Include="..\external\npp\StaticDialog.cpp" />
     <ClCompile Include="AboutDlg.cpp" />
-    <ClCompile Include="JSONDialog.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="JsonHandler.cpp" />
     <ClCompile Include="JsonViewDlg.cpp" />
     <ClCompile Include="NppJsonPlugin.cpp" />
-    <ClCompile Include="PluginDefinition.cpp" />
     <ClCompile Include="RapidJsonHandler.cpp" />
     <ClCompile Include="ScintillaEditor.cpp" />
     <ClCompile Include="ShortcutCommand.cpp" />
-    <ClCompile Include="TreeBuilder.cpp" />
     <ClCompile Include="TreeViewCtrl.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -278,17 +275,14 @@
     <ClInclude Include="..\external\npp\Window.h" />
     <ClInclude Include="AboutDlg.h" />
     <ClInclude Include="Define.h" />
-    <ClInclude Include="JSONDialog.h" />
     <ClInclude Include="JsonHandler.h" />
     <ClInclude Include="JsonNode.h" />
     <ClInclude Include="JsonViewDlg.h" />
     <ClInclude Include="NppJsonPlugin.h" />
-    <ClInclude Include="PluginDefinition.h" />
     <ClInclude Include="RapidJsonHandler.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="ScintillaEditor.h" />
     <ClInclude Include="ShortcutCommand.h" />
-    <ClInclude Include="TreeBuilder.h" />
     <ClInclude Include="StopWatch.h" />
     <ClInclude Include="TreeViewCtrl.h" />
   </ItemGroup>

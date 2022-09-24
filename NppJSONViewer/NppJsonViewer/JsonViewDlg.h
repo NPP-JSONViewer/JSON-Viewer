@@ -50,7 +50,7 @@ private:
 
 	void ToggleMenuItemState(bool bVisible);
 
-	void ShowControls(const std::vector<DWORD>& ids, bool enable);
+	void ShowControls(const std::vector<DWORD>& ids, bool show);
 	void EnableControls(const std::vector<DWORD>& ids, bool enable);
 
 	void HandleTreeEvents(LPARAM lParam);

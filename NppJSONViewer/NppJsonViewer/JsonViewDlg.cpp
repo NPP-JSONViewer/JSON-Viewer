@@ -2,7 +2,6 @@
 #include "Define.h"
 #include "Utility.h"
 #include "StringHelper.h"
-#include "TreeBuilder.h"
 #include "RapidJsonHandler.h"
 #include "ScintillaEditor.h"
 #include "JsonHandler.h"
@@ -284,7 +283,6 @@ void JsonViewDlg::DrawJsonTree()
 
 void JsonViewDlg::PopulateTreeUsingSax(HTREEITEM tree_root, const std::string& jsonText)
 {
-	//TreeBuilder handler(this, tree_root);
 	RapidJsonHandler handler(this, tree_root);
 	rapidjson::Reader reader;
 
@@ -501,10 +499,10 @@ void JsonViewDlg::ToggleMenuItemState(bool bVisible)
 	::SendMessage(_hParent, NPPM_SETMENUITEMCHECK, static_cast<WPARAM>(m_nDlgId), bVisible);
 }
 
-void JsonViewDlg::ShowControls(const std::vector<DWORD>& ids, bool enable)
+void JsonViewDlg::ShowControls(const std::vector<DWORD>& ids, bool show)
 {
 	for (auto id : ids)
-		ShowWindow(GetDlgItem(getHSelf(), id), enable ? SW_HIDE : SW_HIDE);
+		ShowWindow(GetDlgItem(getHSelf(), id), show ? SW_SHOW : SW_HIDE);
 }
 
 void JsonViewDlg::EnableControls(const std::vector<DWORD>& ids, bool enable)
@@ -638,7 +636,7 @@ INT_PTR JsonViewDlg::run_dlgProc(UINT message, WPARAM wParam, LPARAM lParam)
 
 	default:
 		// TODO: Temporarily hide controls which are not implemented 
-		std::vector<DWORD> toHide = { IDC_BTN_SEARCH, IDC_EDT_SEARCH, IDC_EDT_NODEPATH };
+		std::vector<DWORD> toHide = { IDC_BTN_SEARCH, IDC_EDT_SEARCH };
 		ShowControls(toHide, false);
 		return DockingDlgInterface::run_dlgProc(message, wParam, lParam);
 	}

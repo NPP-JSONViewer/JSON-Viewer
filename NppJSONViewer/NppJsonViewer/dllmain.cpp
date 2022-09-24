@@ -1,6 +1,5 @@
 // dllmain.cpp : Defines the entry point for the DLL application.
 
-#include "PluginDefinition.h"
 #include "NppJsonPlugin.h"
 
 NppJsonPlugin g_NppJsonPlugin;
