@@ -301,30 +301,21 @@ void JsonViewDlg::PopulateTreeUsingSax(HTREEITEM tree_root, const std::string& j
 	m_Editor->SetLangAsJson();
 }
 
-HTREEITEM JsonViewDlg::InsertToTree(HWND hWndDlg, HTREEITEM parent, const char* text)
+HTREEITEM JsonViewDlg::InsertToTree(HWND hWndDlg, HTREEITEM parent, const std::string& text)
 {
-	TV_INSERTSTRUCT tvinsert;
-	HTREEITEM item = NULL;
+	auto wText = StringHelper::ToWstring(text);
+
+	TV_INSERTSTRUCT tvinsert{};
 	tvinsert.hParent = parent;
 	tvinsert.hInsertAfter = TVI_LAST;
 	tvinsert.item.mask = TVIF_TEXT;
+	tvinsert.item.pszText = const_cast<LPWSTR>(wText.c_str());
 
-	auto len = strlen(text) + 1;
-	wchar_t* w_msg = new wchar_t[len];
-	if (w_msg)
-	{
-		memset(w_msg, 0, len);
-		MultiByteToWideChar(CP_UTF8, NULL, text, -1, w_msg, static_cast<int>(len));
-
-		tvinsert.item.pszText = w_msg;
-		item = (HTREEITEM)SendDlgItemMessage(hWndDlg, IDC_TREE, TVM_INSERTITEM, 0, (LPARAM)&tvinsert);
-		delete[] w_msg; // fix memory leak
-	}
-
+	HTREEITEM item = (HTREEITEM)SendDlgItemMessage(hWndDlg, IDC_TREE, TVM_INSERTITEM, 0, (LPARAM)&tvinsert);
 	return item;
 }
 
-HTREEITEM JsonViewDlg::InsertToTree(HTREEITEM parent, const char* text)
+HTREEITEM JsonViewDlg::InsertToTree(HTREEITEM parent, const std::string& text)
 {
 	return InsertToTree(getHSelf(), parent, text);
 }
