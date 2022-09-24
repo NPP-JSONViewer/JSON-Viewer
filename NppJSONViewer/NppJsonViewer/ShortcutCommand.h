@@ -2,8 +2,6 @@
 #include "Define.h"
 #include <memory>
 
-enum class CallBackID :int { SHOW_DOC_PANEL = 0, FORMAT, COMPRESS, SEP_1, OPTION, ABOUT };
-
 class ShortcutCommand
 {
 public:

@@ -2,7 +2,8 @@
 #include "PluginInterface.h"
 
 // Define the number of plugin commands here
-const int nTotalCommandCount = 6;
+enum class CallBackID :int { SHOW_DOC_PANEL = 0, FORMAT, COMPRESS, SEP_1, OPTION, ABOUT };
+const int nTotalCommandCount = static_cast<int>(CallBackID::ABOUT) + 1;
 
 // Define plugin name here
 const TCHAR PLUGIN_NAME[] = TEXT("JSON Viewer");
