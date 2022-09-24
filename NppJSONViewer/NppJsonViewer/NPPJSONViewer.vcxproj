@@ -89,40 +89,40 @@
     <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Build\Bin\$(Configuration)\$(Platform)\</OutDir>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">$(SolutionDir)Build\Bin\$(Configuration)\$(Platform)\</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Build\Intermediate\$(Configuration)\$(Platform)\</IntDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">$(SolutionDir)Build\Intermediate\$(Configuration)\$(Platform)\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)Build\Bin\$(Configuration)\$(Platform)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Build\Intermediate\$(ProjectName)\$(Configuration)\$(Platform)\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">$(SolutionDir)Build\Intermediate\$(ProjectName)\$(Configuration)\$(Platform)\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)Build\Intermediate\$(ProjectName)\$(Configuration)\$(Platform)\</IntDir>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</LinkIncremental>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">true</LinkIncremental>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</LinkIncremental>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)Build\Bin\$(Configuration)\$(Platform)\</OutDir>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">$(SolutionDir)Build\Bin\$(Configuration)\$(Platform)\</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)Build\Intermediate\$(Configuration)\$(Platform)\</IntDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">$(SolutionDir)Build\Intermediate\$(Configuration)\$(Platform)\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)Build\Bin\$(Configuration)\$(Platform)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)Build\Intermediate\$(ProjectName)\$(Configuration)\$(Platform)\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">$(SolutionDir)Build\Intermediate\$(ProjectName)\$(Configuration)\$(Platform)\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)Build\Intermediate\$(ProjectName)\$(Configuration)\$(Platform)\</IntDir>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkIncremental>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">false</LinkIncremental>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)Build\Bin\$(Configuration)\$(Platform)\</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)Build\Intermediate\$(Configuration)\$(Platform)\</IntDir>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkIncremental>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)Build\Bin\$(Configuration)\$(Platform)\</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)Build\Intermediate\$(Configuration)\$(Platform)\</IntDir>
-    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(SolutionDir)external\npp;$(SolutionDir)external\rapidjson\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)UtilityLib;$(SolutionDir)external\npp;$(SolutionDir)external\rapidjson\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>$(SolutionDir)external\npp;$(SolutionDir)external\rapidjson\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)UtilityLib;$(SolutionDir)external\npp;$(SolutionDir)external\rapidjson\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(SolutionDir)external\npp;$(SolutionDir)external\rapidjson\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)UtilityLib;$(SolutionDir)external\npp;$(SolutionDir)external\rapidjson\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">
-    <IncludePath>$(SolutionDir)external\npp;$(SolutionDir)external\rapidjson\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)UtilityLib;$(SolutionDir)external\npp;$(SolutionDir)external\rapidjson\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>$(SolutionDir)external\npp;$(SolutionDir)external\rapidjson\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)UtilityLib;$(SolutionDir)external\npp;$(SolutionDir)external\rapidjson\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">
-    <IncludePath>$(SolutionDir)external\npp;$(SolutionDir)external\rapidjson\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)UtilityLib;$(SolutionDir)external\npp;$(SolutionDir)external\rapidjson\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -137,6 +137,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <TreatWarningAsError>true</TreatWarningAsError>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <ConformanceMode>true</ConformanceMode>
     </ClCompile>
     <Link>
       <AdditionalDependencies>shlwapi.lib;comctl32.lib;Version.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -158,6 +159,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <TreatWarningAsError>true</TreatWarningAsError>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <ConformanceMode>true</ConformanceMode>
     </ClCompile>
     <Link>
       <AdditionalDependencies>shlwapi.lib;comctl32.lib;Version.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -175,10 +177,11 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <TreatWarningAsError>true</TreatWarningAsError>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <ConformanceMode>true</ConformanceMode>
     </ClCompile>
     <Link>
       <AdditionalDependencies>shlwapi.lib;comctl32.lib;Version.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <GenerateDebugInformation>DebugFull</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -195,10 +198,11 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <TreatWarningAsError>true</TreatWarningAsError>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <ConformanceMode>true</ConformanceMode>
     </ClCompile>
     <Link>
       <AdditionalDependencies>shlwapi.lib;comctl32.lib;Version.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <GenerateDebugInformation>DebugFull</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -214,10 +218,11 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <TreatWarningAsError>true</TreatWarningAsError>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <ConformanceMode>true</ConformanceMode>
     </ClCompile>
     <Link>
       <AdditionalDependencies>shlwapi.lib;comctl32.lib;Version.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <GenerateDebugInformation>DebugFull</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -237,6 +242,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <TreatWarningAsError>true</TreatWarningAsError>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <ConformanceMode>true</ConformanceMode>
     </ClCompile>
     <Link>
       <AdditionalDependencies>shlwapi.lib;comctl32.lib;Version.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -247,12 +253,15 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\external\npp\StaticDialog.cpp" />
-    <ClCompile Include="Hyperlinks.cpp" />
-    <ClCompile Include="JSONDialog.cpp" />
-    <ClCompile Include="NppPlugin.cpp" />
-    <ClCompile Include="PluginDefinition.cpp" />
-    <ClCompile Include="TreeBuilder.cpp" />
-    <ClCompile Include="utils.cpp" />
+    <ClCompile Include="AboutDlg.cpp" />
+    <ClCompile Include="dllmain.cpp" />
+    <ClCompile Include="JsonHandler.cpp" />
+    <ClCompile Include="JsonViewDlg.cpp" />
+    <ClCompile Include="NppJsonPlugin.cpp" />
+    <ClCompile Include="RapidJsonHandler.cpp" />
+    <ClCompile Include="ScintillaEditor.cpp" />
+    <ClCompile Include="ShortcutCommand.cpp" />
+    <ClCompile Include="TreeViewCtrl.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\external\npp\Docking.h" />
@@ -264,16 +273,33 @@
     <ClInclude Include="..\external\npp\Scintilla.h" />
     <ClInclude Include="..\external\npp\StaticDialog.h" />
     <ClInclude Include="..\external\npp\Window.h" />
-    <ClInclude Include="Hyperlinks.h" />
-    <ClInclude Include="JSONDialog.h" />
-    <ClInclude Include="PluginDefinition.h" />
+    <ClInclude Include="AboutDlg.h" />
+    <ClInclude Include="Define.h" />
+    <ClInclude Include="JsonHandler.h" />
+    <ClInclude Include="JsonNode.h" />
+    <ClInclude Include="JsonViewDlg.h" />
+    <ClInclude Include="NppJsonPlugin.h" />
+    <ClInclude Include="RapidJsonHandler.h" />
     <ClInclude Include="resource.h" />
-    <ClInclude Include="TreeBuilder.h" />
+    <ClInclude Include="ScintillaEditor.h" />
+    <ClInclude Include="ShortcutCommand.h" />
     <ClInclude Include="StopWatch.h" />
-    <ClInclude Include="utils.h" />
+    <ClInclude Include="TreeViewCtrl.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\UtilityLib\UtilityLib.vcxproj">
+      <Project>{171cafc6-e679-4b81-bf5b-049ac0fab4f8}</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="res\format.ico" />
+    <Image Include="res\Icon.ico" />
+    <Image Include="res\Refresh.ico" />
+    <Image Include="res\search.ico" />
+    <Image Include="res\validate.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
