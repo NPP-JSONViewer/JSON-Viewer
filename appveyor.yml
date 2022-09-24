@@ -31,23 +31,12 @@ build_script:
     - msbuild NppJSONViewer.sln /m /p:configuration="%configuration%" /p:platform="%platform_input%" /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
 
 artifacts:
-    - path: NppJSONViewer\Build\Bin\Release\x64\NPPJSONViewer.dll
-      name: x64
+    - path: NppJSONViewer\Build\Bin\%configuration%\%platform%\NPPJSONViewer.dll
+      name: "%platform%"
       type: binary
-    - path: NppJSONViewer\Build\Bin\Release\x64\NPPJSONViewer.pdb
-      name: x64
+
+    - path: NppJSONViewer\Build\Bin\%configuration%\%platform%\NPPJSONViewer.pdb
+      name: "%platform%"
       type: symbols
 
-    - path: NppJSONViewer\Build\Bin\Release\Win32\NPPJSONViewer.dll
-      name: Win32
-      type: binary
-    - path: NppJSONViewer\Build\Bin\Release\Win32\NPPJSONViewer.pdb
-      name: Win32
-      type: symbols
 
-    - path: NppJSONViewer\Build\Bin\Release\ARM64\NPPJSONViewer.dll
-      name: ARM64
-      type: binary
-    - path: NppJSONViewer\Build\Bin\Release\ARM64\NPPJSONViewer.pdb
-      name: ARM64
-      type: symbols
