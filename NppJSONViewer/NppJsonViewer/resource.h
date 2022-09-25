@@ -3,9 +3,9 @@
 // Used by resource.rc
 //
 #define IDD_TREEDLG                     101
-#define IDD_ABOUTDLG                    102
-#define IDR_TREEITEM_MENU               103
-#define IDB_BITMAP_ICON                 104
+#define IDD_SETTING                     102
+#define IDD_ABOUTDLG                    103
+#define IDR_TREEITEM_MENU               104
 #define IDI_ICON_REFRESH                105
 #define IDI_ICON_SEARCH                 106
 #define IDI_ICON_FORMAT                 107
@@ -23,6 +23,19 @@
 #define IDC_BTN_SEARCH                  1011
 #define IDC_DIVIDER                     1012
 #define IDC_BTN_VALIDATE                1013
+#define IDC_HOR_BAR_TOP                 1014
+#define IDC_HOR_BAR_BOTTOM              1015
+#define IDC_RADIO_LINE_AUTO             1016
+#define IDC_RADIO_LINE_WINDOW           1017
+#define IDC_RADIO_LINE_UNIX             1018
+#define IDC_RADIO_LINE_MAC              1019
+#define IDC_RADIO_INDENT_AUTO           1020
+#define IDC_RADIO_INDENT_TAB            1021
+#define IDC_RADIO_INDENT_SPACE          1022
+#define IDC_EDT_INDENT_SPACECOUNT       1023
+#define IDC_STATIC_SPACECOUNT           1024
+#define IDC_RADIO_LINEFORMAT_DEFAULT    1025
+#define IDC_RADIO_LINEFORMAT_SINGLE     1026
 #define IDM_COPY_TREEITEM               40001
 #define IDM_COPY_NODENAME               40002
 #define IDM_COPY_NODEVALUE              40003
@@ -31,12 +44,12 @@
 #define IDM_COLLAPSEALL                 40006
 
 // Next default values for new objects
-//
+// 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        110
 #define _APS_NEXT_COMMAND_VALUE         40007
-#define _APS_NEXT_CONTROL_VALUE         1014
+#define _APS_NEXT_CONTROL_VALUE         1027
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

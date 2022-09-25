@@ -7,6 +7,8 @@
 #include "Notepad_plus_msgs.h"
 #include "ShortcutCommand.h"
 #include "AboutDlg.h"
+#include "SettingsDlg.h"
+
 
 class NppJsonPlugin
 {
@@ -42,7 +44,7 @@ private:
 		static void ShowJsonDlg() { m_pNppJsonPlugin->ShowJsonDlg(); }
 		static void FormatJson() { m_pNppJsonPlugin->FormatJson(); }
 		static void CompressJson() { m_pNppJsonPlugin->CompressJson(); }
-		static void OpenOptionDlg() { m_pNppJsonPlugin->OpenOptionDlg(); }
+		static void OpenSettingDlg() { m_pNppJsonPlugin->OpenSettingDlg(); }
 		static void ShowAboutDlg() { m_pNppJsonPlugin->ShowAboutDlg(); }
 	};
 
@@ -55,7 +57,7 @@ private:
 	void ShowJsonDlg();
 	void FormatJson();
 	void CompressJson();
-	void OpenOptionDlg();
+	void OpenSettingDlg();
 	void ShowAboutDlg();
 
 private:
@@ -65,5 +67,6 @@ private:
 	NppData								m_NppData = {};
 	std::unique_ptr<JsonViewDlg>		m_pJsonViewDlg = nullptr;
 	std::unique_ptr<AboutDlg>			m_pAboutDlg = nullptr;
+	std::unique_ptr<SettingsDlg>		m_pSettingsDlg = nullptr;
 };
 

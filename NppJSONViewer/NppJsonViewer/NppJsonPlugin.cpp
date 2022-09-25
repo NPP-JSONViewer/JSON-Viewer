@@ -1,7 +1,6 @@
 #include "NppJsonPlugin.h"
 #include "resource.h"
 #include <tchar.h>
-#include "AboutDlg.h"
 
 NppJsonPlugin* NppJsonPlugin::Callback::m_pNppJsonPlugin = nullptr;
 
@@ -103,7 +102,7 @@ void NppJsonPlugin::InitCommandMenu()
 
 	m_shortcutCommands.SetCommand(CallBackID::SEP_1, MENU_SEPERATOR, NULL, true);
 
-	//m_shortcutCommands.SetCommand(CallBackID::OPTION, MENU_OPTION, Callback::OpenOptionDlg, false);
+	m_shortcutCommands.SetCommand(CallBackID::SETTING, MENU_SETTING, Callback::OpenSettingDlg, false);
 	m_shortcutCommands.SetCommand(CallBackID::ABOUT, MENU_ABOUT, Callback::ShowAboutDlg, false);
 }
 
@@ -168,15 +167,15 @@ void NppJsonPlugin::CompressJson()
 	}
 }
 
-void NppJsonPlugin::OpenOptionDlg()
+void NppJsonPlugin::OpenSettingDlg()
 {
-	/*auto nCmdId = m_shortcutCommands.GetCommandID(CallBackID::OPTION);
+	auto nCmdId = m_shortcutCommands.GetCommandID(CallBackID::SETTING);
 
 	if (!m_pAboutDlg)
-		m_pAboutDlg = std::make_unique<AboutDlg>(reinterpret_cast<HINSTANCE>(m_hModule), m_NppData._nppHandle, nCmdId);
-	bool isShown = m_pAboutDlg->ShowDlg(true);
+		m_pSettingsDlg = std::make_unique<SettingsDlg>(reinterpret_cast<HINSTANCE>(m_hModule), m_NppData._nppHandle, nCmdId);
+	bool isShown = m_pSettingsDlg->ShowDlg(true);
 
-	ToggleMenuItemState(nCmdId, isShown);*/
+	ToggleMenuItemState(nCmdId, isShown);
 }
 
 void NppJsonPlugin::ShowAboutDlg()

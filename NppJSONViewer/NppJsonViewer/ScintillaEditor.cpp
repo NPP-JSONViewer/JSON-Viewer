@@ -62,11 +62,10 @@ auto ScintillaEditor::GetIndent() const -> Indent
 {
 	bool useTabs = ::SendMessage(m_hScintilla, SCI_GETUSETABS, 0, 0);
 	unsigned indentLen = useTabs ? 1 : static_cast<unsigned>(::SendMessage(m_hScintilla, SCI_GETTABWIDTH, 0, 0));
-	char indentChar = useTabs ? '\t' : ' ';
 
 	return Indent{
 		.len = indentLen,
-		.ch = indentChar
+		.style = useTabs ? IndentStyle::TAB : IndentStyle::SPACE
 	};
 }
 

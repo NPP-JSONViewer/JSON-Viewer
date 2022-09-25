@@ -1,7 +1,7 @@
 #pragma once
 #include "StaticDialog.h"
 
-class AboutDlg :public StaticDialog
+class AboutDlg : public StaticDialog
 {
 public:
 	AboutDlg(HINSTANCE hIntance, HWND hParent, int nCmdId);

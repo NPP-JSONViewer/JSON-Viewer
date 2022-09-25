@@ -2,12 +2,6 @@
 #include "Define.h"
 #include <string>
 
-struct Indent
-{
-	unsigned len = 0;
-	char ch = '\0';
-};
-
 class ScintillaEditor
 {
 public:

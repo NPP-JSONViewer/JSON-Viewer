@@ -67,7 +67,8 @@ void JsonViewDlg::FormatJson()
 	const auto indent = m_Editor->GetIndent();
 	const auto selectedText = m_Editor->GetJsonText();
 
-	Result res = JsonHandler().FormatJson(selectedText, eol, indent.len, indent.ch);
+	char indentChar = indent.style == IndentStyle::TAB ? '\t' : ' ';
+	Result res = JsonHandler().FormatJson(selectedText, eol, indent.len, indentChar);
 
 	if (res.success)
 	{
