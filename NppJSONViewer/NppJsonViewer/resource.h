@@ -36,6 +36,8 @@
 #define IDC_STATIC_SPACECOUNT           1024
 #define IDC_RADIO_LINEFORMAT_DEFAULT    1025
 #define IDC_RADIO_LINEFORMAT_SINGLE     1026
+#define IDC_CHK_FOLLOW_CURRENT_DOC      1028
+#define IDC_CHK_FORMAT_ON_OPEN          1029
 #define IDM_COPY_TREEITEM               40001
 #define IDM_COPY_NODENAME               40002
 #define IDM_COPY_NODEVALUE              40003
@@ -49,7 +51,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        110
 #define _APS_NEXT_COMMAND_VALUE         40007
-#define _APS_NEXT_CONTROL_VALUE         1027
+#define _APS_NEXT_CONTROL_VALUE         1030
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

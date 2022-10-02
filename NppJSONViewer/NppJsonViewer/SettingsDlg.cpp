@@ -123,6 +123,9 @@ bool SettingsDlg::Apply()
 	else if (IsDlgButtonChecked(_hSelf, IDC_RADIO_LINEFORMAT_SINGLE))
 		m_pSetting->lf = LineFormat::SINGLELINE;
 
+	m_pSetting->follow_current_tab = CUtility::GetCheckboxStatus(::GetDlgItem(_hSelf, IDC_CHK_FOLLOW_CURRENT_DOC));
+	m_pSetting->auto_format_on_open = CUtility::GetCheckboxStatus(::GetDlgItem(_hSelf, IDC_CHK_FORMAT_ON_OPEN));
+
 	return WriteINI();
 }
 
@@ -179,6 +182,8 @@ void SettingsDlg::InitDlg()
 	CUtility::SetEditCtrlText(::GetDlgItem(_hSelf, IDC_EDT_INDENT_SPACECOUNT), std::to_wstring(m_pSetting->indent.len));
 	ShowSpaceCountCtrls(m_pSetting->indent.style == IndentStyle::SPACE);
 
+	CUtility::SetCheckboxStatus(::GetDlgItem(_hSelf, IDC_CHK_FOLLOW_CURRENT_DOC), m_pSetting->follow_current_tab);
+	CUtility::SetCheckboxStatus(::GetDlgItem(_hSelf, IDC_CHK_FORMAT_ON_OPEN), m_pSetting->auto_format_on_open);
 }
 
 void SettingsDlg::ShowSpaceCountCtrls(bool bShow)

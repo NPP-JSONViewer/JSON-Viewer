@@ -46,11 +46,15 @@ const TCHAR STR_COPYPATH[] = TEXT("Copy path");
 const TCHAR STR_EXPANDALL[] = TEXT("Expand all");
 const TCHAR STR_COLLAPSEALL[] = TEXT("Collapse all");
 
-const TCHAR STR_INI_FORMATTING_SEC[] = TEXT("FORMATTING");
+const TCHAR STR_INI_FORMATTING_SEC[] = TEXT("Formatting");
 const TCHAR STR_INI_FORMATTING_EOL[] = TEXT("EOL");
 const TCHAR STR_INI_FORMATTING_LINE[] = TEXT("LINE_FORMATTING");
 const TCHAR STR_INI_FORMATTING_INDENT[] = TEXT("INDENTATION");
 const TCHAR STR_INI_FORMATTING_INDENTCOUNT[] = TEXT("INDENTATION_COUNT");
+
+const TCHAR STR_INI_OTHER_SEC[] = TEXT("Others");
+const TCHAR STR_INI_OTHER_FOLLOW_TAB[] = TEXT("FOLLOW_TAB");
+const TCHAR STR_INI_OTHER_AUTO_FORMAT[] = TEXT("AUTO_FORMAT");
 
 enum class IndentStyle { AUTO, TAB, SPACE };
 struct Indent
@@ -67,5 +71,7 @@ struct Setting
 	LineEnding le = LineEnding::AUTO;
 	LineFormat lf = LineFormat::DEFAULT;
 	Indent indent{};
+	bool follow_current_tab = false;
+	bool auto_format_on_open = false;
 };
 

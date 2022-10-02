@@ -90,6 +90,14 @@ bool ProfileSetting::GetSettings(Setting& info) const
 	if (bRetVal)
 		info.indent.len = nVal;
 
+	bRetVal &= ReadValue(STR_INI_OTHER_SEC, STR_INI_OTHER_FOLLOW_TAB, nVal);
+	if (bRetVal)
+		info.follow_current_tab = static_cast<bool>(nVal);
+
+	bRetVal &= ReadValue(STR_INI_OTHER_SEC, STR_INI_OTHER_AUTO_FORMAT, nVal);
+	if (bRetVal)
+		info.auto_format_on_open = static_cast<bool>(nVal);
+
 	return bRetVal;
 }
 
@@ -101,6 +109,8 @@ bool ProfileSetting::SetSettings(const Setting& info) const
 	bRetVal &= WriteValue(STR_INI_FORMATTING_SEC, STR_INI_FORMATTING_LINE, static_cast<int>(info.lf));
 	bRetVal &= WriteValue(STR_INI_FORMATTING_SEC, STR_INI_FORMATTING_INDENT, static_cast<int>(info.indent.style));
 	bRetVal &= WriteValue(STR_INI_FORMATTING_SEC, STR_INI_FORMATTING_INDENTCOUNT, info.indent.len);
+	bRetVal &= WriteValue(STR_INI_OTHER_SEC, STR_INI_OTHER_FOLLOW_TAB, info.follow_current_tab);
+	bRetVal &= WriteValue(STR_INI_OTHER_SEC, STR_INI_OTHER_AUTO_FORMAT, info.auto_format_on_open);
 
 	return bRetVal;
 }
