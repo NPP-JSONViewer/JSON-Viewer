@@ -53,12 +53,6 @@ void NppJsonPlugin::ProcessNotification(const SCNotification* notifyCode)
 		break;
 	}
 
-	case NPPN_BUFFERACTIVATED:
-	{
-		PluginCleanup();
-		break;
-	}
-
 	default:
 		return;
 	}

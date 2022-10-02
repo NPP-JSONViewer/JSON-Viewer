@@ -8,7 +8,7 @@
 
 class JsonViewDlg;
 
-struct TreeNode2
+struct TreeNode
 {
 	HTREEITEM subRoot;
 	JsonNode node;
@@ -18,7 +18,7 @@ struct TreeNode2
 class RapidJsonHandler :public rapidjson::BaseReaderHandler<rapidjson::UTF8<>, RapidJsonHandler>
 {
 	std::string m_strLastKey;
-	std::stack<TreeNode2*> m_NodeStack;
+	std::stack<TreeNode*> m_NodeStack;
 
 	JsonViewDlg* m_dlg = nullptr;
 	HTREEITEM m_treeRoot = nullptr;

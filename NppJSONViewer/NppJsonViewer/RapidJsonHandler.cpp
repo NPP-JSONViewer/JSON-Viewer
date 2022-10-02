@@ -11,7 +11,7 @@ bool RapidJsonHandler::Null()
 	if (!m_NodeStack.size())
 		return false;
 
-	TreeNode2* parent = m_NodeStack.top();
+	TreeNode* parent = m_NodeStack.top();
 	parent->node.type = JsonNodeType::BOOL;
 	parent->node.key = m_strLastKey;
 	parent->node.value = STR_NULL;
@@ -27,7 +27,7 @@ bool RapidJsonHandler::Bool(bool b)
 	if (!m_NodeStack.size())
 		return false;
 
-	TreeNode2* parent = m_NodeStack.top();
+	TreeNode* parent = m_NodeStack.top();
 	parent->node.type = JsonNodeType::BOOL;
 	parent->node.key = m_strLastKey;
 	parent->node.value = b ? STR_TRUE : STR_FALSE;
@@ -68,7 +68,7 @@ bool RapidJsonHandler::RawNumber(const Ch* str, unsigned /*length*/, bool /*copy
 	if (!m_NodeStack.size())
 		return false;
 
-	TreeNode2* parent = m_NodeStack.top();
+	TreeNode* parent = m_NodeStack.top();
 	parent->node.type = JsonNodeType::NUMBER;
 	parent->node.key = m_strLastKey;
 	parent->node.value = str;
@@ -91,7 +91,7 @@ bool RapidJsonHandler::String(const Ch* str, unsigned /*length*/, bool /*copy*/)
 		return true;
 	}
 
-	TreeNode2* parent = m_NodeStack.top();
+	TreeNode* parent = m_NodeStack.top();
 
 	if (parent->node.type != JsonNodeType::ARRAY)
 	{
@@ -101,11 +101,6 @@ bool RapidJsonHandler::String(const Ch* str, unsigned /*length*/, bool /*copy*/)
 	}
 	else
 	{
-		/*std::string strCount = std::to_string(parent->counter);
-		len = strCount.size() + 3 + length + 1;
-		value = new char[len];
-		snprintf(value, len, "%s : %s", strCount.c_str(), str);
-		value[len - 1] = '\0';*/
 		parent->counter++;
 	}
 
@@ -125,10 +120,10 @@ bool RapidJsonHandler::Key(const Ch* str, unsigned /*length*/, bool /*copy*/)
 
 bool RapidJsonHandler::StartObject()
 {
-	TreeNode2* parent = nullptr;
+	TreeNode* parent = nullptr;
 	if (m_NodeStack.empty())
 	{
-		parent = new TreeNode2;
+		parent = new TreeNode;
 		parent->node.type = JsonNodeType::OBJECT;
 		parent->subRoot = m_treeRoot;
 		parent->counter = 0;
@@ -155,7 +150,7 @@ bool RapidJsonHandler::StartObject()
 		}
 
 		parent->counter++;
-		TreeNode2* newTreeNode = new TreeNode2;
+		TreeNode* newTreeNode = new TreeNode;
 		newTreeNode->node.type = JsonNodeType::OBJECT;
 		newTreeNode->subRoot = newNode;
 		newTreeNode->counter = 0;
@@ -169,7 +164,7 @@ bool RapidJsonHandler::EndObject(unsigned /*memberCount*/)
 {
 	if (!m_NodeStack.empty())
 	{
-		TreeNode2* node = m_NodeStack.top();
+		TreeNode* node = m_NodeStack.top();
 		m_NodeStack.pop();
 		delete node;
 	}
@@ -178,10 +173,10 @@ bool RapidJsonHandler::EndObject(unsigned /*memberCount*/)
 
 bool RapidJsonHandler::StartArray()
 {
-	TreeNode2* parent = nullptr;
+	TreeNode* parent = nullptr;
 	if (m_NodeStack.empty())
 	{
-		parent = new TreeNode2;
+		parent = new TreeNode;
 		parent->node.type = JsonNodeType::ARRAY;
 		parent->subRoot = m_treeRoot;
 		parent->counter = 0;
@@ -209,7 +204,7 @@ bool RapidJsonHandler::StartArray()
 		}
 
 		parent->counter++;
-		TreeNode2* newTreeNode = new TreeNode2;
+		TreeNode* newTreeNode = new TreeNode;
 		newTreeNode->node.type = JsonNodeType::ARRAY;
 		newTreeNode->subRoot = newNode;
 		newTreeNode->counter = 0;
@@ -222,7 +217,7 @@ bool RapidJsonHandler::EndArray(unsigned /*elementCount*/)
 {
 	if (!m_NodeStack.empty())
 	{
-		TreeNode2* node = m_NodeStack.top();
+		TreeNode* node = m_NodeStack.top();
 		m_NodeStack.pop();
 		delete node;
 	}
