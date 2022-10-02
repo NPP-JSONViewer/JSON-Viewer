@@ -4,6 +4,7 @@
 #include "resource.h"
 #include "TreeViewCtrl.h"
 #include "ScintillaEditor.h"
+#include "JsonHandler.h"
 #include <string>
 #include <memory>
 #include <vector>
@@ -12,7 +13,7 @@ class JsonViewDlg : public DockingDlgInterface
 {
 	enum class eButton { eRefresh, eValidate, eFormat, eSearch };
 public:
-	JsonViewDlg(HINSTANCE hIntance, const NppData& nppData, int nCmdId);
+	JsonViewDlg(HINSTANCE hIntance, const NppData& nppData, int nCmdId, const std::wstring& path);
 	virtual ~JsonViewDlg();
 
 	void ShowDlg(bool bShow);
@@ -55,6 +56,8 @@ private:
 
 	void HandleTreeEvents(LPARAM lParam);
 
+	auto GetFormatSetting() const->std::tuple<LE, LF, char, unsigned>;
+
 protected:
 	virtual INT_PTR CALLBACK run_dlgProc(UINT message, WPARAM wParam, LPARAM lParam);
 
@@ -71,6 +74,7 @@ private:
 	RECT			m_rcInitialWindowRect = {};
 
 	bool			m_isSilent = false;
+	std::wstring	m_configPath;
 
 	std::unique_ptr<ScintillaEditor>	m_Editor = nullptr;
 	std::unique_ptr <TreeViewCtrl>		m_hTreeView = nullptr;

@@ -1,7 +1,7 @@
 #pragma once
 
 #include <string>
-
+#include "rapidjson/prettywriter.h"
 
 struct Result
 {
@@ -12,6 +12,9 @@ struct Result
 	std::string response;
 };
 
+using LE = rapidjson::LineEndingOption;
+using LF = rapidjson::PrettyFormatOptions;
+
 class JsonHandler
 {
 public:
@@ -19,7 +22,7 @@ public:
 	~JsonHandler() = default;
 
 	auto GetCompressedJson(const std::string& jsonText)->const Result;
-	auto FormatJson(const std::string& jsonText, unsigned eol, unsigned indentLen, char indentChar)->const Result;
+	auto FormatJson(const std::string& jsonText, LE le, LF lf, char indentChar, unsigned indentLen)->const Result;
 	auto ValidateJson(const std::string& jsonText)->const Result;
 
 private:

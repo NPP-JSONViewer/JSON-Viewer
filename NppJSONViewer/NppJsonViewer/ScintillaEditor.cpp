@@ -58,15 +58,12 @@ auto ScintillaEditor::GetEOL() const -> unsigned
 	return static_cast<unsigned>(eolMode);
 }
 
-auto ScintillaEditor::GetIndent() const -> Indent
+auto ScintillaEditor::GetIndent() const ->std::tuple<char, unsigned>
 {
 	bool useTabs = ::SendMessage(m_hScintilla, SCI_GETUSETABS, 0, 0);
+	char indentChar = useTabs ? '\t' : ' ';
 	unsigned indentLen = useTabs ? 1 : static_cast<unsigned>(::SendMessage(m_hScintilla, SCI_GETTABWIDTH, 0, 0));
-
-	return Indent{
-		.len = indentLen,
-		.style = useTabs ? IndentStyle::TAB : IndentStyle::SPACE
-	};
+	return std::tuple<char, unsigned>(indentChar, indentLen);
 }
 
 void ScintillaEditor::RefreshSelectionPos()

@@ -23,6 +23,7 @@ void NppJsonPlugin::SetInfo(const NppData& notpadPlusData)
 	m_NppData = notpadPlusData;
 	InitCommandMenu();
 	InitToolbarIcon();
+	InitConfigPath();
 }
 
 const TCHAR* NppJsonPlugin::GetPluginName() const
@@ -116,12 +117,20 @@ void NppJsonPlugin::InitToolbarIcon()
 	m_hMenuIcon.hToolbarBmp = iconinfo.hbmColor;
 }
 
+void NppJsonPlugin::InitConfigPath()
+{
+	// Get config dir path
+	WCHAR szPath[_MAX_PATH]{};
+	SendMessage(m_NppData._nppHandle, NPPM_GETPLUGINSCONFIGDIR, MAX_PATH, reinterpret_cast<LPARAM>(&szPath));
+	m_configPath = std::wstring(szPath) + TEXT("\\") + PLUGIN_CONFIG;
+}
+
 void NppJsonPlugin::ConstructJsonDlg()
 {
 	if (!m_pJsonViewDlg)
 	{
 		auto nCmdId = m_shortcutCommands.GetCommandID(CallBackID::SHOW_DOC_PANEL);
-		m_pJsonViewDlg = std::make_unique<JsonViewDlg>(reinterpret_cast<HINSTANCE>(m_hModule), m_NppData, nCmdId);
+		m_pJsonViewDlg = std::make_unique<JsonViewDlg>(reinterpret_cast<HINSTANCE>(m_hModule), m_NppData, nCmdId, m_configPath);
 	}
 }
 
@@ -166,7 +175,7 @@ void NppJsonPlugin::OpenSettingDlg()
 	auto nCmdId = m_shortcutCommands.GetCommandID(CallBackID::SETTING);
 
 	if (!m_pAboutDlg)
-		m_pSettingsDlg = std::make_unique<SettingsDlg>(reinterpret_cast<HINSTANCE>(m_hModule), m_NppData._nppHandle, nCmdId);
+		m_pSettingsDlg = std::make_unique<SettingsDlg>(reinterpret_cast<HINSTANCE>(m_hModule), m_NppData._nppHandle, nCmdId, m_configPath);
 	bool isShown = m_pSettingsDlg->ShowDlg(true);
 
 	ToggleMenuItemState(nCmdId, isShown);

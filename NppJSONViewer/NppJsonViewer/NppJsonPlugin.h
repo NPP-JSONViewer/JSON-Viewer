@@ -51,6 +51,7 @@ private:
 	void SetMenuIcon();
 	void InitCommandMenu();
 	void InitToolbarIcon();
+	void InitConfigPath();
 
 	void ConstructJsonDlg();
 	void ToggleMenuItemState(int nCmdId, bool bVisible);
@@ -66,6 +67,7 @@ private:
 	toolbarIcons						m_hMenuIcon = {};
 	ShortcutCommand						m_shortcutCommands;
 	NppData								m_NppData = {};
+	std::wstring						m_configPath;
 	std::unique_ptr<JsonViewDlg>		m_pJsonViewDlg = nullptr;
 	std::unique_ptr<AboutDlg>			m_pAboutDlg = nullptr;
 	std::unique_ptr<SettingsDlg>		m_pSettingsDlg = nullptr;

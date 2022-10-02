@@ -6,17 +6,13 @@
 #include <Uxtheme.h>
 
 
-SettingsDlg::SettingsDlg(HINSTANCE hIntance, HWND hParent, int nCmdId)
+SettingsDlg::SettingsDlg(HINSTANCE hIntance, HWND hParent, int nCmdId, const std::wstring& configPath)
 	: m_nCmdId(nCmdId)
+	, m_configPath(configPath)
 	, StaticDialog()
 	, m_pSetting(std::make_unique<Setting>())
 {
 	init(hIntance, hParent);
-
-	// Get config dir path
-	WCHAR szPath[_MAX_PATH]{};
-	SendMessage(hParent, NPPM_GETPLUGINSCONFIGDIR, MAX_PATH, reinterpret_cast<LPARAM>(&szPath));
-	m_configPath = std::wstring(szPath) + TEXT("\\") + PLUGIN_CONFIG;
 }
 
 

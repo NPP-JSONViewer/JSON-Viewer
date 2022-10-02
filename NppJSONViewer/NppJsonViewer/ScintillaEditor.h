@@ -1,6 +1,7 @@
 #pragma once
 #include "Define.h"
 #include <string>
+#include <tuple>
 
 class ScintillaEditor
 {
@@ -18,7 +19,7 @@ public:
 	auto GetSelectionEnd() const->size_t { return m_nEndPos; }
 
 	auto GetEOL() const->unsigned;
-	auto GetIndent() const->Indent;
+	auto GetIndent() const->std::tuple<char, unsigned>;
 
 private:
 	void RefreshSelectionPos();
