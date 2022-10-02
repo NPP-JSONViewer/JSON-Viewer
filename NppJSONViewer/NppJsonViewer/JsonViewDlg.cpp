@@ -52,7 +52,7 @@ void JsonViewDlg::ShowDlg(bool bShow)
 		data.pszName = const_cast<TCHAR*>(TITLE_JSON_PANEL);
 
 		// the dlgDlg should be the index of funcItem where the current function pointer is
-		data.dlgID = m_nDlgId;
+		data.dlgID = static_cast<int>(CallBackID::SHOW_DOC_PANEL);
 		::SendMessage(_hParent, NPPM_DMMREGASDCKDLG, 0, (LPARAM)&data);
 
 		// Draw json tree now
