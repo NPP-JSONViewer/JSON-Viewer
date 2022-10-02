@@ -3,10 +3,10 @@
 #include <string>
 #include <memory>
 #include "Define.h"
-#include "JsonViewDlg.h"
 #include "Notepad_plus_msgs.h"
 #include "ShortcutCommand.h"
 #include "AboutDlg.h"
+#include "JsonViewDlg.h"
 #include "SettingsDlg.h"
 
 
@@ -53,8 +53,10 @@ private:
 	void InitToolbarIcon();
 	void InitConfigPath();
 
-	void ConstructJsonDlg();
 	void ToggleMenuItemState(int nCmdId, bool bVisible);
+
+	void ConstructJsonDlg();
+	void ConstructSetting();
 
 	void ShowJsonDlg();
 	void FormatJson();
@@ -68,8 +70,10 @@ private:
 	ShortcutCommand						m_shortcutCommands;
 	NppData								m_NppData = {};
 	std::wstring						m_configPath;
-	std::unique_ptr<JsonViewDlg>		m_pJsonViewDlg = nullptr;
+	bool								m_bAboutToClose = false;
 	std::unique_ptr<AboutDlg>			m_pAboutDlg = nullptr;
+	std::unique_ptr<JsonViewDlg>		m_pJsonViewDlg = nullptr;
 	std::unique_ptr<SettingsDlg>		m_pSettingsDlg = nullptr;
+	std::shared_ptr<Setting>			m_pSetting = nullptr;
 };
 

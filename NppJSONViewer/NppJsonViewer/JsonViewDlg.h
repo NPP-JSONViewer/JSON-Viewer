@@ -13,12 +13,13 @@ class JsonViewDlg : public DockingDlgInterface
 {
 	enum class eButton { eRefresh, eValidate, eFormat, eSearch };
 public:
-	JsonViewDlg(HINSTANCE hIntance, const NppData& nppData, int nCmdId, const std::wstring& path);
+	JsonViewDlg(HINSTANCE hIntance, const NppData& nppData, int nCmdId, std::shared_ptr<Setting>& pSetting);
 	virtual ~JsonViewDlg();
 
 	void ShowDlg(bool bShow);
 	void FormatJson();
 	void CompressJson();
+	void HandleTabActivated();
 
 	HTREEITEM InsertToTree(HTREEITEM parent, const std::string& text);
 
@@ -71,10 +72,8 @@ private:
 	LONG			m_lfInitialClientHeight = 0;
 	RECT			m_rcInitialWindowRect = {};
 
-	bool			m_isSilent = false;
-	std::wstring	m_configPath;
-
 	std::unique_ptr<ScintillaEditor>	m_Editor = nullptr;
 	std::unique_ptr <TreeViewCtrl>		m_hTreeView = nullptr;
+	std::shared_ptr<Setting>			m_pSetting = nullptr;
 };
 

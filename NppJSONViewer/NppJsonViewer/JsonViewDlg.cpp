@@ -8,13 +8,13 @@
 #include <format>
 
 
-JsonViewDlg::JsonViewDlg(HINSTANCE hIntance, const NppData& nppData, int nCmdId, const std::wstring& path)
+JsonViewDlg::JsonViewDlg(HINSTANCE hIntance, const NppData& nppData, int nCmdId, std::shared_ptr<Setting>& pSetting)
 	: m_NppData(nppData)
 	, DockingDlgInterface(IDD_TREEDLG)
 	, m_nDlgId(nCmdId)
-	, m_configPath(path)
 	, m_Editor(std::make_unique<ScintillaEditor>(nppData))
 	, m_hTreeView(std::make_unique<TreeViewCtrl>())
+	, m_pSetting(pSetting)
 {
 	_hParent = nppData._nppHandle;
 	_hInst = hIntance;
@@ -109,6 +109,23 @@ void JsonViewDlg::CompressJson()
 		std::string err = std::format("\n\nError: ({} : {})", res.error_code, res.error_str);
 
 		::MessageBox(m_NppData._nppHandle, (JSON_ERR_VALIDATE + StringHelper::ToWstring(err)).c_str(), JSON_ERROR_TITLE, MB_OK | MB_ICONERROR);
+	}
+}
+
+void JsonViewDlg::HandleTabActivated()
+{
+	const bool bIsVisible = isCreated() && isVisible();
+	if (bIsVisible && m_Editor->IsJsonFile())
+	{
+		if (m_pSetting->follow_current_tab)
+		{
+			DrawJsonTree();
+		}
+
+		if (m_pSetting->auto_format_on_open)
+		{
+			FormatJson();
+		}
 	}
 }
 
@@ -468,7 +485,7 @@ auto JsonViewDlg::CopyPath() const -> std::wstring
 
 int JsonViewDlg::ShowMessage(const std::wstring& title, const std::wstring& msg, int flag, bool bForceShow)
 {
-	return (!m_isSilent || bForceShow) ? ::MessageBox(_hParent, msg.c_str(), title.c_str(), flag) : IDOK;
+	return bForceShow ? ::MessageBox(_hParent, msg.c_str(), title.c_str(), flag) : IDOK;
 }
 
 void JsonViewDlg::ToggleMenuItemState(bool bVisible)
@@ -511,43 +528,63 @@ void JsonViewDlg::HandleTreeEvents(LPARAM lParam)
 
 auto JsonViewDlg::GetFormatSetting() const -> std::tuple<LE, LF, char, unsigned>
 {
-	// Default scintilla setting
-	const auto eol = m_Editor->GetEOL();
-	auto [indentChar, indentLen] = m_Editor->GetIndent();
-
 	LE le = LE::kCrLf;
 	LF lf = LF::kFormatDefault;
+	char indentChar = ' ';
+	unsigned indentLen = 0;
 
-	switch (eol)
+	// Line formatting options
+	lf = static_cast<LF>(m_pSetting->lf);
+
+	// End of line options
+	switch (m_pSetting->le)
 	{
-	case 0:		le = LE::kCrLf;	break;
-	case 1:		le = LE::kCr;	break;
-	default:	le = LE::kLf;	break;
+	case LineEnding::WINDOWS:
+		le = LE::kCrLf;
+		break;
+
+	case LineEnding::UNIX:
+		le = LE::kLf;
+		break;
+
+	case LineEnding::MAC:
+		le = LE::kCr;
+		break;
+
+		// Takes from Notepad++
+	case LineEnding::AUTO:
+	default:
+	{
+		const auto eol = m_Editor->GetEOL();
+		switch (eol)
+		{
+		case 0:    le = LE::kCrLf;  break;
+		case 1:    le = LE::kCr;    break;
+		default:   le = LE::kLf;    break;
+		}
+	}
 	}
 
-
-	std::unique_ptr<Setting> pInfo = std::make_unique<Setting>();
-	if (ProfileSetting(m_configPath).GetSettings(*pInfo))
+	// Indentation options
+	switch (m_pSetting->indent.style)
 	{
-		lf = static_cast<LF>(pInfo->lf);
+	case IndentStyle::TAB:
+		indentChar = '\t';
+		indentLen = 1;
+		break;
 
-		switch (pInfo->le)
-		{
-		case LineEnding::WINDOWS: le = LE::kCrLf;	break;
-		case LineEnding::UNIX:	  le = LE::kLf;		break;
-		case LineEnding::MAC:	  le = LE::kCr;		break;
-		case LineEnding::AUTO:	 					break;		// Takes from Notepad++
-		default:				 					break;		// Takes from Notepad++
-		}
+	case IndentStyle::SPACE:
+		indentChar = ' ';
+		indentLen = m_pSetting->indent.len;
+		break;
 
-
-		switch (pInfo->indent.style)
-		{
-		case IndentStyle::TAB:   indentChar = '\t'; indentLen = 1;					break;
-		case IndentStyle::SPACE: indentChar = ' ';  indentLen = pInfo->indent.len;	break;
-		case IndentStyle::AUTO:														break;		// Takes from Notepad++
-		default: 																	break;		// Takes from Notepad++
-		}
+		// Takes from Notepad++
+	case IndentStyle::AUTO:
+	default:
+		const auto [c, l] = m_Editor->GetIndent();
+		indentChar = c;
+		indentLen = l;
+		break;
 	}
 
 	return std::tuple<LE, LF, char, unsigned>(le, lf, indentChar, indentLen);

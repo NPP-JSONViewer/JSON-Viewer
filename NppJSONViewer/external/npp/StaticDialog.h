@@ -60,7 +60,7 @@ public :
 	};
 
 protected :
-	RECT _rc;
+	RECT _rc{};
 	static INT_PTR CALLBACK dlgProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam);
 	virtual INT_PTR CALLBACK run_dlgProc(UINT message, WPARAM wParam, LPARAM lParam) = 0;
 

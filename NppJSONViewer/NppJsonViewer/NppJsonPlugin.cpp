@@ -1,5 +1,6 @@
 #include "NppJsonPlugin.h"
 #include "resource.h"
+#include "Profile.h"
 #include <tchar.h>
 
 NppJsonPlugin* NppJsonPlugin::Callback::m_pNppJsonPlugin = nullptr;
@@ -51,6 +52,20 @@ void NppJsonPlugin::ProcessNotification(const SCNotification* notifyCode)
 	{
 		PluginCleanup();
 		break;
+	}
+
+	case NPPN_BUFFERACTIVATED:
+	{
+		if (m_pJsonViewDlg && !m_bAboutToClose)
+		{
+			m_pJsonViewDlg->HandleTabActivated();
+		}
+		break;
+	}
+
+	case NPPN_BEFORESHUTDOWN:
+	{
+		m_bAboutToClose = true;
 	}
 
 	default:
@@ -119,18 +134,28 @@ void NppJsonPlugin::InitConfigPath()
 	m_configPath = std::wstring(szPath) + TEXT("\\") + PLUGIN_CONFIG;
 }
 
+void NppJsonPlugin::ToggleMenuItemState(int nCmdId, bool bVisible)
+{
+	::SendMessage(m_NppData._nppHandle, NPPM_SETMENUITEMCHECK, static_cast<WPARAM>(nCmdId), bVisible);
+}
+
 void NppJsonPlugin::ConstructJsonDlg()
 {
 	if (!m_pJsonViewDlg)
 	{
+		ConstructSetting();
 		auto nCmdId = m_shortcutCommands.GetCommandID(CallBackID::SHOW_DOC_PANEL);
-		m_pJsonViewDlg = std::make_unique<JsonViewDlg>(reinterpret_cast<HINSTANCE>(m_hModule), m_NppData, nCmdId, m_configPath);
+		m_pJsonViewDlg = std::make_unique<JsonViewDlg>(reinterpret_cast<HINSTANCE>(m_hModule), m_NppData, nCmdId, m_pSetting);
 	}
 }
 
-void NppJsonPlugin::ToggleMenuItemState(int nCmdId, bool bVisible)
+void NppJsonPlugin::ConstructSetting()
 {
-	::SendMessage(m_NppData._nppHandle, NPPM_SETMENUITEMCHECK, static_cast<WPARAM>(nCmdId), bVisible);
+	if (!m_pSetting)
+	{
+		m_pSetting = std::make_shared<Setting>();
+		ProfileSetting(m_configPath).GetSettings(*m_pSetting);
+	}
 }
 
 void NppJsonPlugin::ShowJsonDlg()
@@ -166,10 +191,11 @@ void NppJsonPlugin::CompressJson()
 
 void NppJsonPlugin::OpenSettingDlg()
 {
+	ConstructSetting();
 	auto nCmdId = m_shortcutCommands.GetCommandID(CallBackID::SETTING);
 
 	if (!m_pAboutDlg)
-		m_pSettingsDlg = std::make_unique<SettingsDlg>(reinterpret_cast<HINSTANCE>(m_hModule), m_NppData._nppHandle, nCmdId, m_configPath);
+		m_pSettingsDlg = std::make_unique<SettingsDlg>(reinterpret_cast<HINSTANCE>(m_hModule), m_NppData._nppHandle, nCmdId, m_configPath, m_pSetting);
 	bool isShown = m_pSettingsDlg->ShowDlg(true);
 
 	ToggleMenuItemState(nCmdId, isShown);

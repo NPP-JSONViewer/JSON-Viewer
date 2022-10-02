@@ -11,6 +11,7 @@ public:
 
 	std::string GetJsonText();
 	void SetLangAsJson() const;
+	bool IsJsonFile() const;
 
 	void ReplaceSelection(const std::string& text) const;
 

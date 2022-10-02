@@ -6,11 +6,11 @@
 #include <Uxtheme.h>
 
 
-SettingsDlg::SettingsDlg(HINSTANCE hIntance, HWND hParent, int nCmdId, const std::wstring& configPath)
+SettingsDlg::SettingsDlg(HINSTANCE hIntance, HWND hParent, int nCmdId, const std::wstring& configPath, std::shared_ptr<Setting>& pSetting)
 	: m_nCmdId(nCmdId)
 	, m_configPath(configPath)
 	, StaticDialog()
-	, m_pSetting(std::make_unique<Setting>())
+	, m_pSetting(pSetting)
 {
 	init(hIntance, hParent);
 }

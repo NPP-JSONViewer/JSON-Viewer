@@ -42,6 +42,13 @@ void ScintillaEditor::SetLangAsJson() const
 	::SendMessage(m_hScintilla, NPPM_SETCURRENTLANGTYPE, 0, LangType::L_JSON);
 }
 
+bool ScintillaEditor::IsJsonFile() const
+{
+	unsigned langType = 0;
+	::SendMessage(m_NppData._nppHandle, NPPM_GETCURRENTLANGTYPE, 0, reinterpret_cast<LPARAM>(&langType));
+	return langType == LangType::L_JSON;
+}
+
 void ScintillaEditor::ReplaceSelection(const std::string& text) const
 {
 	::SendMessage(m_hScintilla, SCI_REPLACESEL, 0, reinterpret_cast<LPARAM>(text.c_str()));
