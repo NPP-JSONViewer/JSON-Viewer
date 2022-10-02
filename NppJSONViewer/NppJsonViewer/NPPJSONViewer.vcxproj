@@ -258,8 +258,10 @@
     <ClCompile Include="JsonHandler.cpp" />
     <ClCompile Include="JsonViewDlg.cpp" />
     <ClCompile Include="NppJsonPlugin.cpp" />
+    <ClCompile Include="Profile.cpp" />
     <ClCompile Include="RapidJsonHandler.cpp" />
     <ClCompile Include="ScintillaEditor.cpp" />
+    <ClCompile Include="SettingsDlg.cpp" />
     <ClCompile Include="ShortcutCommand.cpp" />
     <ClCompile Include="TreeViewCtrl.cpp" />
   </ItemGroup>
@@ -279,9 +281,11 @@
     <ClInclude Include="JsonNode.h" />
     <ClInclude Include="JsonViewDlg.h" />
     <ClInclude Include="NppJsonPlugin.h" />
+    <ClInclude Include="Profile.h" />
     <ClInclude Include="RapidJsonHandler.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="ScintillaEditor.h" />
+    <ClInclude Include="SettingsDlg.h" />
     <ClInclude Include="ShortcutCommand.h" />
     <ClInclude Include="StopWatch.h" />
     <ClInclude Include="TreeViewCtrl.h" />

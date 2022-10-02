@@ -2,18 +2,19 @@
 #include "PluginInterface.h"
 
 // Define the number of plugin commands here
-enum class CallBackID :int { SHOW_DOC_PANEL = 0, FORMAT, COMPRESS, SEP_1, /*OPTION,*/ ABOUT };
-const int nTotalCommandCount = static_cast<int>(CallBackID::ABOUT) + 1;
+enum class CallBackID :int { SHOW_DOC_PANEL = 0, FORMAT, COMPRESS, SEP_1, SETTING, ABOUT };
+constexpr const int nTotalCommandCount = static_cast<int>(CallBackID::ABOUT) + 1;
 
 // Define plugin name here
 const TCHAR PLUGIN_NAME[] = TEXT("JSON Viewer");
+const TCHAR PLUGIN_CONFIG[] = TEXT("JSONViewer.ini");
 
 // Text which can be considered for localization
 const TCHAR TITLE_JSON_PANEL[] = TEXT("JSON Viewer Panel");
 const TCHAR MENU_SHOW_JSON_PANEL[] = TEXT("Show &JSON Viewer");
 const TCHAR MENU_FORMAT_JSON[] = TEXT("&Format JSON");
 const TCHAR MENU_COMPRESS_JSON[] = TEXT("&Compress JSON");
-const TCHAR MENU_OPTION[] = TEXT("&Option");
+const TCHAR MENU_SETTING[] = TEXT("&Setting");
 const TCHAR MENU_ABOUT[] = TEXT("&About");
 const TCHAR MENU_SEPERATOR[] = TEXT("-SEPARATOR-");
 
@@ -38,9 +39,32 @@ const TCHAR JSON_ERR_VALIDATE_SUCCESS[] = TEXT("JSON looks good. No error found 
 
 const TCHAR STR_VERSION[] = TEXT("Version: ");
 const TCHAR STR_COPY[] = TEXT("Copy");
-const TCHAR STR_COPYNAME[] = TEXT("Copy name"); 
+const TCHAR STR_COPYNAME[] = TEXT("Copy name");
 const TCHAR STR_COPYVALUE[] = TEXT("Copy value");
 const TCHAR STR_COPYPATH[] = TEXT("Copy path");
 const TCHAR STR_EXPANDALL[] = TEXT("Expand all");
 const TCHAR STR_COLLAPSEALL[] = TEXT("Collapse all");
+
+const TCHAR STR_INI_FORMATTING_SEC[] = TEXT("FORMATTING");
+const TCHAR STR_INI_FORMATTING_EOL[] = TEXT("EOL");
+const TCHAR STR_INI_FORMATTING_LINE[] = TEXT("LINE_FORMATTING");
+const TCHAR STR_INI_FORMATTING_INDENT[] = TEXT("INDENTATION");
+const TCHAR STR_INI_FORMATTING_INDENTCOUNT[] = TEXT("INDENTATION_COUNT");
+
+enum class IndentStyle { AUTO, TAB, SPACE };
+struct Indent
+{
+	unsigned len = 0;
+	IndentStyle style = IndentStyle::AUTO;
+};
+
+enum class LineEnding { AUTO, WINDOWS, UNIX, MAC };
+enum class LineFormat { DEFAULT, SINGLELINE };
+
+struct Setting
+{
+	LineEnding le = LineEnding::AUTO;
+	LineFormat lf = LineFormat::DEFAULT;
+	Indent indent{};
+};
 

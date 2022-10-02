@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include <Windows.h>
+#include <optional>
 
 class CUtility
 {
@@ -44,5 +45,7 @@ public:
 
 	static bool CopyToClipboard(const std::wstring& str2cpy, HWND hwnd);
 
+	static bool IsNumber(const std::wstring& str);
+	static auto GetNumber(const std::wstring& str)->std::optional<int>;
 };
 

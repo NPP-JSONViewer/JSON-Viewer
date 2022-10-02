@@ -279,3 +279,18 @@ bool CUtility::CopyToClipboard(const std::wstring& str2cpy, HWND hwnd)
 	return true;
 }
 
+bool CUtility::IsNumber(const std::wstring& str)
+{
+	return !str.empty() && std::find_if(str.begin(),
+		str.end(), [](wchar_t c) { return !std::isdigit(c); }) == str.end();
+}
+
+auto CUtility::GetNumber(const std::wstring& str) -> std::optional<int>
+{
+	std::optional<int> retVal = std::nullopt;
+	if (IsNumber(str))
+		retVal = std::make_optional<int>(std::stoi(str));
+
+	return retVal;
+}
+

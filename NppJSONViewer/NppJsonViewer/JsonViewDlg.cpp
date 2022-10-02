@@ -4,16 +4,17 @@
 #include "StringHelper.h"
 #include "RapidJsonHandler.h"
 #include "ScintillaEditor.h"
-#include "JsonHandler.h"
+#include "Profile.h"
 #include <format>
 
 
-JsonViewDlg::JsonViewDlg(HINSTANCE hIntance, const NppData& nppData, int nCmdId) :
-	m_NppData(nppData),
-	DockingDlgInterface(IDD_TREEDLG),
-	m_nDlgId(nCmdId),
-	m_Editor(std::make_unique<ScintillaEditor>(nppData)),
-	m_hTreeView(std::make_unique<TreeViewCtrl>())
+JsonViewDlg::JsonViewDlg(HINSTANCE hIntance, const NppData& nppData, int nCmdId, const std::wstring& path)
+	: m_NppData(nppData)
+	, DockingDlgInterface(IDD_TREEDLG)
+	, m_nDlgId(nCmdId)
+	, m_configPath(path)
+	, m_Editor(std::make_unique<ScintillaEditor>(nppData))
+	, m_hTreeView(std::make_unique<TreeViewCtrl>())
 {
 	_hParent = nppData._nppHandle;
 	_hInst = hIntance;
@@ -62,12 +63,10 @@ void JsonViewDlg::ShowDlg(bool bShow)
 
 void JsonViewDlg::FormatJson()
 {
-	// Get the current scintilla
-	const auto eol = m_Editor->GetEOL();
-	const auto indent = m_Editor->GetIndent();
 	const auto selectedText = m_Editor->GetJsonText();
+	const auto [le, lf, indentChar, indentLen] = GetFormatSetting();
 
-	Result res = JsonHandler().FormatJson(selectedText, eol, indent.len, indent.ch);
+	Result res = JsonHandler().FormatJson(selectedText, le, lf, indentChar, indentLen);
 
 	if (res.success)
 	{
@@ -521,6 +520,50 @@ void JsonViewDlg::HandleTreeEvents(LPARAM lParam)
 	}
 	break;
 	}
+}
+
+auto JsonViewDlg::GetFormatSetting() const -> std::tuple<LE, LF, char, unsigned>
+{
+	// Default scintilla setting
+	const auto eol = m_Editor->GetEOL();
+	auto [indentChar, indentLen] = m_Editor->GetIndent();
+
+	LE le = LE::kCrLf;
+	LF lf = LF::kFormatDefault;
+
+	switch (eol)
+	{
+	case 0:		le = LE::kCrLf;	break;
+	case 1:		le = LE::kCr;	break;
+	default:	le = LE::kLf;	break;
+	}
+
+
+	std::unique_ptr<Setting> pInfo = std::make_unique<Setting>();
+	if (ProfileSetting(m_configPath).GetSettings(*pInfo))
+	{
+		lf = static_cast<LF>(pInfo->lf);
+
+		switch (pInfo->le)
+		{
+		case LineEnding::WINDOWS: le = LE::kCrLf;	break;
+		case LineEnding::UNIX:	  le = LE::kLf;		break;
+		case LineEnding::MAC:	  le = LE::kCr;		break;
+		case LineEnding::AUTO:	 					break;		// Takes from Notepad++
+		default:				 					break;		// Takes from Notepad++
+		}
+
+
+		switch (pInfo->indent.style)
+		{
+		case IndentStyle::TAB:   indentChar = '\t'; indentLen = 1;					break;
+		case IndentStyle::SPACE: indentChar = ' ';  indentLen = pInfo->indent.len;	break;
+		case IndentStyle::AUTO:														break;		// Takes from Notepad++
+		default: 																	break;		// Takes from Notepad++
+		}
+	}
+
+	return std::tuple<LE, LF, char, unsigned>(le, lf, indentChar, indentLen);
 }
 
 INT_PTR JsonViewDlg::run_dlgProc(UINT message, WPARAM wParam, LPARAM lParam)

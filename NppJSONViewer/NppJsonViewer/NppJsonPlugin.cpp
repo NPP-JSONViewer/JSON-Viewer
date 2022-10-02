@@ -1,7 +1,6 @@
 #include "NppJsonPlugin.h"
 #include "resource.h"
 #include <tchar.h>
-#include "AboutDlg.h"
 
 NppJsonPlugin* NppJsonPlugin::Callback::m_pNppJsonPlugin = nullptr;
 
@@ -24,6 +23,7 @@ void NppJsonPlugin::SetInfo(const NppData& notpadPlusData)
 	m_NppData = notpadPlusData;
 	InitCommandMenu();
 	InitToolbarIcon();
+	InitConfigPath();
 }
 
 const TCHAR* NppJsonPlugin::GetPluginName() const
@@ -103,7 +103,7 @@ void NppJsonPlugin::InitCommandMenu()
 
 	m_shortcutCommands.SetCommand(CallBackID::SEP_1, MENU_SEPERATOR, NULL, true);
 
-	//m_shortcutCommands.SetCommand(CallBackID::OPTION, MENU_OPTION, Callback::OpenOptionDlg, false);
+	m_shortcutCommands.SetCommand(CallBackID::SETTING, MENU_SETTING, Callback::OpenSettingDlg, false);
 	m_shortcutCommands.SetCommand(CallBackID::ABOUT, MENU_ABOUT, Callback::ShowAboutDlg, false);
 }
 
@@ -117,6 +117,23 @@ void NppJsonPlugin::InitToolbarIcon()
 	m_hMenuIcon.hToolbarBmp = iconinfo.hbmColor;
 }
 
+void NppJsonPlugin::InitConfigPath()
+{
+	// Get config dir path
+	WCHAR szPath[_MAX_PATH]{};
+	SendMessage(m_NppData._nppHandle, NPPM_GETPLUGINSCONFIGDIR, MAX_PATH, reinterpret_cast<LPARAM>(&szPath));
+	m_configPath = std::wstring(szPath) + TEXT("\\") + PLUGIN_CONFIG;
+}
+
+void NppJsonPlugin::ConstructJsonDlg()
+{
+	if (!m_pJsonViewDlg)
+	{
+		auto nCmdId = m_shortcutCommands.GetCommandID(CallBackID::SHOW_DOC_PANEL);
+		m_pJsonViewDlg = std::make_unique<JsonViewDlg>(reinterpret_cast<HINSTANCE>(m_hModule), m_NppData, nCmdId, m_configPath);
+	}
+}
+
 void NppJsonPlugin::ToggleMenuItemState(int nCmdId, bool bVisible)
 {
 	::SendMessage(m_NppData._nppHandle, NPPM_SETMENUITEMCHECK, static_cast<WPARAM>(nCmdId), bVisible);
@@ -124,12 +141,7 @@ void NppJsonPlugin::ToggleMenuItemState(int nCmdId, bool bVisible)
 
 void NppJsonPlugin::ShowJsonDlg()
 {
-	auto nCmdId = m_shortcutCommands.GetCommandID(CallBackID::SHOW_DOC_PANEL);
-
-	if (!m_pJsonViewDlg)
-	{
-		m_pJsonViewDlg = std::make_unique<JsonViewDlg>(reinterpret_cast<HINSTANCE>(m_hModule), m_NppData, nCmdId);
-	}
+	ConstructJsonDlg();
 
 	if (m_pJsonViewDlg)	// Hope it is constructed by now.
 	{
@@ -140,12 +152,7 @@ void NppJsonPlugin::ShowJsonDlg()
 
 void NppJsonPlugin::FormatJson()
 {
-	auto nCmdId = m_shortcutCommands.GetCommandID(CallBackID::FORMAT);
-
-	if (!m_pJsonViewDlg)
-	{
-		m_pJsonViewDlg = std::make_unique<JsonViewDlg>(reinterpret_cast<HINSTANCE>(m_hModule), m_NppData, nCmdId);
-	}
+	ConstructJsonDlg();
 
 	if (m_pJsonViewDlg)	// Hope it is constructed by now.
 	{
@@ -155,12 +162,7 @@ void NppJsonPlugin::FormatJson()
 
 void NppJsonPlugin::CompressJson()
 {
-	auto nCmdId = m_shortcutCommands.GetCommandID(CallBackID::FORMAT);
-
-	if (!m_pJsonViewDlg)
-	{
-		m_pJsonViewDlg = std::make_unique<JsonViewDlg>(reinterpret_cast<HINSTANCE>(m_hModule), m_NppData, nCmdId);
-	}
+	ConstructJsonDlg();
 
 	if (m_pJsonViewDlg)	// Hope it is constructed by now.
 	{
@@ -168,15 +170,15 @@ void NppJsonPlugin::CompressJson()
 	}
 }
 
-void NppJsonPlugin::OpenOptionDlg()
+void NppJsonPlugin::OpenSettingDlg()
 {
-	/*auto nCmdId = m_shortcutCommands.GetCommandID(CallBackID::OPTION);
+	auto nCmdId = m_shortcutCommands.GetCommandID(CallBackID::SETTING);
 
 	if (!m_pAboutDlg)
-		m_pAboutDlg = std::make_unique<AboutDlg>(reinterpret_cast<HINSTANCE>(m_hModule), m_NppData._nppHandle, nCmdId);
-	bool isShown = m_pAboutDlg->ShowDlg(true);
+		m_pSettingsDlg = std::make_unique<SettingsDlg>(reinterpret_cast<HINSTANCE>(m_hModule), m_NppData._nppHandle, nCmdId, m_configPath);
+	bool isShown = m_pSettingsDlg->ShowDlg(true);
 
-	ToggleMenuItemState(nCmdId, isShown);*/
+	ToggleMenuItemState(nCmdId, isShown);
 }
 
 void NppJsonPlugin::ShowAboutDlg()

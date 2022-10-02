@@ -19,6 +19,7 @@
 
 #include "Window.h"
 #include "Notepad_plus_msgs.h"
+typedef HRESULT(WINAPI* ETDTProc) (HWND, DWORD);
 
 enum class PosAlign { left, right, top, bottom };
 

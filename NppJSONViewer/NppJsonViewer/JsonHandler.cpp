@@ -1,7 +1,6 @@
 #include "JsonHandler.h"
 
 #include "rapidjson/reader.h"
-#include "rapidjson/prettywriter.h"
 #include "rapidjson/stringbuffer.h"
 #include "rapidjson/document.h"
 #include "rapidjson/error/en.h"
@@ -11,7 +10,7 @@ auto JsonHandler::GetCompressedJson(const std::string& jsonText)-> const Result
 	return ParseJson(jsonText);
 }
 
-auto JsonHandler::FormatJson(const std::string& jsonText, unsigned eol, unsigned indentLen, char indentChar)-> const Result
+auto JsonHandler::FormatJson(const std::string& jsonText, LE le, LF lf, char indentChar, unsigned indentLen)-> const Result
 {
 	Result retVal{};
 
@@ -20,19 +19,8 @@ auto JsonHandler::FormatJson(const std::string& jsonText, unsigned eol, unsigned
 	rapidjson::StringStream ss(jsonText.c_str());
 	rapidjson::Reader reader;
 
-	switch (eol)
-	{
-	case 0:
-		pw.SetLineEnding(rapidjson::LineEndingOption::kCrLf);
-		break;
-	case 1:
-		pw.SetLineEnding(rapidjson::LineEndingOption::kCr);
-		break;
-	default:
-		pw.SetLineEnding(rapidjson::LineEndingOption::kLf);
-		break;
-	}
-
+	pw.SetLineEnding(le);
+	pw.SetFormatOptions(lf);
 	pw.SetIndent(indentChar, indentLen);
 
 	if (reader.Parse<rapidjson::kParseFullPrecisionFlag | rapidjson::kParseCommentsFlag |
