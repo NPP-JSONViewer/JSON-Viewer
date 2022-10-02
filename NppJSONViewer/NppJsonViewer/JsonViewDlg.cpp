@@ -33,6 +33,7 @@ void JsonViewDlg::ShowDlg(bool bShow)
 {
 	if (!isCreated())
 	{
+		init(_hInst, _hParent);
 		tTbData	data = { 0 };
 		create(&data);
 
