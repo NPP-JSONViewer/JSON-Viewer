@@ -18,8 +18,6 @@ public:
 
 	auto InitTree()->HTREEITEM;
 	auto InsertNode(const std::wstring& text, LPARAM lparam, HTREEITEM parentNode)->HTREEITEM;
-	//void InsertItem(const JsonNode* jsonNode, HTREEITEM node);
-	void InsertItem(const void* jsonNode, HTREEITEM node);
 
 	bool IsExpanded(HTREEITEM node) const;
 	bool IsThisOrAnyChildExpanded(HTREEITEM node) const;

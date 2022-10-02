@@ -65,8 +65,7 @@ INT_PTR SettingsDlg::run_dlgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 			}
 			else
 			{
-				::MessageBox(_hSelf, L"Failed to save the setting. Please try again.",
-					L"Setting Save Error", MB_OK | MB_ICONERROR);
+				::MessageBox(_hSelf, JSON_ERR_SAVE_SETTING, JSON_ERROR_TITLE, MB_OK | MB_ICONERROR);
 			}
 			return TRUE;
 

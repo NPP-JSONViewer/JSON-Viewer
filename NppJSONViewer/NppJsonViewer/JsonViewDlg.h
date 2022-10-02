@@ -20,8 +20,6 @@ public:
 	void FormatJson();
 	void CompressJson();
 
-	// TODO : move to treeviewctrl class
-	HTREEITEM InsertToTree(HWND hWndDlg, HTREEITEM parent, const std::string& text);
 	HTREEITEM InsertToTree(HTREEITEM parent, const std::string& text);
 
 private:

@@ -300,23 +300,10 @@ void JsonViewDlg::PopulateTreeUsingSax(HTREEITEM tree_root, const std::string& j
 	m_Editor->SetLangAsJson();
 }
 
-HTREEITEM JsonViewDlg::InsertToTree(HWND hWndDlg, HTREEITEM parent, const std::string& text)
-{
-	auto wText = StringHelper::ToWstring(text);
-
-	TV_INSERTSTRUCT tvinsert{};
-	tvinsert.hParent = parent;
-	tvinsert.hInsertAfter = TVI_LAST;
-	tvinsert.item.mask = TVIF_TEXT;
-	tvinsert.item.pszText = const_cast<LPWSTR>(wText.c_str());
-
-	HTREEITEM item = (HTREEITEM)SendDlgItemMessage(hWndDlg, IDC_TREE, TVM_INSERTITEM, 0, (LPARAM)&tvinsert);
-	return item;
-}
-
 HTREEITEM JsonViewDlg::InsertToTree(HTREEITEM parent, const std::string& text)
 {
-	return InsertToTree(getHSelf(), parent, text);
+	auto wText = StringHelper::ToWstring(text);
+	return m_hTreeView->InsertNode(wText, NULL, parent);
 }
 
 void JsonViewDlg::UpdateNodePath(HTREEITEM htiNode)

@@ -10,9 +10,9 @@ class JsonViewDlg;
 
 struct TreeNode
 {
-	HTREEITEM subRoot;
-	JsonNode node;
-	int counter;
+	HTREEITEM subRoot{};
+	JsonNode node{};
+	int counter{};
 };
 
 class RapidJsonHandler :public rapidjson::BaseReaderHandler<rapidjson::UTF8<>, RapidJsonHandler>

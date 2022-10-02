@@ -36,6 +36,7 @@ const TCHAR JSON_INFO_TITLE[] = TEXT("JSON Viewer: Information");
 const TCHAR JSON_ERR_PARSE[] = TEXT("Cannot parse JSON. Please select a JSON String.");
 const TCHAR JSON_ERR_VALIDATE[] = TEXT("There was an error while parsing JSON. Refer the current selection for possible problematic area.");
 const TCHAR JSON_ERR_VALIDATE_SUCCESS[] = TEXT("JSON looks good. No error found while validating it.");
+const TCHAR JSON_ERR_SAVE_SETTING[] = TEXT("Failed to save the setting. Please try again.");
 
 const TCHAR STR_VERSION[] = TEXT("Version: ");
 const TCHAR STR_COPY[] = TEXT("Copy");

@@ -44,45 +44,6 @@ auto TreeViewCtrl::InsertNode(const std::wstring& text, LPARAM lparam, HTREEITEM
 	return item;
 }
 
-void TreeViewCtrl::InsertItem(const void* jsonNode, HTREEITEM node)
-{
-	if (!jsonNode || !node)
-		return;
-
-	/*std::wstring txtToInsert = StringHelper::ToWstring(jsonNode->key);
-	JsonNodeType valType = jsonNode->type;
-
-	if (valType == JsonNodeType::UNKNOWN || valType == JsonNodeType::NUMBER || valType == JsonNodeType::BOOL)
-	{
-		txtToInsert += TEXT(" : ");
-		txtToInsert += StringHelper::ToWstring(jsonNode->value);
-		InsertNode(txtToInsert, jsonNode->pos.line, node);
-	}
-	else if (valType == JsonNodeType::STRING)
-	{
-		txtToInsert += TEXT(" : ");
-		txtToInsert += TEXT("\"");
-		txtToInsert += StringHelper::ToWstring(jsonNode->value);
-		txtToInsert += TEXT("\"");
-		InsertNode(txtToInsert, jsonNode->pos.line, node);
-	}
-	else if (valType == JsonNodeType::OBJECT || valType == JsonNodeType::ARRAY)
-	{
-		if (valType == JsonNodeType::OBJECT)
-			txtToInsert += TEXT(" : [Object]");
-		if (valType == JsonNodeType::ARRAY)
-			txtToInsert += TEXT(" : [Array]");
-
-		HTREEITEM newNode = InsertNode(txtToInsert, jsonNode->pos.line, node);
-
-		for (auto jsonNextNode : jsonNode->childs)
-		{
-			if (jsonNextNode)
-				InsertItem(jsonNextNode, newNode);
-		}
-	}*/
-}
-
 bool TreeViewCtrl::IsExpanded(HTREEITEM node) const
 {
 	return TreeView_GetItemState(m_hTree, node, TVIS_EXPANDED) & TVIS_EXPANDED;
