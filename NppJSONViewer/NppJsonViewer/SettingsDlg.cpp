@@ -116,7 +116,11 @@ bool SettingsDlg::Apply()
 	else if (IsDlgButtonChecked(_hSelf, IDC_RADIO_INDENT_SPACE))
 		m_pSetting->indent.style = IndentStyle::SPACE;
 
-	//m_pSetting->indent.len = CUtility::GetEditCtrlText(::GetDlgItem(_hSelf, IDC_EDT_INDENT_SPACECOUNT));
+	auto indent_len = CUtility::GetNumber(CUtility::GetEditCtrlText(::GetDlgItem(_hSelf, IDC_EDT_INDENT_SPACECOUNT)));
+	if (indent_len.has_value())
+	{
+		m_pSetting->indent.len = indent_len.value();
+	}
 
 	// Line Ending setting
 	if (IsDlgButtonChecked(_hSelf, IDC_RADIO_LINEFORMAT_DEFAULT))

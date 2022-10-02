@@ -116,6 +116,15 @@ void NppJsonPlugin::InitToolbarIcon()
 	m_hMenuIcon.hToolbarBmp = iconinfo.hbmColor;
 }
 
+void NppJsonPlugin::ConstructJsonDlg()
+{
+	if (!m_pJsonViewDlg)
+	{
+		auto nCmdId = m_shortcutCommands.GetCommandID(CallBackID::SHOW_DOC_PANEL);
+		m_pJsonViewDlg = std::make_unique<JsonViewDlg>(reinterpret_cast<HINSTANCE>(m_hModule), m_NppData, nCmdId);
+	}
+}
+
 void NppJsonPlugin::ToggleMenuItemState(int nCmdId, bool bVisible)
 {
 	::SendMessage(m_NppData._nppHandle, NPPM_SETMENUITEMCHECK, static_cast<WPARAM>(nCmdId), bVisible);
@@ -123,12 +132,7 @@ void NppJsonPlugin::ToggleMenuItemState(int nCmdId, bool bVisible)
 
 void NppJsonPlugin::ShowJsonDlg()
 {
-	auto nCmdId = m_shortcutCommands.GetCommandID(CallBackID::SHOW_DOC_PANEL);
-
-	if (!m_pJsonViewDlg)
-	{
-		m_pJsonViewDlg = std::make_unique<JsonViewDlg>(reinterpret_cast<HINSTANCE>(m_hModule), m_NppData, nCmdId);
-	}
+	ConstructJsonDlg();
 
 	if (m_pJsonViewDlg)	// Hope it is constructed by now.
 	{
@@ -139,12 +143,7 @@ void NppJsonPlugin::ShowJsonDlg()
 
 void NppJsonPlugin::FormatJson()
 {
-	auto nCmdId = m_shortcutCommands.GetCommandID(CallBackID::FORMAT);
-
-	if (!m_pJsonViewDlg)
-	{
-		m_pJsonViewDlg = std::make_unique<JsonViewDlg>(reinterpret_cast<HINSTANCE>(m_hModule), m_NppData, nCmdId);
-	}
+	ConstructJsonDlg();
 
 	if (m_pJsonViewDlg)	// Hope it is constructed by now.
 	{
@@ -154,12 +153,7 @@ void NppJsonPlugin::FormatJson()
 
 void NppJsonPlugin::CompressJson()
 {
-	auto nCmdId = m_shortcutCommands.GetCommandID(CallBackID::FORMAT);
-
-	if (!m_pJsonViewDlg)
-	{
-		m_pJsonViewDlg = std::make_unique<JsonViewDlg>(reinterpret_cast<HINSTANCE>(m_hModule), m_NppData, nCmdId);
-	}
+	ConstructJsonDlg();
 
 	if (m_pJsonViewDlg)	// Hope it is constructed by now.
 	{

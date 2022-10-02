@@ -52,6 +52,7 @@ private:
 	void InitCommandMenu();
 	void InitToolbarIcon();
 
+	void ConstructJsonDlg();
 	void ToggleMenuItemState(int nCmdId, bool bVisible);
 
 	void ShowJsonDlg();
