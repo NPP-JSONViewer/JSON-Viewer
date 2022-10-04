@@ -67,7 +67,7 @@ void JsonViewDlg::FormatJson()
 	const auto selectedText = m_Editor->GetJsonText();
 	const auto [le, lf, indentChar, indentLen] = GetFormatSetting();
 
-	Result res = JsonHandler().FormatJson(selectedText, le, lf, indentChar, indentLen);
+	Result res = JsonHandler(m_pSetting->parseOptions).FormatJson(selectedText, le, lf, indentChar, indentLen);
 
 	if (res.success)
 	{
@@ -93,7 +93,7 @@ void JsonViewDlg::CompressJson()
 	// Get the current scintilla
 	const auto selectedText = m_Editor->GetJsonText();
 
-	Result res = JsonHandler().GetCompressedJson(selectedText);
+	Result res = JsonHandler(m_pSetting->parseOptions).GetCompressedJson(selectedText);
 
 	if (res.success)
 	{
@@ -118,12 +118,12 @@ void JsonViewDlg::HandleTabActivated()
 	const bool bIsVisible = isCreated() && isVisible();
 	if (bIsVisible && m_Editor->IsJsonFile())
 	{
-		if (m_pSetting->follow_current_tab)
+		if (m_pSetting->bFollowCurrentTab)
 		{
 			DrawJsonTree();
 		}
 
-		if (m_pSetting->auto_format_on_open)
+		if (m_pSetting->bAutoFormat)
 		{
 			FormatJson();
 		}
@@ -135,7 +135,7 @@ void JsonViewDlg::ValidateJson()
 	// Get the current scintilla
 	const auto selectedText = m_Editor->GetJsonText();
 
-	Result res = JsonHandler().ValidateJson(selectedText);
+	Result res = JsonHandler(m_pSetting->parseOptions).ValidateJson(selectedText);
 
 	if (res.success)
 	{
@@ -535,10 +535,10 @@ auto JsonViewDlg::GetFormatSetting() const -> std::tuple<LE, LF, char, unsigned>
 	unsigned indentLen = 0;
 
 	// Line formatting options
-	lf = static_cast<LF>(m_pSetting->lf);
+	lf = static_cast<LF>(m_pSetting->lineFormat);
 
 	// End of line options
-	switch (m_pSetting->le)
+	switch (m_pSetting->lineEnding)
 	{
 	case LineEnding::WINDOWS:
 		le = LE::kCrLf;

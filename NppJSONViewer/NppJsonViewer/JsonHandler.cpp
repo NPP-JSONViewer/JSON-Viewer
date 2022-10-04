@@ -5,6 +5,11 @@
 #include "rapidjson/document.h"
 #include "rapidjson/error/en.h"
 
+JsonHandler::JsonHandler(const ParseOptions& options)
+	: m_parseOptions(options)
+{
+}
+
 auto JsonHandler::GetCompressedJson(const std::string& jsonText)-> const Result
 {
 	return ParseJson(jsonText);

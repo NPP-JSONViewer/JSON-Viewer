@@ -97,9 +97,12 @@ CAPTION "JSON Viewer Settings"
 FONT 8, "MS Shell Dlg", 400, 0, 0x1
 BEGIN
     PUSHBUTTON      "",IDC_HOR_BAR_TOP,0,1,300,1,WS_DISABLED,WS_EX_STATICEDGE
-    CONTROL         "Follow current tab if it is json file",IDC_CHK_FOLLOW_CURRENT_DOC,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,5,7,140,10
+    CONTROL         "Follow current tab if it is json file",IDC_CHK_FOLLOW_CURRENT_DOC,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,5,7,140,10
     CONTROL         "Auto format josn file when openend",IDC_CHK_FORMAT_ON_OPEN,
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,5,20,140,10
+    CONTROL         "Ignore tralling comma",IDC_CHK_IGNORE_COMMA,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,5,33,140,10
+    CONTROL         "Ignore comments in json",IDC_CHK_IGNORE_COMMENT,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,5,46,140,10
     GROUPBOX        " Indentation: ",IDC_STATIC,153,7,140,43
     CONTROL         "Auto detect",IDC_RADIO_INDENT_AUTO,"Button",BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,160,21,50,10
     CONTROL         "Use tab",IDC_RADIO_INDENT_TAB,"Button",BS_AUTORADIOBUTTON,240,21,50,10

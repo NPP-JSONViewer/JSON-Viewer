@@ -55,23 +55,31 @@ const TCHAR STR_INI_FORMATTING_INDENTCOUNT[] = TEXT("INDENTATION_COUNT");
 const TCHAR STR_INI_OTHER_SEC[] = TEXT("Others");
 const TCHAR STR_INI_OTHER_FOLLOW_TAB[] = TEXT("FOLLOW_TAB");
 const TCHAR STR_INI_OTHER_AUTO_FORMAT[] = TEXT("AUTO_FORMAT");
-
-enum class IndentStyle { AUTO, TAB, SPACE };
-struct Indent
-{
-	unsigned len = 0;
-	IndentStyle style = IndentStyle::AUTO;
-};
+const TCHAR STR_INI_OTHER_IGNORE_COMMENT[] = TEXT("IGNORE_COMMENT");
+const TCHAR STR_INI_OTHER_IGNORE_COMMA[] = TEXT("IGNORE_TRAILLING_COMMA");
 
 enum class LineEnding { AUTO, WINDOWS, UNIX, MAC };
 enum class LineFormat { DEFAULT, SINGLELINE };
+enum class IndentStyle { AUTO, TAB, SPACE };
+struct Indent
+{
+	unsigned len = 4;
+	IndentStyle style = IndentStyle::AUTO;
+};
+
+struct ParseOptions
+{
+	bool bIgnoreComment = true;
+	bool bIgnoreTraillingComma = true;
+};
 
 struct Setting
 {
-	LineEnding le = LineEnding::AUTO;
-	LineFormat lf = LineFormat::DEFAULT;
+	LineEnding lineEnding = LineEnding::AUTO;
+	LineFormat lineFormat = LineFormat::DEFAULT;
 	Indent indent{};
-	bool follow_current_tab = false;
-	bool auto_format_on_open = false;
+	bool bFollowCurrentTab = false;
+	bool bAutoFormat = false;
+	ParseOptions parseOptions{};
 };
 

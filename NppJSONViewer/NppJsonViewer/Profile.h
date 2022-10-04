@@ -11,8 +11,8 @@ public:
 	virtual ~Profile() = default;
 
 protected:
-	bool ReadValue(const std::wstring& section, const std::wstring& key, int& retVal) const;
-	bool ReadValue(const std::wstring& section, const std::wstring& key, std::wstring& retVal) const;
+	bool ReadValue(const std::wstring& section, const std::wstring& key, int& retVal, int defaultVal = 0) const;
+	bool ReadValue(const std::wstring& section, const std::wstring& key, std::wstring& retVal, const std::wstring& defaultVal = {}) const;
 
 	bool WriteValue(const std::wstring& section, const std::wstring& key, int value) const;
 	bool WriteValue(const std::wstring& section, const std::wstring& key, const std::wstring& value) const;

@@ -12,21 +12,21 @@ Profile::Profile(const std::wstring& path)
 		Init();
 }
 
-bool Profile::ReadValue(const std::wstring& section, const std::wstring& key, int& retVal) const
+bool Profile::ReadValue(const std::wstring& section, const std::wstring& key, int& retVal, int defaultVal) const
 {
-	retVal = GetPrivateProfileInt(section.c_str(), key.c_str(), 0, m_ProfileFilePath.c_str());
+	retVal = GetPrivateProfileInt(section.c_str(), key.c_str(), defaultVal, m_ProfileFilePath.c_str());
 
 	return true;
 }
 
-bool Profile::ReadValue(const std::wstring& section, const std::wstring& key, std::wstring& retVal) const
+bool Profile::ReadValue(const std::wstring& section, const std::wstring& key, std::wstring& retVal, const std::wstring& defaultVal) const
 {
 	bool bRetVal = false;
 
 	// Try with MAX_PATH
 	constexpr DWORD nBufSize = MAX_PATH * 2;
 	auto pData = std::make_unique<TCHAR[]>(nBufSize);
-	GetPrivateProfileString(section.c_str(), key.c_str(), nullptr, pData.get(), nBufSize, m_ProfileFilePath.c_str());
+	GetPrivateProfileString(section.c_str(), key.c_str(), defaultVal.c_str(), pData.get(), nBufSize, m_ProfileFilePath.c_str());
 
 	if (pData)
 	{
@@ -76,27 +76,35 @@ bool ProfileSetting::GetSettings(Setting& info) const
 	int nVal = 0;
 	bRetVal &= ReadValue(STR_INI_FORMATTING_SEC, STR_INI_FORMATTING_EOL, nVal);
 	if (bRetVal)
-		info.le = static_cast<LineEnding>(nVal);
+		info.lineEnding = static_cast<LineEnding>(nVal);
 
 	bRetVal &= ReadValue(STR_INI_FORMATTING_SEC, STR_INI_FORMATTING_LINE, nVal);
 	if (bRetVal)
-		info.lf = static_cast<LineFormat>(nVal);
+		info.lineFormat = static_cast<LineFormat>(nVal);
 
 	bRetVal &= ReadValue(STR_INI_FORMATTING_SEC, STR_INI_FORMATTING_INDENT, nVal);
 	if (bRetVal)
 		info.indent.style = static_cast<IndentStyle>(nVal);
 
-	bRetVal &= ReadValue(STR_INI_FORMATTING_SEC, STR_INI_FORMATTING_INDENTCOUNT, nVal);
+	bRetVal &= ReadValue(STR_INI_FORMATTING_SEC, STR_INI_FORMATTING_INDENTCOUNT, nVal, info.indent.len);
 	if (bRetVal)
 		info.indent.len = nVal;
 
 	bRetVal &= ReadValue(STR_INI_OTHER_SEC, STR_INI_OTHER_FOLLOW_TAB, nVal);
 	if (bRetVal)
-		info.follow_current_tab = static_cast<bool>(nVal);
+		info.bFollowCurrentTab = static_cast<bool>(nVal);
 
 	bRetVal &= ReadValue(STR_INI_OTHER_SEC, STR_INI_OTHER_AUTO_FORMAT, nVal);
 	if (bRetVal)
-		info.auto_format_on_open = static_cast<bool>(nVal);
+		info.bAutoFormat = static_cast<bool>(nVal);
+
+	bRetVal &= ReadValue(STR_INI_OTHER_SEC, STR_INI_OTHER_IGNORE_COMMENT, nVal, info.parseOptions.bIgnoreComment);
+	if (bRetVal)
+		info.parseOptions.bIgnoreComment = static_cast<bool>(nVal);
+
+	bRetVal &= ReadValue(STR_INI_OTHER_SEC, STR_INI_OTHER_IGNORE_COMMA, nVal, info.parseOptions.bIgnoreTraillingComma);
+	if (bRetVal)
+		info.parseOptions.bIgnoreTraillingComma = static_cast<bool>(nVal);
 
 	return bRetVal;
 }
@@ -105,12 +113,15 @@ bool ProfileSetting::SetSettings(const Setting& info) const
 {
 	bool bRetVal = true;
 
-	bRetVal &= WriteValue(STR_INI_FORMATTING_SEC, STR_INI_FORMATTING_EOL, static_cast<int>(info.le));
-	bRetVal &= WriteValue(STR_INI_FORMATTING_SEC, STR_INI_FORMATTING_LINE, static_cast<int>(info.lf));
+	bRetVal &= WriteValue(STR_INI_FORMATTING_SEC, STR_INI_FORMATTING_EOL, static_cast<int>(info.lineEnding));
+	bRetVal &= WriteValue(STR_INI_FORMATTING_SEC, STR_INI_FORMATTING_LINE, static_cast<int>(info.lineFormat));
 	bRetVal &= WriteValue(STR_INI_FORMATTING_SEC, STR_INI_FORMATTING_INDENT, static_cast<int>(info.indent.style));
 	bRetVal &= WriteValue(STR_INI_FORMATTING_SEC, STR_INI_FORMATTING_INDENTCOUNT, info.indent.len);
-	bRetVal &= WriteValue(STR_INI_OTHER_SEC, STR_INI_OTHER_FOLLOW_TAB, info.follow_current_tab);
-	bRetVal &= WriteValue(STR_INI_OTHER_SEC, STR_INI_OTHER_AUTO_FORMAT, info.auto_format_on_open);
+
+	bRetVal &= WriteValue(STR_INI_OTHER_SEC, STR_INI_OTHER_FOLLOW_TAB, info.bFollowCurrentTab);
+	bRetVal &= WriteValue(STR_INI_OTHER_SEC, STR_INI_OTHER_AUTO_FORMAT, info.bAutoFormat);
+	bRetVal &= WriteValue(STR_INI_OTHER_SEC, STR_INI_OTHER_IGNORE_COMMENT, info.parseOptions.bIgnoreComment);
+	bRetVal &= WriteValue(STR_INI_OTHER_SEC, STR_INI_OTHER_IGNORE_COMMA, info.parseOptions.bIgnoreTraillingComma);
 
 	return bRetVal;
 }

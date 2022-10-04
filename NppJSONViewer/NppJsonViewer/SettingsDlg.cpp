@@ -95,13 +95,13 @@ bool SettingsDlg::Apply()
 
 	// Line Ending setting
 	if (IsDlgButtonChecked(_hSelf, IDC_RADIO_LINE_AUTO))
-		m_pSetting->le = LineEnding::AUTO;
+		m_pSetting->lineEnding = LineEnding::AUTO;
 	else if (IsDlgButtonChecked(_hSelf, IDC_RADIO_LINE_WINDOW))
-		m_pSetting->le = LineEnding::WINDOWS;
+		m_pSetting->lineEnding = LineEnding::WINDOWS;
 	else if (IsDlgButtonChecked(_hSelf, IDC_RADIO_LINE_UNIX))
-		m_pSetting->le = LineEnding::UNIX;
+		m_pSetting->lineEnding = LineEnding::UNIX;
 	else if (IsDlgButtonChecked(_hSelf, IDC_RADIO_LINE_MAC))
-		m_pSetting->le = LineEnding::MAC;
+		m_pSetting->lineEnding = LineEnding::MAC;
 
 	// Indentation setting
 	if (IsDlgButtonChecked(_hSelf, IDC_RADIO_INDENT_AUTO))
@@ -119,12 +119,14 @@ bool SettingsDlg::Apply()
 
 	// Line Ending setting
 	if (IsDlgButtonChecked(_hSelf, IDC_RADIO_LINEFORMAT_DEFAULT))
-		m_pSetting->lf = LineFormat::DEFAULT;
+		m_pSetting->lineFormat = LineFormat::DEFAULT;
 	else if (IsDlgButtonChecked(_hSelf, IDC_RADIO_LINEFORMAT_SINGLE))
-		m_pSetting->lf = LineFormat::SINGLELINE;
+		m_pSetting->lineFormat = LineFormat::SINGLELINE;
 
-	m_pSetting->follow_current_tab = CUtility::GetCheckboxStatus(::GetDlgItem(_hSelf, IDC_CHK_FOLLOW_CURRENT_DOC));
-	m_pSetting->auto_format_on_open = CUtility::GetCheckboxStatus(::GetDlgItem(_hSelf, IDC_CHK_FORMAT_ON_OPEN));
+	m_pSetting->bFollowCurrentTab = CUtility::GetCheckboxStatus(::GetDlgItem(_hSelf, IDC_CHK_FOLLOW_CURRENT_DOC));
+	m_pSetting->bAutoFormat = CUtility::GetCheckboxStatus(::GetDlgItem(_hSelf, IDC_CHK_FORMAT_ON_OPEN));
+	m_pSetting->parseOptions.bIgnoreTraillingComma = CUtility::GetCheckboxStatus(::GetDlgItem(_hSelf, IDC_CHK_IGNORE_COMMA));
+	m_pSetting->parseOptions.bIgnoreComment = CUtility::GetCheckboxStatus(::GetDlgItem(_hSelf, IDC_CHK_IGNORE_COMMENT));
 
 	return WriteINI();
 }
@@ -150,7 +152,7 @@ void SettingsDlg::InitDlg()
 	// Set UI control state here
 
 	int nCtrlID = IDC_RADIO_LINE_AUTO;
-	switch (m_pSetting->le)
+	switch (m_pSetting->lineEnding)
 	{
 	case LineEnding::WINDOWS:		nCtrlID = IDC_RADIO_LINE_WINDOW;		break;
 	case LineEnding::UNIX:			nCtrlID = IDC_RADIO_LINE_UNIX;			break;
@@ -162,7 +164,7 @@ void SettingsDlg::InitDlg()
 
 
 	nCtrlID = IDC_RADIO_LINEFORMAT_DEFAULT;
-	switch (m_pSetting->lf)
+	switch (m_pSetting->lineFormat)
 	{
 	case LineFormat::SINGLELINE:	nCtrlID = IDC_RADIO_LINEFORMAT_SINGLE;	break;
 	case LineFormat::DEFAULT:		nCtrlID = IDC_RADIO_LINEFORMAT_DEFAULT;	break;
@@ -182,8 +184,10 @@ void SettingsDlg::InitDlg()
 	CUtility::SetEditCtrlText(::GetDlgItem(_hSelf, IDC_EDT_INDENT_SPACECOUNT), std::to_wstring(m_pSetting->indent.len));
 	ShowSpaceCountCtrls(m_pSetting->indent.style == IndentStyle::SPACE);
 
-	CUtility::SetCheckboxStatus(::GetDlgItem(_hSelf, IDC_CHK_FOLLOW_CURRENT_DOC), m_pSetting->follow_current_tab);
-	CUtility::SetCheckboxStatus(::GetDlgItem(_hSelf, IDC_CHK_FORMAT_ON_OPEN), m_pSetting->auto_format_on_open);
+	CUtility::SetCheckboxStatus(::GetDlgItem(_hSelf, IDC_CHK_FOLLOW_CURRENT_DOC), m_pSetting->bFollowCurrentTab);
+	CUtility::SetCheckboxStatus(::GetDlgItem(_hSelf, IDC_CHK_FORMAT_ON_OPEN), m_pSetting->bAutoFormat);
+	CUtility::SetCheckboxStatus(::GetDlgItem(_hSelf, IDC_CHK_IGNORE_COMMA), m_pSetting->parseOptions.bIgnoreTraillingComma);
+	CUtility::SetCheckboxStatus(::GetDlgItem(_hSelf, IDC_CHK_IGNORE_COMMENT), m_pSetting->parseOptions.bIgnoreComment);
 }
 
 void SettingsDlg::ShowSpaceCountCtrls(bool bShow)

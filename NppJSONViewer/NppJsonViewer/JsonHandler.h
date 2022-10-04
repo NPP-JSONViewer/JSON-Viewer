@@ -2,6 +2,7 @@
 
 #include <string>
 #include "rapidjson/prettywriter.h"
+#include "Define.h"
 
 struct Result
 {
@@ -17,8 +18,9 @@ using LF = rapidjson::PrettyFormatOptions;
 
 class JsonHandler
 {
+	ParseOptions m_parseOptions{};
 public:
-	JsonHandler() = default;
+	JsonHandler(const ParseOptions& options);
 	~JsonHandler() = default;
 
 	auto GetCompressedJson(const std::string& jsonText)->const Result;
