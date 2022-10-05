@@ -14,10 +14,10 @@ This plugin is meant to display a JSON string in a Treeview. It also marks the e
 
 ### 2.0.2.0
 1. Provided UI to control formatting option via setting dialog
-    1. Setting for indetation
+    1. Setting for indentation
     2. Setting for line ending
     3. Setting for line format
-    4. Make json parsing configurable e.g. ignore trailling comma, ignore comment
+    4. Make json parsing configurable e.g. ignore trailing comma, ignore comment
 2. Added couple of new feature
     1. Follow json tree for current tab if it is json file
     2. Auto format json file when opened (by direct or by tab switching)
