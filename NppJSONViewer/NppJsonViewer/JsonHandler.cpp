@@ -1,87 +1,33 @@
 #include "JsonHandler.h"
 
-#include "rapidjson/reader.h"
-#include "rapidjson/stringbuffer.h"
-#include "rapidjson/document.h"
-#include "rapidjson/error/en.h"
-
-JsonHandler::JsonHandler(const ParseOptions& options)
-	: m_parseOptions(options)
+JsonHandler::JsonHandler(const ParseOptions &options)
+    : m_parseOptions(options)
 {
 }
 
-auto JsonHandler::GetCompressedJson(const std::string& jsonText)-> const Result
+auto JsonHandler::GetCompressedJson(const std::string &jsonText) -> const Result
 {
-	return ParseJson(jsonText);
+    rapidjson::StringBuffer                    sb;
+    rapidjson::Writer<rapidjson::StringBuffer> handler(sb);
+
+    return ParseJson(jsonText, sb, handler);
 }
 
-auto JsonHandler::FormatJson(const std::string& jsonText, LE le, LF lf, char indentChar, unsigned indentLen)-> const Result
+auto JsonHandler::FormatJson(const std::string &jsonText, LE le, LF lf, char indentChar, unsigned indentLen) -> const Result
 {
-	Result retVal{};
+    rapidjson::StringBuffer                          sb;
+    rapidjson::PrettyWriter<rapidjson::StringBuffer> handler(sb);
+    handler.SetLineEnding(le);
+    handler.SetFormatOptions(lf);
+    handler.SetIndent(indentChar, indentLen);
 
-	rapidjson::StringBuffer sb;
-	rapidjson::PrettyWriter<rapidjson::StringBuffer> pw(sb);
-	rapidjson::StringStream ss(jsonText.c_str());
-	rapidjson::Reader reader;
-
-	pw.SetLineEnding(le);
-	pw.SetFormatOptions(lf);
-	pw.SetIndent(indentChar, indentLen);
-
-	if (reader.Parse<rapidjson::kParseFullPrecisionFlag | rapidjson::kParseCommentsFlag |
-		rapidjson::kParseEscapedApostropheFlag | rapidjson::kParseNanAndInfFlag | rapidjson::kParseTrailingCommasFlag>(ss, pw)
-		&& sb.GetString())
-	{
-		retVal.success = true;
-		retVal.response = sb.GetString();
-		retVal.error_str.clear();
-		retVal.error_code = retVal.error_pos = -1;
-	}
-	else
-	{
-		retVal.success = false;
-		retVal.response.clear();
-		retVal.error_str = rapidjson::GetParseError_En(reader.GetParseErrorCode());
-		retVal.error_pos = static_cast<int>(reader.GetErrorOffset());
-		retVal.error_code = reader.GetParseErrorCode();
-	}
-
-	return retVal;
+    return ParseJson(jsonText, sb, handler);
 }
 
-
-auto JsonHandler::ValidateJson(const std::string& jsonText)-> const Result
+auto JsonHandler::ValidateJson(const std::string &jsonText) -> const Result
 {
-	return ParseJson(jsonText);
+    rapidjson::StringBuffer                    sb;
+    rapidjson::Writer<rapidjson::StringBuffer> handler(sb);
+
+    return ParseJson(jsonText, sb, handler);
 }
-
-auto JsonHandler::ParseJson(const std::string& jsonText) -> const Result
-{
-	Result retVal{};
-
-	rapidjson::StringBuffer sb;
-	rapidjson::Writer<rapidjson::StringBuffer> pw(sb);
-	rapidjson::StringStream ss(jsonText.c_str());
-	rapidjson::Reader reader;
-
-	if (reader.Parse<rapidjson::kParseFullPrecisionFlag | rapidjson::kParseCommentsFlag |
-		rapidjson::kParseEscapedApostropheFlag | rapidjson::kParseNanAndInfFlag | rapidjson::kParseTrailingCommasFlag>(ss, pw)
-		&& sb.GetString())
-	{
-		retVal.success = true;
-		retVal.response = sb.GetString();
-		retVal.error_str.clear();
-		retVal.error_code = retVal.error_pos = -1;
-	}
-	else
-	{
-		retVal.success = false;
-		retVal.response.clear();
-		retVal.error_str = rapidjson::GetParseError_En(reader.GetParseErrorCode());
-		retVal.error_pos = static_cast<int>(reader.GetErrorOffset());
-		retVal.error_code = reader.GetParseErrorCode();
-	}
-
-	return retVal;
-}
-

@@ -298,24 +298,32 @@ void JsonViewDlg::DrawJsonTree()
 	EnableControls(ctrls, true);
 }
 
-void JsonViewDlg::PopulateTreeUsingSax(HTREEITEM tree_root, const std::string& jsonText)
+void JsonViewDlg::PopulateTreeUsingSax(HTREEITEM tree_root, const std::string &jsonText)
 {
-	RapidJsonHandler handler(this, tree_root);
-	rapidjson::Reader reader;
+    RapidJsonHandler        handler(this, tree_root);
+    rapidjson::StringBuffer sb;
 
-	rapidjson::StringStream ss(jsonText.c_str());
-	if (!reader.Parse< rapidjson::kParseNumbersAsStringsFlag | rapidjson::kParseCommentsFlag |
-		rapidjson::kParseEscapedApostropheFlag | rapidjson::kParseNanAndInfFlag | rapidjson::kParseTrailingCommasFlag>(ss, handler))
-	{
-		// Mark the error position
-		size_t start = m_Editor->GetSelectionStart();
-		size_t errPosition = start + reader.GetErrorOffset();
-		m_Editor->MakeSelection(errPosition, errPosition + 1);
+    Result res = JsonHandler(m_pSetting->parseOptions).ParseJson(jsonText, sb, handler);
+    if (!res.success)
+    {
+        // Mark the error position
+        size_t start       = m_Editor->GetSelectionStart();
+        size_t errPosition = start + static_cast<size_t>(res.error_pos);
+        m_Editor->MakeSelection(errPosition, errPosition + 1);
 
-		::MessageBox(m_NppData._nppHandle, JSON_ERR_PARSE, JSON_ERROR_TITLE, MB_OK | MB_ICONERROR);
-	}
+		// Intimate user
+        if (jsonText.empty())
+        {
+            ::MessageBox(m_NppData._nppHandle, JSON_ERR_PARSE, JSON_ERROR_TITLE, MB_OK | MB_ICONERROR);
+        }
+        else
+        {
+            std::string err = std::format("\n\nError: ({} : {})", res.error_code, res.error_str);
+            ::MessageBox(m_NppData._nppHandle, (JSON_ERR_VALIDATE + StringHelper::ToWstring(err)).c_str(), JSON_ERROR_TITLE, MB_OK | MB_ICONERROR);
+        }
+    }
 
-	m_Editor->SetLangAsJson();
+    m_Editor->SetLangAsJson();
 }
 
 HTREEITEM JsonViewDlg::InsertToTree(HTREEITEM parent, const std::string& text)
@@ -408,16 +416,16 @@ void JsonViewDlg::ShowContextMenu(HTREEITEM htiNode, LPPOINT lppScreen)
 		itemFlag = MF_STRING | (bEnableCopyValue ? MF_ENABLED : MF_DISABLED);
 		AppendMenu(hMenuPopup, itemFlag, IDM_COPY_NODEVALUE, STR_COPYVALUE);
 
-		itemFlag = MF_STRING | (bEnableCopyPath ? MF_ENABLED : MF_DISABLED);;
+		itemFlag = MF_STRING | (bEnableCopyPath ? MF_ENABLED : MF_DISABLED);
 		AppendMenu(hMenuPopup, itemFlag, IDM_COPY_NODEPATH, STR_COPYPATH);
 
 		// separator
 		AppendMenu(hMenuPopup, MF_SEPARATOR, 0, NULL);
 
-		itemFlag = MF_STRING | (bEnableExpand ? MF_ENABLED : MF_DISABLED);;
+		itemFlag = MF_STRING | (bEnableExpand ? MF_ENABLED : MF_DISABLED);
 		AppendMenu(hMenuPopup, itemFlag, IDM_EXPANDALL, STR_EXPANDALL);
 
-		itemFlag = MF_STRING | (bEnableCollapse ? MF_ENABLED : MF_DISABLED);;
+		itemFlag = MF_STRING | (bEnableCollapse ? MF_ENABLED : MF_DISABLED);
 		AppendMenu(hMenuPopup, itemFlag, IDM_COLLAPSEALL, STR_COLLAPSEALL);
 
 		// Open menu
