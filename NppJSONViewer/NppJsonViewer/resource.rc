@@ -99,9 +99,9 @@ BEGIN
     PUSHBUTTON      "",IDC_HOR_BAR_TOP,0,1,300,1,WS_DISABLED,WS_EX_STATICEDGE
     CONTROL         "Follow current tab if it is json file",IDC_CHK_FOLLOW_CURRENT_DOC,
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,5,7,140,10
-    CONTROL         "Auto format josn file when openend",IDC_CHK_FORMAT_ON_OPEN,
+    CONTROL         "Auto format json file when openend",IDC_CHK_FORMAT_ON_OPEN,
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,5,20,140,10
-    CONTROL         "Ignore tralling comma",IDC_CHK_IGNORE_COMMA,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,5,33,140,10
+    CONTROL         "Ignore trailing comma",IDC_CHK_IGNORE_COMMA,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,5,33,140,10
     CONTROL         "Ignore comments in json",IDC_CHK_IGNORE_COMMENT,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,5,46,140,10
     GROUPBOX        " Indentation: ",IDC_STATIC,153,7,140,43
     CONTROL         "Auto detect",IDC_RADIO_INDENT_AUTO,"Button",BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,160,21,50,10
@@ -183,7 +183,7 @@ BEGIN
             VALUE "FileDescription", "Notepad++ plugin for JSON file"
             VALUE "FileVersion", "2.0.2.0"
             VALUE "InternalName", "JSONViewer"
-            VALUE "LegalCopyright", "Copyright © 2022"
+            VALUE "LegalCopyright", "Copyright Â© 2022"
             VALUE "OriginalFilename", "NPPJSONViewer.dll"
             VALUE "ProductName", "JSONViewer plugin for Notepad++"
             VALUE "ProductVersion", "2.0.2.0"
