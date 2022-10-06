@@ -101,6 +101,8 @@ bool RapidJsonHandler::String(const Ch* str, unsigned /*length*/, bool /*copy*/)
 	}
 	else
 	{
+		parent->node.key = std::to_string(parent->counter);
+		parent->node.value = str;
 		parent->counter++;
 	}
 
