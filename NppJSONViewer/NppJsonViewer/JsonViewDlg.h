@@ -11,17 +11,24 @@
 
 class JsonViewDlg : public DockingDlgInterface
 {
-	enum class eButton { eRefresh, eValidate, eFormat, eSearch };
+    enum class eButton
+    {
+        eRefresh,
+        eValidate,
+        eFormat,
+        eSearch
+    };
+
 public:
-	JsonViewDlg(HINSTANCE hIntance, const NppData& nppData, int nCmdId, std::shared_ptr<Setting>& pSetting);
-	virtual ~JsonViewDlg();
+    JsonViewDlg(HINSTANCE hIntance, const NppData &nppData, int nCmdId, std::shared_ptr<Setting> &pSetting);
+    virtual ~JsonViewDlg();
 
-	void ShowDlg(bool bShow);
-	void FormatJson();
-	void CompressJson();
-	void HandleTabActivated();
+    void ShowDlg(bool bShow);
+    void FormatJson();
+    void CompressJson();
+    void HandleTabActivated();
 
-	HTREEITEM InsertToTree(HTREEITEM parent, const std::string& text);
+    HTREEITEM InsertToTree(HTREEITEM parent, const std::string &text);
 
 private:
     void DrawJsonTree();
@@ -32,48 +39,47 @@ private:
     void UpdateNodePath(HTREEITEM htiNode);
 
     void PrepareButtons();
-	void SetIconAndTooltip(eButton ctrlType, const std::wstring& toolTip);
+    void SetIconAndTooltip(eButton ctrlType, const std::wstring &toolTip);
 
-	void AdjustDocPanelSize(int nWidth, int nHeight);
+    void AdjustDocPanelSize(int nWidth, int nHeight);
 
-	// Context menu related functions
-	void ShowContextMenu(int x, int y);
-	void ShowContextMenu(HTREEITEM htiNode, LPPOINT lppScreen);
-	void ContextMenuExpand(bool bExpand);
+    // Context menu related functions
+    void ShowContextMenu(int x, int y);
+    void ShowContextMenu(HTREEITEM htiNode, LPPOINT lppScreen);
+    void ContextMenuExpand(bool bExpand);
 
-	auto CopyName() const->std::wstring;
-	auto CopyKey() const->std::wstring;
-	auto CopyValue() const->std::wstring;
-	auto CopyPath() const->std::wstring;
+    auto CopyName() const -> std::wstring;
+    auto CopyKey() const -> std::wstring;
+    auto CopyValue() const -> std::wstring;
+    auto CopyPath() const -> std::wstring;
 
     int ShowMessage(const std::wstring &title, const std::wstring &msg, int flag, bool bDontShow = false);
 
-	void ToggleMenuItemState(bool bVisible);
+    void ToggleMenuItemState(bool bVisible);
 
-	void ShowControls(const std::vector<DWORD>& ids, bool show);
-	void EnableControls(const std::vector<DWORD>& ids, bool enable);
+    void ShowControls(const std::vector<DWORD> &ids, bool show);
+    void EnableControls(const std::vector<DWORD> &ids, bool enable);
 
-	void HandleTreeEvents(LPARAM lParam);
+    void HandleTreeEvents(LPARAM lParam);
 
-	auto GetFormatSetting() const->std::tuple<LE, LF, char, unsigned>;
+    auto GetFormatSetting() const -> std::tuple<LE, LF, char, unsigned>;
 
 protected:
-	virtual INT_PTR CALLBACK run_dlgProc(UINT message, WPARAM wParam, LPARAM lParam);
+    virtual INT_PTR CALLBACK run_dlgProc(UINT message, WPARAM wParam, LPARAM lParam);
 
 private:
-	int				m_nDlgId = -1;
-	NppData			m_NppData = {};
-	HICON			m_hBtnIcon[4] = {};
+    int     m_nDlgId      = -1;
+    NppData m_NppData     = {};
+    HICON   m_hBtnIcon[4] = {};
 
-	// To handle doc panel resizing
-	LONG			m_lfDeltaWidth = 0;
-	LONG			m_lfDeltaHeight = 0;
-	LONG			m_lfInitialClientWidth = 0;
-	LONG			m_lfInitialClientHeight = 0;
-	RECT			m_rcInitialWindowRect = {};
+    // To handle doc panel resizing
+    LONG m_lfDeltaWidth          = 0;
+    LONG m_lfDeltaHeight         = 0;
+    LONG m_lfInitialClientWidth  = 0;
+    LONG m_lfInitialClientHeight = 0;
+    RECT m_rcInitialWindowRect   = {};
 
-	std::unique_ptr<ScintillaEditor>	m_Editor = nullptr;
-	std::unique_ptr <TreeViewCtrl>		m_hTreeView = nullptr;
-	std::shared_ptr<Setting>			m_pSetting = nullptr;
+    std::unique_ptr<ScintillaEditor> m_Editor    = nullptr;
+    std::unique_ptr<TreeViewCtrl>    m_hTreeView = nullptr;
+    std::shared_ptr<Setting>         m_pSetting  = nullptr;
 };
-
