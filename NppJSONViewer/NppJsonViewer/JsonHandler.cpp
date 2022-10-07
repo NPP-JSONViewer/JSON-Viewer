@@ -1,5 +1,8 @@
 #include "JsonHandler.h"
 
+namespace rj = rapidjson;
+
+
 JsonHandler::JsonHandler(const ParseOptions &options)
     : m_parseOptions(options)
 {
@@ -7,27 +10,27 @@ JsonHandler::JsonHandler(const ParseOptions &options)
 
 auto JsonHandler::GetCompressedJson(const std::string &jsonText) -> const Result
 {
-    rapidjson::StringBuffer                    sb;
-    rapidjson::Writer<rapidjson::StringBuffer> handler(sb);
+    rj::StringBuffer                                                                                sb;
+    rj::Writer<rj::StringBuffer, rj::UTF8<>, rj::UTF8<>, rj::CrtAllocator, rj::kWriteNanAndInfFlag> handler(sb);
 
-    return ParseJson(jsonText, sb, handler);
+    return ParseJson<flgBaseWriter>(jsonText, sb, handler);
 }
 
 auto JsonHandler::FormatJson(const std::string &jsonText, LE le, LF lf, char indentChar, unsigned indentLen) -> const Result
 {
-    rapidjson::StringBuffer                          sb;
-    rapidjson::PrettyWriter<rapidjson::StringBuffer> handler(sb);
+    rj::StringBuffer                                                                                      sb;
+    rj::PrettyWriter<rj::StringBuffer, rj::UTF8<>, rj::UTF8<>, rj::CrtAllocator, rj::kWriteNanAndInfFlag> handler(sb);
     handler.SetLineEnding(le);
     handler.SetFormatOptions(lf);
     handler.SetIndent(indentChar, indentLen);
 
-    return ParseJson(jsonText, sb, handler);
+    return ParseJson<flgBaseWriter>(jsonText, sb, handler);
 }
 
 auto JsonHandler::ValidateJson(const std::string &jsonText) -> const Result
 {
-    rapidjson::StringBuffer                    sb;
-    rapidjson::Writer<rapidjson::StringBuffer> handler(sb);
+    rj::StringBuffer                                                                                sb;
+    rj::Writer<rj::StringBuffer, rj::UTF8<>, rj::UTF8<>, rj::CrtAllocator, rj::kWriteNanAndInfFlag> handler(sb);
 
-    return ParseJson(jsonText, sb, handler);
+    return ParseJson<flgBaseWriter>(jsonText, sb, handler);
 }

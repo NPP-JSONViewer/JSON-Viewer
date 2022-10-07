@@ -186,7 +186,7 @@ void JsonViewDlg::PopulateTreeUsingSax(HTREEITEM tree_root, const std::string &j
     RapidJsonHandler        handler(this, tree_root);
     rapidjson::StringBuffer sb;
 
-    Result res = JsonHandler(m_pSetting->parseOptions).ParseJson(jsonText, sb, handler);
+    Result res = JsonHandler(m_pSetting->parseOptions).ParseJson<flgBaseReader>(jsonText, sb, handler);
     if (!res.success)
     {
         // Mark the error position
