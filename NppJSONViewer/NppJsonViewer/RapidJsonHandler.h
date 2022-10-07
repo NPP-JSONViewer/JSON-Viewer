@@ -46,4 +46,7 @@ public:
     bool EndObject(unsigned memberCount);
     bool StartArray();
     bool EndArray(unsigned elementCount);
+
+private:
+    void HandleArray(TreeNode *node, const char *const str);
 };
