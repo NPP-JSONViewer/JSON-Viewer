@@ -155,6 +155,72 @@ void JsonViewDlg::ValidateJson()
 	}
 }
 
+void JsonViewDlg::DrawJsonTree()
+{
+    // Disable all buttons and treeView
+    std::vector<DWORD> ctrls = {IDC_BTN_REFRESH, IDC_BTN_VALIDATE, IDC_BTN_FORMAT, IDC_BTN_SEARCH, IDC_EDT_SEARCH};
+    EnableControls(ctrls, false);
+
+    HTREEITEM rootNode = nullptr;
+    rootNode           = m_hTreeView->InitTree();
+
+    const std::string txtForParsing = m_Editor->GetJsonText();
+
+    if (txtForParsing.empty())
+    {
+        m_hTreeView->InsertNode(JSON_ERR_PARSE, NULL, rootNode);
+    }
+    else
+    {
+        PopulateTreeUsingSax(rootNode, txtForParsing);
+    }
+
+    m_hTreeView->Expand(rootNode);
+
+    // Enable all buttons and treeView
+    EnableControls(ctrls, true);
+}
+
+void JsonViewDlg::PopulateTreeUsingSax(HTREEITEM tree_root, const std::string &jsonText)
+{
+    RapidJsonHandler        handler(this, tree_root);
+    rapidjson::StringBuffer sb;
+
+    Result res = JsonHandler(m_pSetting->parseOptions).ParseJson(jsonText, sb, handler);
+    if (!res.success)
+    {
+        // Mark the error position
+        size_t start       = m_Editor->GetSelectionStart();
+        size_t errPosition = start + static_cast<size_t>(res.error_pos);
+        m_Editor->MakeSelection(errPosition, errPosition + 1);
+
+        // Intimate user
+        if (jsonText.empty())
+        {
+            ShowMessage(JSON_ERROR_TITLE, JSON_ERR_PARSE, MB_OK | MB_ICONERROR);
+        }
+        else
+        {
+            std::string err = std::format("\n\nError: ({} : {})", res.error_code, res.error_str);
+            ShowMessage(JSON_ERROR_TITLE, (JSON_ERR_VALIDATE + StringHelper::ToWstring(err)).c_str(), MB_OK | MB_ICONERROR);
+        }
+    }
+
+    m_Editor->SetLangAsJson();
+}
+
+HTREEITEM JsonViewDlg::InsertToTree(HTREEITEM parent, const std::string &text)
+{
+    auto wText = StringHelper::ToWstring(text);
+    return m_hTreeView->InsertNode(wText, NULL, parent);
+}
+
+void JsonViewDlg::UpdateNodePath(HTREEITEM htiNode)
+{
+    std::wstring nodePath = m_hTreeView->GetNodePath(htiNode);
+    SetDlgItemText(_hSelf, IDC_EDT_NODEPATH, nodePath.c_str());
+}
+
 void JsonViewDlg::PrepareButtons()
 {
 	// Refresh Button
@@ -270,72 +336,6 @@ void JsonViewDlg::AdjustDocPanelSize(int nWidth, int nHeight)
 
 		::SetWindowPos(hWnd, NULL, rc.left, rc.top + addHeight, cx, cy, flags);
 	}
-}
-
-void JsonViewDlg::DrawJsonTree()
-{
-	// Disable all buttons and treeView
-	std::vector<DWORD> ctrls = { IDC_BTN_REFRESH , IDC_BTN_VALIDATE, IDC_BTN_FORMAT, IDC_BTN_SEARCH, IDC_EDT_SEARCH };
-	EnableControls(ctrls, false);
-
-	HTREEITEM rootNode = nullptr;
-	rootNode = m_hTreeView->InitTree();
-
-	const std::string txtForParsing = m_Editor->GetJsonText();
-
-	if (txtForParsing.empty())
-	{
-		m_hTreeView->InsertNode(JSON_ERR_PARSE, NULL, rootNode);
-	}
-	else
-	{
-		PopulateTreeUsingSax(rootNode, txtForParsing);
-	}
-
-	m_hTreeView->Expand(rootNode);
-
-	// Enable all buttons and treeView
-	EnableControls(ctrls, true);
-}
-
-void JsonViewDlg::PopulateTreeUsingSax(HTREEITEM tree_root, const std::string &jsonText)
-{
-    RapidJsonHandler        handler(this, tree_root);
-    rapidjson::StringBuffer sb;
-
-    Result res = JsonHandler(m_pSetting->parseOptions).ParseJson(jsonText, sb, handler);
-    if (!res.success)
-    {
-        // Mark the error position
-        size_t start       = m_Editor->GetSelectionStart();
-        size_t errPosition = start + static_cast<size_t>(res.error_pos);
-        m_Editor->MakeSelection(errPosition, errPosition + 1);
-
-		// Intimate user
-        if (jsonText.empty())
-        {
-            ShowMessage(JSON_ERROR_TITLE, JSON_ERR_PARSE, MB_OK | MB_ICONERROR);
-        }
-        else
-        {
-            std::string err = std::format("\n\nError: ({} : {})", res.error_code, res.error_str);
-            ShowMessage(JSON_ERROR_TITLE, (JSON_ERR_VALIDATE + StringHelper::ToWstring(err)).c_str(), MB_OK | MB_ICONERROR);
-        }
-    }
-
-    m_Editor->SetLangAsJson();
-}
-
-HTREEITEM JsonViewDlg::InsertToTree(HTREEITEM parent, const std::string& text)
-{
-	auto wText = StringHelper::ToWstring(text);
-	return m_hTreeView->InsertNode(wText, NULL, parent);
-}
-
-void JsonViewDlg::UpdateNodePath(HTREEITEM htiNode)
-{
-	std::wstring nodePath = m_hTreeView->GetNodePath(htiNode);
-	SetDlgItemText(_hSelf, IDC_EDT_NODEPATH, nodePath.c_str());
 }
 
 void JsonViewDlg::ShowContextMenu(int x, int y)

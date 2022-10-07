@@ -24,17 +24,17 @@ public:
 	HTREEITEM InsertToTree(HTREEITEM parent, const std::string& text);
 
 private:
-	void PrepareButtons();
+    void DrawJsonTree();
+    void PopulateTreeUsingSax(HTREEITEM tree_root, const std::string &jsonText);
+
+    void ValidateJson();
+
+    void UpdateNodePath(HTREEITEM htiNode);
+
+    void PrepareButtons();
 	void SetIconAndTooltip(eButton ctrlType, const std::wstring& toolTip);
 
 	void AdjustDocPanelSize(int nWidth, int nHeight);
-
-	void DrawJsonTree();
-	void PopulateTreeUsingSax(HTREEITEM tree_root, const std::string& jsonText);
-
-	void ValidateJson();
-
-	void UpdateNodePath(HTREEITEM htiNode);
 
 	// Context menu related functions
 	void ShowContextMenu(int x, int y);
