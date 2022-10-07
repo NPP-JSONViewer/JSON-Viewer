@@ -46,7 +46,7 @@ private:
 	auto CopyValue() const->std::wstring;
 	auto CopyPath() const->std::wstring;
 
-	int ShowMessage(const std::wstring& title, const std::wstring& msg, int flag, bool bForceShow = false);
+    int ShowMessage(const std::wstring &title, const std::wstring &msg, int flag, bool bDontShow = false);
 
 	void ToggleMenuItemState(bool bVisible);
 

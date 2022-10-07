@@ -84,7 +84,7 @@ void JsonViewDlg::FormatJson()
 		// Intimate user
 		std::string err = std::format("\n\nError: ({} : {})", res.error_code, res.error_str);
 
-		::MessageBox(m_NppData._nppHandle, (JSON_ERR_VALIDATE + StringHelper::ToWstring(err)).c_str(), JSON_ERROR_TITLE, MB_OK | MB_ICONERROR);
+		ShowMessage(JSON_ERROR_TITLE, (JSON_ERR_VALIDATE + StringHelper::ToWstring(err)).c_str(), MB_OK | MB_ICONERROR);
 	}
 }
 
@@ -109,7 +109,7 @@ void JsonViewDlg::CompressJson()
 		// Intimate user
 		std::string err = std::format("\n\nError: ({} : {})", res.error_code, res.error_str);
 
-		::MessageBox(m_NppData._nppHandle, (JSON_ERR_VALIDATE + StringHelper::ToWstring(err)).c_str(), JSON_ERROR_TITLE, MB_OK | MB_ICONERROR);
+		ShowMessage(JSON_ERROR_TITLE, (JSON_ERR_VALIDATE + StringHelper::ToWstring(err)).c_str(), MB_OK | MB_ICONERROR);
 	}
 }
 
@@ -139,7 +139,7 @@ void JsonViewDlg::ValidateJson()
 
 	if (res.success)
 	{
-		::MessageBox(m_NppData._nppHandle, JSON_ERR_VALIDATE_SUCCESS, JSON_INFO_TITLE, MB_OK | MB_ICONINFORMATION);
+        ShowMessage(JSON_INFO_TITLE, JSON_ERR_VALIDATE_SUCCESS, MB_OK | MB_ICONINFORMATION);
 	}
 	else
 	{
@@ -151,7 +151,7 @@ void JsonViewDlg::ValidateJson()
 		// Intimate user
 		std::string err = std::format("\n\nError: ({} : {})", res.error_code, res.error_str);
 
-		::MessageBox(m_NppData._nppHandle, (JSON_ERR_VALIDATE + StringHelper::ToWstring(err)).c_str(), JSON_ERROR_TITLE, MB_OK | MB_ICONERROR);
+		ShowMessage(JSON_ERROR_TITLE, (JSON_ERR_VALIDATE + StringHelper::ToWstring(err)).c_str(), MB_OK | MB_ICONERROR);
 	}
 }
 
@@ -314,12 +314,12 @@ void JsonViewDlg::PopulateTreeUsingSax(HTREEITEM tree_root, const std::string &j
 		// Intimate user
         if (jsonText.empty())
         {
-            ::MessageBox(m_NppData._nppHandle, JSON_ERR_PARSE, JSON_ERROR_TITLE, MB_OK | MB_ICONERROR);
+            ShowMessage(JSON_ERROR_TITLE, JSON_ERR_PARSE, MB_OK | MB_ICONERROR);
         }
         else
         {
             std::string err = std::format("\n\nError: ({} : {})", res.error_code, res.error_str);
-            ::MessageBox(m_NppData._nppHandle, (JSON_ERR_VALIDATE + StringHelper::ToWstring(err)).c_str(), JSON_ERROR_TITLE, MB_OK | MB_ICONERROR);
+            ShowMessage(JSON_ERROR_TITLE, (JSON_ERR_VALIDATE + StringHelper::ToWstring(err)).c_str(), MB_OK | MB_ICONERROR);
         }
     }
 
@@ -492,9 +492,9 @@ auto JsonViewDlg::CopyPath() const -> std::wstring
 	return std::wstring();
 }
 
-int JsonViewDlg::ShowMessage(const std::wstring& title, const std::wstring& msg, int flag, bool bForceShow)
+int JsonViewDlg::ShowMessage(const std::wstring &title, const std::wstring &msg, int flag, bool bDontShow)
 {
-	return bForceShow ? ::MessageBox(_hParent, msg.c_str(), title.c_str(), flag) : IDOK;
+    return !bDontShow ? ::MessageBox(_hParent, msg.c_str(), title.c_str(), flag) : IDOK;
 }
 
 void JsonViewDlg::ToggleMenuItemState(bool bVisible)
@@ -651,7 +651,7 @@ INT_PTR JsonViewDlg::run_dlgProc(UINT message, WPARAM wParam, LPARAM lParam)
 			break;
 
 		case IDC_BTN_SEARCH:
-			MessageBox(_hSelf, L"IDC_BTN_SEARCH", L"OK", MB_OK);
+            ShowMessage(L"OK", L"IDC_BTN_SEARCH", MB_OK);
 			break;
 
 			// context menu entries
