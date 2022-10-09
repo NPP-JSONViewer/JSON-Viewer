@@ -37,6 +37,7 @@ public:
     bool HasChild(HTREEITEM hti) const;
 
     HTREEITEM GetSelection() const;
+    void      SetSelection(HTREEITEM hItem) const;
 
     bool IsItemVisible(HTREEITEM hti);
 

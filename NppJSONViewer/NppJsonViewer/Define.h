@@ -65,6 +65,10 @@ const TCHAR STR_INI_OTHER_AUTO_FORMAT[]    = TEXT("AUTO_FORMAT");
 const TCHAR STR_INI_OTHER_IGNORE_COMMENT[] = TEXT("IGNORE_COMMENT");
 const TCHAR STR_INI_OTHER_IGNORE_COMMA[]   = TEXT("IGNORE_TRAILLING_COMMA");
 
+const TCHAR STR_SRCH_SEARCHING[]   = TEXT("Searching for: ");
+const TCHAR STR_SRCH_NOTFOUND[]    = TEXT("Not found: ");
+const TCHAR STR_SRCH_NOMOREFOUND[] = TEXT("No more found: ");
+
 enum class LineEnding
 {
     AUTO,

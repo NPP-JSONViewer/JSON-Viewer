@@ -223,6 +223,11 @@ HTREEITEM TreeViewCtrl::GetSelection() const
     return TreeView_GetSelection(m_hTree);
 }
 
+void TreeViewCtrl::SetSelection(HTREEITEM hItem) const
+{
+    TreeView_SelectItem(m_hTree, hItem);
+}
+
 bool TreeViewCtrl::IsItemVisible(HTREEITEM hti)
 {
     RECT rect = {};

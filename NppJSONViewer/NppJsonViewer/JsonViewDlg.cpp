@@ -221,6 +221,86 @@ void JsonViewDlg::UpdateNodePath(HTREEITEM htiNode)
     CUtility::SetEditCtrlText(::GetDlgItem(_hSelf, IDC_EDT_NODEPATH), nodePath);
 }
 
+void JsonViewDlg::SearchInTree()
+{
+    std::wstring itemToSearch = CUtility::GetEditCtrlText(::GetDlgItem(_hSelf, IDC_EDT_SEARCH));
+    CUtility::SetEditCtrlText(::GetDlgItem(_hSelf, IDC_EDT_NODEPATH), STR_SRCH_SEARCHING + itemToSearch);
+    m_hTreeView->SetSelection(nullptr);
+
+    static int          foundCount = 0;
+    static std::wstring previousSearch;
+    static HTREEITEM    nextNode = m_hTreeView->NextItem(m_hTreeView->GetRoot());
+
+    // New search, hence search from begining
+    if (previousSearch != itemToSearch)
+    {
+        previousSearch = itemToSearch;
+        nextNode       = m_hTreeView->NextItem(m_hTreeView->GetRoot());
+        foundCount     = 0;
+    }
+    else
+    {
+        nextNode = m_hTreeView->NextItem(nextNode);
+        if (nextNode == m_hTreeView->GetRoot())
+        {
+            nextNode   = m_hTreeView->NextItem(nextNode);
+            foundCount = 0;
+        }
+    }
+
+    // Check if this is an empty json
+    std::wstring nodeText = m_hTreeView->GetNodeName(nextNode);
+    if (nodeText.empty() || wcscmp(nodeText.c_str(), JSON_ERR_PARSE) == 0)
+    {
+        CUtility::SetEditCtrlText(::GetDlgItem(_hSelf, IDC_EDT_NODEPATH), STR_SRCH_NOTFOUND + itemToSearch);
+    }
+    else
+    {
+        bool bFound = false;
+        while (!bFound && nextNode)
+        {
+            nodeText     = m_hTreeView->GetNodeName(nextNode);
+            auto nodeKey = m_hTreeView->GetNodeKey(nextNode);
+            auto nodeVal = m_hTreeView->GetNodeValue(nextNode);
+
+            // Search in node value
+            if (nodeKey != nodeVal)
+                bFound = StringHelper::Contains(nodeVal, itemToSearch);
+
+            // If both are euaal, but not all three 
+            // { "[i]": "[i]"}      => Search for '[i]'
+            //
+            if (!bFound && nodeKey == nodeVal && nodeKey != nodeText)
+                bFound = StringHelper::Contains(nodeVal, itemToSearch);
+
+            // If all three are same, then key does not start with '[' and end with ']'
+            // "num": [12.148681171238422,42.835353759876654]       => Search for 'num'
+            //
+            if (!bFound && nodeKey == nodeVal && nodeKey == nodeText && !nodeKey.starts_with(L"[") && !nodeKey.ends_with(L"]"))
+                bFound = StringHelper::Contains(nodeText, itemToSearch);
+            
+            if (bFound)
+                break;
+
+            nextNode = m_hTreeView->NextItem(nextNode);
+        }
+
+        if (bFound)
+        {
+            UpdateNodePath(nextNode);
+            m_hTreeView->SetSelection(nextNode);
+            ++foundCount;
+        }
+        else
+        {
+            if (foundCount)
+                CUtility::SetEditCtrlText(::GetDlgItem(_hSelf, IDC_EDT_NODEPATH), STR_SRCH_NOMOREFOUND + itemToSearch);
+            else
+                CUtility::SetEditCtrlText(::GetDlgItem(_hSelf, IDC_EDT_NODEPATH), STR_SRCH_NOTFOUND + itemToSearch);
+        }
+    }
+}
+
 void JsonViewDlg::PrepareButtons()
 {
     // Refresh Button
@@ -651,7 +731,7 @@ INT_PTR JsonViewDlg::run_dlgProc(UINT message, WPARAM wParam, LPARAM lParam)
             break;
 
         case IDC_BTN_SEARCH:
-            ShowMessage(L"OK", L"IDC_BTN_SEARCH", MB_OK);
+            SearchInTree();
             break;
 
             // Handle context menu entries
@@ -702,9 +782,6 @@ INT_PTR JsonViewDlg::run_dlgProc(UINT message, WPARAM wParam, LPARAM lParam)
     }
 
     default:
-        // TODO: Temporarily hide controls which are not implemented
-        std::vector<DWORD> toHide = {IDC_BTN_SEARCH, IDC_EDT_SEARCH};
-        ShowControls(toHide, false);
         return DockingDlgInterface::run_dlgProc(message, wParam, lParam);
     }
 }

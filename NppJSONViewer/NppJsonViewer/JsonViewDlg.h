@@ -38,6 +38,8 @@ private:
 
     void UpdateNodePath(HTREEITEM htiNode);
 
+    void SearchInTree();
+
     void PrepareButtons();
     void SetIconAndTooltip(eButton ctrlType, const std::wstring &toolTip);
 
