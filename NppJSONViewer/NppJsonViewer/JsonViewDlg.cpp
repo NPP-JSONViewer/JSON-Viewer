@@ -264,21 +264,23 @@ void JsonViewDlg::SearchInTree()
             auto nodeVal = m_hTreeView->GetNodeValue(nextNode);
 
             // Search in node value
-            if (nodeKey != nodeVal)
+            //  1. If both key and value are not equal
+            //  2. If both are euaal, but not all three (key, value and keyValue)
+            //  3. If all three equal, but key does not start with '[' and end with ']'
+
+            bool shouldSearch = (nodeKey != nodeVal);
+            shouldSearch |= (nodeKey == nodeVal && nodeKey != nodeText);
+            shouldSearch |= (nodeKey == nodeVal && nodeKey == nodeText && !nodeKey.starts_with(L"[") && !nodeKey.ends_with(L"]"));
+            if (shouldSearch)
                 bFound = StringHelper::Contains(nodeVal, itemToSearch);
 
-            // If both are euaal, but not all three 
-            // { "[i]": "[i]"}      => Search for '[i]'
-            //
-            if (!bFound && nodeKey == nodeVal && nodeKey != nodeText)
-                bFound = StringHelper::Contains(nodeVal, itemToSearch);
+            // Search in Key if not found in value
+            //  1. If key does not start with '[' and end with ']'
 
-            // If all three are same, then key does not start with '[' and end with ']'
-            // "num": [12.148681171238422,42.835353759876654]       => Search for 'num'
-            //
-            if (!bFound && nodeKey == nodeVal && nodeKey == nodeText && !nodeKey.starts_with(L"[") && !nodeKey.ends_with(L"]"))
-                bFound = StringHelper::Contains(nodeText, itemToSearch);
-            
+            shouldSearch = (!nodeKey.starts_with(L"[") && !nodeKey.ends_with(L"]"));
+            if (!bFound && shouldSearch)
+                bFound = StringHelper::Contains(nodeKey, itemToSearch);
+
             if (bFound)
                 break;
 
