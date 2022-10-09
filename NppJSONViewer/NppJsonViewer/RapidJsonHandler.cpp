@@ -12,7 +12,7 @@ bool RapidJsonHandler::Null()
         return false;
 
     TreeNode *parent = m_NodeStack.top();
-    HandleArray(parent, STR_NULL, false);
+    InsertToTree(parent, STR_NULL, false);
     return true;
 }
 
@@ -22,7 +22,7 @@ bool RapidJsonHandler::Bool(bool b)
         return false;
 
     TreeNode *parent = m_NodeStack.top();
-    HandleArray(parent, b ? STR_TRUE : STR_FALSE, false);
+    InsertToTree(parent, b ? STR_TRUE : STR_FALSE, false);
     return true;
 }
 
@@ -57,7 +57,7 @@ bool RapidJsonHandler::RawNumber(const Ch *str, unsigned /*length*/, bool /*copy
         return false;
 
     TreeNode *parent = m_NodeStack.top();
-    HandleArray(parent, str, false);
+    InsertToTree(parent, str, false);
     return true;
 }
 
@@ -74,7 +74,7 @@ bool RapidJsonHandler::String(const Ch *str, unsigned /*length*/, bool /*copy*/)
     }
 
     TreeNode *parent = m_NodeStack.top();
-    HandleArray(parent, str, true);
+    InsertToTree(parent, str, true);
 
     return true;
 }
@@ -193,7 +193,7 @@ bool RapidJsonHandler::EndArray(unsigned /*elementCount*/)
     return true;
 }
 
-void RapidJsonHandler::HandleArray(TreeNode *node, const char *const str, bool bQuote)
+void RapidJsonHandler::InsertToTree(TreeNode *node, const char *const str, bool bQuote)
 {
     if (!node || !str)
         return;
@@ -206,7 +206,7 @@ void RapidJsonHandler::HandleArray(TreeNode *node, const char *const str, bool b
     }
     else
     {
-        node->node.key   = std::to_string(node->counter);
+        node->node.key   = "[" + std::to_string(node->counter) + "]";
         node->node.value = str;
         node->counter++;
     }

@@ -48,5 +48,5 @@ public:
     bool EndArray(unsigned elementCount);
 
 private:
-    void HandleArray(TreeNode *node, const char *const str, bool bQuote);
+    void InsertToTree(TreeNode *node, const char *const str, bool bQuote);
 };
