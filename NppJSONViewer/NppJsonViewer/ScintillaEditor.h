@@ -6,30 +6,35 @@
 class ScintillaEditor
 {
 public:
-	explicit ScintillaEditor(const NppData& nppData);
-	~ScintillaEditor() = default;
+    explicit ScintillaEditor(const NppData &nppData);
+    ~ScintillaEditor() = default;
 
-	std::string GetJsonText();
-	void SetLangAsJson() const;
-	bool IsJsonFile() const;
+    std::string GetJsonText();
+    void        SetLangAsJson() const;
+    bool        IsJsonFile() const;
 
-	void ReplaceSelection(const std::string& text) const;
+    void ReplaceSelection(const std::string &text) const;
 
-	void MakeSelection(size_t start, size_t end) const;
-	auto GetSelectionStart() const->size_t { return m_nStartPos; }
-	auto GetSelectionEnd() const->size_t { return m_nEndPos; }
+    void MakeSelection(size_t start, size_t end) const;
+    auto GetSelectionStart() const -> size_t
+    {
+        return m_nStartPos;
+    }
+    auto GetSelectionEnd() const -> size_t
+    {
+        return m_nEndPos;
+    }
 
-	auto GetEOL() const->unsigned;
-	auto GetIndent() const->std::tuple<char, unsigned>;
+    auto GetEOL() const -> unsigned;
+    auto GetIndent() const -> std::tuple<char, unsigned>;
 
 private:
-	void RefreshSelectionPos();
+    void RefreshSelectionPos();
 
 private:
-	NppData m_NppData = {};
-	HWND	m_hScintilla = nullptr;
+    NppData m_NppData    = {};
+    HWND    m_hScintilla = nullptr;
 
-	size_t	m_nStartPos = 0;
-	size_t	m_nEndPos = 0;
+    size_t m_nStartPos = 0;
+    size_t m_nEndPos   = 0;
 };
-

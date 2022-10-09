@@ -5,51 +5,57 @@
 
 class TreeViewCtrl
 {
-	HWND	m_hTree = nullptr;
-	HWND	m_hParent = nullptr;
+    HWND m_hTree   = nullptr;
+    HWND m_hParent = nullptr;
 
 public:
-	TreeViewCtrl() = default;
-	~TreeViewCtrl() = default;
+    TreeViewCtrl()  = default;
+    ~TreeViewCtrl() = default;
 
-	void OnInit(HWND hParent);
+    void OnInit(HWND hParent);
 
-	HWND GetTreeViewHandle() { return m_hTree; }
+    HWND GetTreeViewHandle()
+    {
+        return m_hTree;
+    }
 
-	auto InitTree()->HTREEITEM;
-	auto InsertNode(const std::wstring& text, LPARAM lparam, HTREEITEM parentNode)->HTREEITEM;
+    auto InitTree() -> HTREEITEM;
+    auto InsertNode(const std::wstring &text, LPARAM lparam, HTREEITEM parentNode) -> HTREEITEM;
 
-	bool IsExpanded(HTREEITEM node) const;
-	bool IsThisOrAnyChildExpanded(HTREEITEM node) const;
-	bool IsThisOrAnyChildCollapsed(HTREEITEM node) const;
+    bool IsExpanded(HTREEITEM node) const;
+    bool IsThisOrAnyChildExpanded(HTREEITEM node) const;
+    bool IsThisOrAnyChildCollapsed(HTREEITEM node) const;
 
-	void Expand(HTREEITEM node);
-	void Collapse(HTREEITEM node);
+    void Expand(HTREEITEM node);
+    void Collapse(HTREEITEM node);
 
-	BOOL ScreenToTreeView(LPPOINT lpPoint);
-	auto HitTest(LPTVHITTESTINFO lpHTInfo)->HTREEITEM;
+    BOOL ScreenToTreeView(LPPOINT lpPoint);
+    auto HitTest(LPTVHITTESTINFO lpHTInfo) -> HTREEITEM;
 
-	auto GetRoot()->HTREEITEM;
-	bool SelectItem(HTREEITEM hti, bool firstVisible = false);
-	bool HasChild(HTREEITEM hti) const;
+    auto GetRoot() -> HTREEITEM;
+    bool SelectItem(HTREEITEM hti, bool firstVisible = false);
+    bool HasChild(HTREEITEM hti) const;
 
-	HTREEITEM GetSelection() const;
+    HTREEITEM GetSelection() const;
 
-	bool IsItemVisible(HTREEITEM hti);
+    bool IsItemVisible(HTREEITEM hti);
 
-	HTREEITEM NextItem(HTREEITEM htiCurrent) { return NextItem(htiCurrent, nullptr); }
-	HTREEITEM NextItem(HTREEITEM htiCurrent, HTREEITEM htiNextRoot);
+    HTREEITEM NextItem(HTREEITEM htiCurrent)
+    {
+        return NextItem(htiCurrent, nullptr);
+    }
 
-	auto GetNodeName(HTREEITEM hti)->std::wstring;
-	auto GetNodeKey(HTREEITEM hti)->std::wstring;
-	auto GetNodeValue(HTREEITEM hti)->std::wstring;
-	auto GetNodePath(HTREEITEM hti)->std::wstring;
+    HTREEITEM NextItem(HTREEITEM htiCurrent, HTREEITEM htiNextRoot);
+
+    auto GetNodeName(HTREEITEM hti) -> std::wstring;
+    auto GetNodeKey(HTREEITEM hti) -> std::wstring;
+    auto GetNodeValue(HTREEITEM hti) -> std::wstring;
+    auto GetNodePath(HTREEITEM hti) -> std::wstring;
 
 private:
-	void ExpandOrCollpase(HTREEITEM node, UINT_PTR code);
+    void ExpandOrCollpase(HTREEITEM node, UINT_PTR code);
 
-	HTREEITEM GetParentItem(HTREEITEM hti);
+    HTREEITEM GetParentItem(HTREEITEM hti);
 
-	bool GetTVItem(HTREEITEM hti, TCHAR* buf, int bufSize, TVITEM* tvi);
+    bool GetTVItem(HTREEITEM hti, TCHAR *buf, int bufSize, TVITEM *tvi);
 };
-

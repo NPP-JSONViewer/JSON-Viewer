@@ -218,7 +218,7 @@ HTREEITEM JsonViewDlg::InsertToTree(HTREEITEM parent, const std::string &text)
 void JsonViewDlg::UpdateNodePath(HTREEITEM htiNode)
 {
     std::wstring nodePath = m_hTreeView->GetNodePath(htiNode);
-    SetDlgItemText(_hSelf, IDC_EDT_NODEPATH, nodePath.c_str());
+    CUtility::SetEditCtrlText(::GetDlgItem(_hSelf, IDC_EDT_NODEPATH), nodePath);
 }
 
 void JsonViewDlg::PrepareButtons()
@@ -262,7 +262,8 @@ void JsonViewDlg::SetIconAndTooltip(eButton ctrlType, const std::wstring &toolTi
         iconResID = IDI_ICON_SEARCH;
         break;
 
-    default: return;
+    default:
+        return;
     }
 
     HWND hWnd = ::GetDlgItem(_hSelf, nCtrlID);
@@ -540,9 +541,13 @@ auto JsonViewDlg::GetFormatSetting() const -> std::tuple<LE, LF, char, unsigned>
     // End of line options
     switch (m_pSetting->lineEnding)
     {
-    case LineEnding::WINDOWS: le = LE::kCrLf; break;
+    case LineEnding::WINDOWS:
+        le = LE::kCrLf;
+        break;
 
-    case LineEnding::UNIX: le = LE::kLf; break;
+    case LineEnding::UNIX:
+        le = LE::kLf;
+        break;
 
     case LineEnding::MAC:
         le = LE::kCr;
@@ -555,9 +560,15 @@ auto JsonViewDlg::GetFormatSetting() const -> std::tuple<LE, LF, char, unsigned>
         const auto eol = m_Editor->GetEOL();
         switch (eol)
         {
-        case 0: le = LE::kCrLf; break;
-        case 1: le = LE::kCr; break;
-        default: le = LE::kLf; break;
+        case 0:
+            le = LE::kCrLf;
+            break;
+        case 1:
+            le = LE::kCr;
+            break;
+        default:
+            le = LE::kLf;
+            break;
         }
     }
     }
@@ -626,28 +637,47 @@ INT_PTR JsonViewDlg::run_dlgProc(UINT message, WPARAM wParam, LPARAM lParam)
     {
         switch (LOWORD(wParam))
         {
-        case IDC_BTN_REFRESH: DrawJsonTree(); break;
+            // Handle Button events
+        case IDC_BTN_REFRESH:
+            DrawJsonTree();
+            break;
 
-        case IDC_BTN_FORMAT: FormatJson(); break;
+        case IDC_BTN_FORMAT:
+            FormatJson();
+            break;
 
-        case IDC_BTN_VALIDATE: ValidateJson(); break;
+        case IDC_BTN_VALIDATE:
+            ValidateJson();
+            break;
 
         case IDC_BTN_SEARCH:
             ShowMessage(L"OK", L"IDC_BTN_SEARCH", MB_OK);
             break;
 
-            // context menu entries
-        case IDM_COPY_TREEITEM: CUtility::CopyToClipboard(CopyName(), _hSelf); break;
+            // Handle context menu entries
+        case IDM_COPY_TREEITEM:
+            CUtility::CopyToClipboard(CopyName(), _hSelf);
+            break;
 
-        case IDM_COPY_NODENAME: CUtility::CopyToClipboard(CopyKey(), _hSelf); break;
+        case IDM_COPY_NODENAME:
+            CUtility::CopyToClipboard(CopyKey(), _hSelf);
+            break;
 
-        case IDM_COPY_NODEVALUE: CUtility::CopyToClipboard(CopyValue(), _hSelf); break;
+        case IDM_COPY_NODEVALUE:
+            CUtility::CopyToClipboard(CopyValue(), _hSelf);
+            break;
 
-        case IDM_COPY_NODEPATH: CUtility::CopyToClipboard(CopyPath(), _hSelf); break;
+        case IDM_COPY_NODEPATH:
+            CUtility::CopyToClipboard(CopyPath(), _hSelf);
+            break;
 
-        case IDM_EXPANDALL: ContextMenuExpand(true); break;
+        case IDM_EXPANDALL:
+            ContextMenuExpand(true);
+            break;
 
-        case IDM_COLLAPSEALL: ContextMenuExpand(false); break;
+        case IDM_COLLAPSEALL:
+            ContextMenuExpand(false);
+            break;
         }
         return TRUE;
     }
