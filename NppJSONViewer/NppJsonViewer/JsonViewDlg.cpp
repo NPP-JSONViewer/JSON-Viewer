@@ -215,6 +215,21 @@ HTREEITEM JsonViewDlg::InsertToTree(HTREEITEM parent, const std::string &text)
     return m_hTreeView->InsertNode(wText, NULL, parent);
 }
 
+void JsonViewDlg::AppendNodeCount(HTREEITEM node, unsigned elementCount, bool bArray)
+{
+    if (!node)
+        return;
+
+    auto txt = m_hTreeView->GetNodeName(node, false);
+
+    txt += L" ";
+    txt += bArray ? L"[" : L"{";
+    txt += std::to_wstring(elementCount);
+    txt += bArray ? L"]" : L"}";
+
+    m_hTreeView->UpdateNodeText(node, txt);
+}
+
 void JsonViewDlg::UpdateNodePath(HTREEITEM htiNode)
 {
     std::wstring nodePath = m_hTreeView->GetNodePath(htiNode);
@@ -249,7 +264,7 @@ void JsonViewDlg::SearchInTree()
     }
 
     // Check if this is an empty json
-    std::wstring nodeText = m_hTreeView->GetNodeName(nextNode);
+    std::wstring nodeText = m_hTreeView->GetNodeName(nextNode, true);
     if (nodeText.empty() || wcscmp(nodeText.c_str(), JSON_ERR_PARSE) == 0)
     {
         CUtility::SetEditCtrlText(::GetDlgItem(_hSelf, IDC_EDT_NODEPATH), STR_SRCH_NOTFOUND + itemToSearch);
@@ -259,7 +274,7 @@ void JsonViewDlg::SearchInTree()
         bool bFound = false;
         while (!bFound && nextNode)
         {
-            nodeText     = m_hTreeView->GetNodeName(nextNode);
+            nodeText     = m_hTreeView->GetNodeName(nextNode, true);
             auto nodeKey = m_hTreeView->GetNodeKey(nextNode);
             auto nodeVal = m_hTreeView->GetNodeValue(nextNode);
 
@@ -532,7 +547,7 @@ auto JsonViewDlg::CopyName() const -> std::wstring
     HTREEITEM selectedNode = m_hTreeView->GetSelection();
     if (selectedNode)
     {
-        return m_hTreeView->GetNodeName(selectedNode);
+        return m_hTreeView->GetNodeName(selectedNode, true);
     }
     return std::wstring();
 }

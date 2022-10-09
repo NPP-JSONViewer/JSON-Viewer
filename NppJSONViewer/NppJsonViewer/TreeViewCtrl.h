@@ -21,6 +21,7 @@ public:
 
     auto InitTree() -> HTREEITEM;
     auto InsertNode(const std::wstring &text, LPARAM lparam, HTREEITEM parentNode) -> HTREEITEM;
+    void UpdateNodeText(HTREEITEM node, const std::wstring &text);
 
     bool IsExpanded(HTREEITEM node) const;
     bool IsThisOrAnyChildExpanded(HTREEITEM node) const;
@@ -48,7 +49,7 @@ public:
 
     HTREEITEM NextItem(HTREEITEM htiCurrent, HTREEITEM htiNextRoot);
 
-    auto GetNodeName(HTREEITEM hti) -> std::wstring;
+    auto GetNodeName(HTREEITEM hti, bool removeTrailingCount) -> std::wstring;
     auto GetNodeKey(HTREEITEM hti) -> std::wstring;
     auto GetNodeValue(HTREEITEM hti) -> std::wstring;
     auto GetNodePath(HTREEITEM hti) -> std::wstring;
@@ -58,5 +59,6 @@ private:
 
     HTREEITEM GetParentItem(HTREEITEM hti);
 
-    bool GetTVItem(HTREEITEM hti, TCHAR *buf, int bufSize, TVITEM *tvi);
+    bool GetTVItem(HTREEITEM hti, TVITEM *tvi) const;
+    bool SetTVItem(TVITEM *tvi) const;
 };

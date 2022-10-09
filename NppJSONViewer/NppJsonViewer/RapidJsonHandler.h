@@ -49,4 +49,5 @@ public:
 
 private:
     void InsertToTree(TreeNode *node, const char *const str, bool bQuote);
+    void AppendNodeCount(unsigned elementCount, bool bArray);
 };

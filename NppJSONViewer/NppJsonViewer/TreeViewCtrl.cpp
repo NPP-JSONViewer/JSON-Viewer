@@ -2,6 +2,7 @@
 #include "Define.h"
 #include "resource.h"
 #include "StringHelper.h"
+#include <memory>
 
 
 void TreeViewCtrl::OnInit(HWND hParent)
@@ -41,6 +42,19 @@ auto TreeViewCtrl::InsertNode(const std::wstring &text, LPARAM lparam, HTREEITEM
     HTREEITEM item = reinterpret_cast<HTREEITEM>(SendDlgItemMessage(m_hParent, IDC_TREE, TVM_INSERTITEM, 0, reinterpret_cast<LPARAM>(&tvinsert)));
 
     return item;
+}
+
+void TreeViewCtrl::UpdateNodeText(HTREEITEM node, const std::wstring &text)
+{
+    auto tvi = std::make_unique<TVITEMW>();
+    if (GetTVItem(node, tvi.get()))
+    {
+        tvi->mask |= TVIF_TEXT;
+        tvi->cchTextMax = static_cast<int>(text.size());
+        tvi->pszText    = const_cast<wchar_t *>(text.c_str());
+
+        SetTVItem(tvi.get());
+    }
 }
 
 bool TreeViewCtrl::IsExpanded(HTREEITEM node) const
@@ -130,7 +144,7 @@ bool TreeViewCtrl::HasChild(HTREEITEM hti) const
     return htiChild ? true : false;
 }
 
-auto TreeViewCtrl::GetNodeName(HTREEITEM hti) -> std::wstring
+auto TreeViewCtrl::GetNodeName(HTREEITEM hti, bool removeTrailingCount) -> std::wstring
 {
     if (!hti)
         return TEXT("");
@@ -142,12 +156,44 @@ auto TreeViewCtrl::GetNodeName(HTREEITEM hti) -> std::wstring
     tvItem.pszText    = textBuffer;
     tvItem.cchTextMax = MAX_PATH;
     SendMessage(m_hTree, TVM_GETITEM, 0, reinterpret_cast<LPARAM>(&tvItem));
-    return tvItem.pszText ? tvItem.pszText : TEXT("");
+
+    std::wstring retVal = tvItem.pszText ? tvItem.pszText : TEXT("");
+
+    // If it is an array or list then remove trailing {} or []
+    if (removeTrailingCount && HasChild(hti))
+    {
+        auto remove = [](std::wstring &input, const wchar_t ch)
+        {
+            wchar_t removeTill = ch == L'}' ? L'{' : L'[';
+            wchar_t current    = input.back();
+
+            while (current != removeTill)
+            {
+                input.pop_back();
+                current = input.back();
+            }
+
+            input.pop_back();    // remove { or [
+            input.pop_back();    // remove trailing space.
+        };
+
+        if (retVal.ends_with(L"}"))
+        {
+            remove(retVal, L'}');
+        }
+
+        else if (retVal.ends_with(L"]"))
+        {
+            remove(retVal, L']');
+        }
+    }
+
+    return retVal;
 }
 
 auto TreeViewCtrl::GetNodeKey(HTREEITEM hti) -> std::wstring
 {
-    std::wstring retVal = GetNodeName(hti);
+    std::wstring retVal = GetNodeName(hti, true);
 
     auto pos = retVal.find(L" : ");
     if (pos != std::wstring::npos)
@@ -159,7 +205,7 @@ auto TreeViewCtrl::GetNodeKey(HTREEITEM hti) -> std::wstring
 
 auto TreeViewCtrl::GetNodeValue(HTREEITEM hti) -> std::wstring
 {
-    std::wstring retVal = GetNodeName(hti);
+    std::wstring retVal = GetNodeName(hti, true);
 
     auto pos = retVal.find(L" : ");
     if (pos != std::wstring::npos)
@@ -276,13 +322,16 @@ HTREEITEM TreeViewCtrl::NextItem(HTREEITEM htiCurrent, HTREEITEM htiNextRoot)
     return nullptr;
 }
 
-bool TreeViewCtrl::GetTVItem(HTREEITEM hti, TCHAR *buf, int bufSize, TVITEM *tvi)
+bool TreeViewCtrl::GetTVItem(HTREEITEM hti, TVITEM *tvi) const
 {
-    tvi->mask       = TVIF_HANDLE | TVIF_TEXT | TVIF_PARAM;
-    tvi->cchTextMax = bufSize;
-    tvi->pszText    = buf;
+    tvi->mask       = TVIF_HANDLE | TVIF_PARAM;
     tvi->hItem      = hti;
     tvi->lParam     = -1;
 
     return TreeView_GetItem(m_hTree, tvi) ? true : false;
+}
+
+bool TreeViewCtrl::SetTVItem(TVITEM *tvi) const
+{
+    return TreeView_SetItem(m_hTree, tvi) ? true : false;
 }

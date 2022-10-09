@@ -129,14 +129,9 @@ bool RapidJsonHandler::StartObject()
     return true;
 }
 
-bool RapidJsonHandler::EndObject(unsigned /*memberCount*/)
+bool RapidJsonHandler::EndObject(unsigned memberCount)
 {
-    if (!m_NodeStack.empty())
-    {
-        TreeNode *node = m_NodeStack.top();
-        m_NodeStack.pop();
-        delete node;
-    }
+    AppendNodeCount(memberCount, false);
     return true;
 }
 
@@ -182,14 +177,9 @@ bool RapidJsonHandler::StartArray()
     return true;
 }
 
-bool RapidJsonHandler::EndArray(unsigned /*elementCount*/)
+bool RapidJsonHandler::EndArray(unsigned elementCount)
 {
-    if (!m_NodeStack.empty())
-    {
-        TreeNode *node = m_NodeStack.top();
-        m_NodeStack.pop();
-        delete node;
-    }
+    AppendNodeCount(elementCount, true);
     return true;
 }
 
@@ -216,4 +206,18 @@ void RapidJsonHandler::InsertToTree(TreeNode *node, const char *const str, bool 
         m_dlg->InsertToTree(node->subRoot, node->node.key + " : \"" + node->node.value + "\"");
     else
         m_dlg->InsertToTree(node->subRoot, node->node.key + " : " + node->node.value);
+}
+
+void RapidJsonHandler::AppendNodeCount(unsigned elementCount, bool bArray)
+{
+    if (!m_NodeStack.empty())
+    {
+        TreeNode *node = m_NodeStack.top();
+        m_NodeStack.pop();
+
+        if (node->subRoot && node->subRoot != m_treeRoot)
+            m_dlg->AppendNodeCount(node->subRoot, elementCount, bArray);
+
+        delete node;
+    }
 }

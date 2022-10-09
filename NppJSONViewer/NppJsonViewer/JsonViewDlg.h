@@ -29,6 +29,7 @@ public:
     void HandleTabActivated();
 
     HTREEITEM InsertToTree(HTREEITEM parent, const std::string &text);
+    void      AppendNodeCount(HTREEITEM node, unsigned elementCount, bool bArray);
 
 private:
     void DrawJsonTree();
