@@ -233,33 +233,29 @@ auto TreeViewCtrl::GetNodePath(HTREEITEM hti) -> std::wstring
             if (nodeKey[nodeKey.size() - 1] == TEXT('"'))
                 nodeKey.pop_back();
 
-            if (wstrJsonPath.empty())
+            std::wstring separator = TEXT(".");
+            if (nodeKey[0] == TEXT('['))
             {
-                wstrJsonPath = nodeKey;
+                bArray       = true;
+                wstrJsonPath = nodeKey + separator + wstrJsonPath;
             }
             else
             {
-                std::wstring separator = TEXT(".");
-                if (nodeKey[0] == TEXT('['))
+                if (bArray)
                 {
-                    bArray       = true;
-                    wstrJsonPath = nodeKey + separator + wstrJsonPath;
+                    bArray = false;
+                    separator.clear();
                 }
-                else
-                {
-                    if (bArray)
-                    {
-                        bArray = false;
-                        separator.clear();
-                    }
-                    wstrJsonPath = nodeKey + separator + wstrJsonPath;
-                }
+                wstrJsonPath = nodeKey + separator + wstrJsonPath;
             }
         }
 
         HTREEITEM htiParent = GetParentItem(hitTravel);
         hitTravel           = htiParent;
     }
+
+    // remove trailling dot (.)
+    wstrJsonPath.pop_back();
 
     return wstrJsonPath;
 }
