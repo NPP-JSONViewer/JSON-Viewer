@@ -65,6 +65,7 @@ void NppJsonPlugin::ProcessNotification(const SCNotification *notifyCode)
     case NPPN_BEFORESHUTDOWN:
     {
         m_bAboutToClose = true;
+        break;
     }
 
     case NPPN_READY:
@@ -74,6 +75,7 @@ void NppJsonPlugin::ProcessNotification(const SCNotification *notifyCode)
         {
             ::SendMessage(m_pJsonViewDlg->getHSelf(), WM_COMMAND, IDC_BTN_REFRESH, 0);
         }
+        break;
     }
 
     default:

@@ -7,7 +7,7 @@ class Profile
     std::wstring m_ProfileFilePath;
 
 public:
-    Profile(const std::wstring &path);
+    explicit Profile(const std::wstring &path);
     virtual ~Profile() = default;
 
 protected:
@@ -25,7 +25,7 @@ private:
 class ProfileSetting : public Profile
 {
 public:
-    ProfileSetting(const std::wstring &path)
+    explicit ProfileSetting(const std::wstring &path)
         : Profile(path)
     {
     }

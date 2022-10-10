@@ -31,7 +31,7 @@ class JsonHandler
     ParseOptions m_parseOptions {};
 
 public:
-    JsonHandler(const ParseOptions &options);
+    explicit JsonHandler(const ParseOptions &options);
     ~JsonHandler() = default;
 
     auto GetCompressedJson(const std::string &jsonText) -> const Result;
