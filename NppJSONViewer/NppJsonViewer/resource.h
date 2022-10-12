@@ -40,6 +40,7 @@
 #define IDC_CHK_FORMAT_ON_OPEN          1029
 #define IDC_CHK_IGNORE_COMMA            1030
 #define IDC_CHK_IGNORE_COMMENT          1031
+#define IDC_CHK_REPLACE_UNDEFINED       1032
 #define IDM_COPY_TREEITEM               40001
 #define IDM_COPY_NODENAME               40002
 #define IDM_COPY_NODEVALUE              40003

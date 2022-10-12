@@ -6,6 +6,7 @@
 #include "ScintillaEditor.h"
 #include "Profile.h"
 #include <format>
+#include <regex>
 
 
 JsonViewDlg::JsonViewDlg(HINSTANCE hIntance, const NppData &nppData, int nCmdId, std::shared_ptr<Setting> &pSetting)
@@ -76,6 +77,30 @@ void JsonViewDlg::FormatJson()
     }
     else
     {
+        if (m_pSetting->parseOptions.bReplaceUndefined)
+        {
+            auto text = selectedText.substr(res.error_pos, 9);
+            std::transform(text.begin(), text.end(), text.begin(), [](unsigned char c) { return (unsigned char)std::tolower(c); });
+            if (text == "undefined")
+            {
+                try
+                {
+                    std::regex regex("(\\:)([\\s]*?)undefined([\\s,}]*?)", std::regex_constants::icase);
+                    text = std::regex_replace(selectedText, regex, "$1null");
+                    res  = JsonHandler(m_pSetting->parseOptions).FormatJson(text, le, lf, indentChar, indentLen);
+                    if (res.success)
+                    {
+                        m_Editor->ReplaceSelection(res.response);
+                        m_Editor->SetLangAsJson();
+                        return;
+                    }
+                }
+                catch (const std::exception)
+                {
+                }
+            }
+        }
+
         // Mark the error position
         size_t start = m_Editor->GetSelectionStart() + res.error_pos;
         size_t end   = start + m_Editor->GetSelectionEnd();
