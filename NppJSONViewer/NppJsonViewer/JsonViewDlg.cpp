@@ -164,11 +164,13 @@ void JsonViewDlg::DrawJsonTree()
     HTREEITEM rootNode = nullptr;
     rootNode           = m_hTreeView->InitTree();
 
+    const bool isJsonFile = m_Editor->IsJsonFile();
     const std::string txtForParsing = m_Editor->GetJsonText();
 
-    if (txtForParsing.empty())
+    if (!isJsonFile || txtForParsing.empty())
     {
         m_hTreeView->InsertNode(JSON_ERR_PARSE, NULL, rootNode);
+        m_Editor->MakeSelection(0, 0);
     }
     else
     {
