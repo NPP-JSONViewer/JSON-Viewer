@@ -181,8 +181,10 @@ void JsonViewDlg::PopulateTreeUsingSax(HTREEITEM tree_root, const std::string &j
             ShowMessage(JSON_ERROR_TITLE, (JSON_ERR_VALIDATE + StringHelper::ToWstring(err)).c_str(), MB_OK | MB_ICONERROR);
         }
     }
-
-    m_Editor->SetLangAsJson();
+    else
+    {
+        m_Editor->SetLangAsJson();
+    }
 }
 
 HTREEITEM JsonViewDlg::InsertToTree(HTREEITEM parent, const std::string &text)
