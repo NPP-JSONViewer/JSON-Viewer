@@ -76,15 +76,7 @@ void JsonViewDlg::FormatJson()
     }
     else
     {
-        // Mark the error position
-        size_t start = m_Editor->GetSelectionStart() + res.error_pos;
-        size_t end   = start + m_Editor->GetSelectionEnd();
-        m_Editor->MakeSelection(start, end);
-
-        // Intimate user
-        std::string err = std::format("\n\nError: ({} : {})", res.error_code, res.error_str);
-
-        ShowMessage(JSON_ERROR_TITLE, (JSON_ERR_VALIDATE + StringHelper::ToWstring(err)).c_str(), MB_OK | MB_ICONERROR);
+        ReportError(res);
     }
 }
 
@@ -101,15 +93,7 @@ void JsonViewDlg::CompressJson()
     }
     else
     {
-        // Mark the error position
-        size_t start = m_Editor->GetSelectionStart() + res.error_pos;
-        size_t end   = start + m_Editor->GetSelectionEnd();
-        m_Editor->MakeSelection(start, end);
-
-        // Intimate user
-        std::string err = std::format("\n\nError: ({} : {})", res.error_code, res.error_str);
-
-        ShowMessage(JSON_ERROR_TITLE, (JSON_ERR_VALIDATE + StringHelper::ToWstring(err)).c_str(), MB_OK | MB_ICONERROR);
+        ReportError(res);
     }
 }
 
@@ -143,15 +127,7 @@ void JsonViewDlg::ValidateJson()
     }
     else
     {
-        // Mark the error position
-        size_t start = m_Editor->GetSelectionStart() + res.error_pos;
-        size_t end   = start + m_Editor->GetSelectionEnd();
-        m_Editor->MakeSelection(start, end);
-
-        // Intimate user
-        std::string err = std::format("\n\nError: ({} : {})", res.error_code, res.error_str);
-
-        ShowMessage(JSON_ERROR_TITLE, (JSON_ERR_VALIDATE + StringHelper::ToWstring(err)).c_str(), MB_OK | MB_ICONERROR);
+        ReportError(res);
     }
 }
 
@@ -189,11 +165,6 @@ void JsonViewDlg::PopulateTreeUsingSax(HTREEITEM tree_root, const std::string &j
     Result res = JsonHandler(m_pSetting->parseOptions).ParseJson<flgBaseReader>(jsonText, sb, handler);
     if (!res.success)
     {
-        // Mark the error position
-        size_t start       = m_Editor->GetSelectionStart();
-        size_t errPosition = start + static_cast<size_t>(res.error_pos);
-        m_Editor->MakeSelection(errPosition, errPosition + 1);
-
         // Intimate user
         if (jsonText.empty())
         {
@@ -201,6 +172,11 @@ void JsonViewDlg::PopulateTreeUsingSax(HTREEITEM tree_root, const std::string &j
         }
         else
         {
+            // Mark the error position
+            size_t start       = m_Editor->GetSelectionStart();
+            size_t errPosition = start + static_cast<size_t>(res.error_pos);
+            m_Editor->MakeSelection(errPosition, errPosition + 1);
+
             std::string err = std::format("\n\nError: ({} : {})", res.error_code, res.error_str);
             ShowMessage(JSON_ERROR_TITLE, (JSON_ERR_VALIDATE + StringHelper::ToWstring(err)).c_str(), MB_OK | MB_ICONERROR);
         }
@@ -585,6 +561,19 @@ auto JsonViewDlg::CopyPath() const -> std::wstring
 int JsonViewDlg::ShowMessage(const std::wstring &title, const std::wstring &msg, int flag, bool bDontShow)
 {
     return !bDontShow ? ::MessageBox(_hParent, msg.c_str(), title.c_str(), flag) : IDOK;
+}
+
+void JsonViewDlg::ReportError(const Result &result)
+{
+    // Mark the error position
+    size_t start = m_Editor->GetSelectionStart() + result.error_pos;
+    size_t end   = start + m_Editor->GetSelectionEnd();
+    m_Editor->MakeSelection(start, end);
+
+    // Intimate user
+    std::string err = std::format("\n\nError: ({} : {})", result.error_code, result.error_str);
+
+    ShowMessage(JSON_ERROR_TITLE, (JSON_ERR_VALIDATE + StringHelper::ToWstring(err)).c_str(), MB_OK | MB_ICONERROR);
 }
 
 void JsonViewDlg::ToggleMenuItemState(bool bVisible)
