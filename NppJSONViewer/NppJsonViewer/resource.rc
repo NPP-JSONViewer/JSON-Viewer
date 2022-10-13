@@ -57,7 +57,7 @@ FONT 8, "MS Shell Dlg", 400, 0, 0x1
 BEGIN
     DEFPUSHBUTTON   "OK",IDOK,110,133,50,14
     GROUPBOX        "JSON Viewer",IDC_GB_TITLE,13,7,260,124,BS_CENTER
-    LTEXT           "Hopefully a decent JSON plugin-in for Notepad++ which can validate, format and compress any JSON file.",IDC_STATIC,20,18,250,18
+    LTEXT           "Hopefully a decent JSON plugin for Notepad++ which can validate, format and compress any JSON file.",IDC_STATIC,20,18,250,18
     LTEXT           "Developed by:",IDC_STATIC,20,45,70,8
     LTEXT           "Kapil Ratnani",IDC_STATIC,89,45,180,8
     LTEXT           "Maintained by:",IDC_STATIC,20,55,70,8
