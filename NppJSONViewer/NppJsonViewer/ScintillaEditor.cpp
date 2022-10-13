@@ -39,7 +39,7 @@ std::string ScintillaEditor::GetJsonText()
 
 void ScintillaEditor::SetLangAsJson() const
 {
-    ::SendMessage(m_hScintilla, NPPM_SETCURRENTLANGTYPE, 0, LangType::L_JSON);
+    ::SendMessage(m_NppData._nppHandle, NPPM_SETCURRENTLANGTYPE, 0, LangType::L_JSON);
 }
 
 bool ScintillaEditor::IsJsonFile() const
