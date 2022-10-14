@@ -75,6 +75,8 @@ void NppJsonPlugin::ProcessNotification(const SCNotification *notifyCode)
         {
             ::SendMessage(m_pJsonViewDlg->getHSelf(), WM_COMMAND, IDC_BTN_REFRESH, 0);
         }
+        m_bIsLoaded = true;
+
         break;
     }
 
@@ -155,7 +157,7 @@ void NppJsonPlugin::ConstructJsonDlg()
     {
         ConstructSetting();
         auto nCmdId    = m_shortcutCommands.GetCommandID(CallBackID::SHOW_DOC_PANEL);
-        m_pJsonViewDlg = std::make_unique<JsonViewDlg>(reinterpret_cast<HINSTANCE>(m_hModule), m_NppData, nCmdId, m_pSetting);
+        m_pJsonViewDlg = std::make_unique<JsonViewDlg>(reinterpret_cast<HINSTANCE>(m_hModule), m_NppData, nCmdId, m_pSetting, &m_bIsLoaded);
     }
 }
 

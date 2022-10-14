@@ -20,7 +20,7 @@ class JsonViewDlg : public DockingDlgInterface
     };
 
 public:
-    JsonViewDlg(HINSTANCE hIntance, const NppData &nppData, int nCmdId, std::shared_ptr<Setting> &pSetting);
+    JsonViewDlg(HINSTANCE hIntance, const NppData &nppData, int nCmdId, std::shared_ptr<Setting> &pSetting, const bool *pIsLoaded);
     virtual ~JsonViewDlg();
 
     void ShowDlg(bool bShow);
@@ -32,8 +32,8 @@ public:
     void      AppendNodeCount(HTREEITEM node, unsigned elementCount, bool bArray);
 
 private:
-    void DrawJsonTree();
-    void PopulateTreeUsingSax(HTREEITEM tree_root, const std::string &jsonText);
+    void DrawJsonTree(bool suppressErrorMsg = false);
+    std::wstring PopulateTreeUsingSax(HTREEITEM tree_root, const std::string &jsonText);
 
     void ValidateJson();
 
@@ -71,9 +71,10 @@ protected:
     virtual INT_PTR CALLBACK run_dlgProc(UINT message, WPARAM wParam, LPARAM lParam);
 
 private:
-    int     m_nDlgId      = -1;
-    NppData m_NppData     = {};
-    HICON   m_hBtnIcon[4] = {};
+    int         m_nDlgId      = -1;
+    NppData     m_NppData     = {};
+    HICON       m_hBtnIcon[4] = {};
+    const bool *m_pIsLoaded   = nullptr;
 
     // To handle doc panel resizing
     LONG m_lfDeltaWidth          = 0;

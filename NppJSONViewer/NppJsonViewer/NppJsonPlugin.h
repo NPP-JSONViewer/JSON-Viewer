@@ -87,6 +87,7 @@ private:
     NppData                      m_NppData = {};
     std::wstring                 m_configPath;
     bool                         m_bAboutToClose = false;
+    bool                         m_bIsLoaded     = false;
     std::unique_ptr<AboutDlg>    m_pAboutDlg     = nullptr;
     std::unique_ptr<JsonViewDlg> m_pJsonViewDlg  = nullptr;
     std::unique_ptr<SettingsDlg> m_pSettingsDlg  = nullptr;

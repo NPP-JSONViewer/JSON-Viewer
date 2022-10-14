@@ -8,13 +8,14 @@
 #include <format>
 
 
-JsonViewDlg::JsonViewDlg(HINSTANCE hIntance, const NppData &nppData, int nCmdId, std::shared_ptr<Setting> &pSetting)
+JsonViewDlg::JsonViewDlg(HINSTANCE hIntance, const NppData &nppData, int nCmdId, std::shared_ptr<Setting> &pSetting, const bool *pIsLoaded)
     : m_NppData(nppData)
     , DockingDlgInterface(IDD_TREEDLG)
     , m_nDlgId(nCmdId)
     , m_Editor(std::make_unique<ScintillaEditor>(nppData))
     , m_hTreeView(std::make_unique<TreeViewCtrl>())
     , m_pSetting(pSetting)
+    , m_pIsLoaded(pIsLoaded)
 {
     _hParent = nppData._nppHandle;
     _hInst   = hIntance;
@@ -56,7 +57,11 @@ void JsonViewDlg::ShowDlg(bool bShow)
         ::SendMessage(_hParent, NPPM_DMMREGASDCKDLG, 0, (LPARAM)&data);
 
         // Draw json tree now
-        DrawJsonTree();
+        DrawJsonTree(true);
+    }
+    else if (bShow)
+    {
+        DrawJsonTree(true);
     }
 
     DockingDlgInterface::display(bShow);
@@ -155,7 +160,7 @@ void JsonViewDlg::ValidateJson()
     }
 }
 
-void JsonViewDlg::DrawJsonTree()
+void JsonViewDlg::DrawJsonTree(bool suppressErrorMsg)
 {
     // Disable all buttons and treeView
     std::vector<DWORD> ctrls = {IDC_BTN_REFRESH, IDC_BTN_VALIDATE, IDC_BTN_FORMAT, IDC_BTN_SEARCH, IDC_EDT_SEARCH};
@@ -164,17 +169,24 @@ void JsonViewDlg::DrawJsonTree()
     HTREEITEM rootNode = nullptr;
     rootNode           = m_hTreeView->InitTree();
 
-    const bool isJsonFile = m_Editor->IsJsonFile();
     const std::string txtForParsing = m_Editor->GetJsonText();
 
-    if (!isJsonFile || txtForParsing.empty())
+    if (txtForParsing.empty())
     {
         m_hTreeView->InsertNode(JSON_ERR_PARSE, NULL, rootNode);
         m_Editor->MakeSelection(0, 0);
     }
     else
     {
-        PopulateTreeUsingSax(rootNode, txtForParsing);
+        auto errorMsg = PopulateTreeUsingSax(rootNode, txtForParsing);
+        if (!*m_pIsLoaded || errorMsg.size() != 0 && suppressErrorMsg)
+        {
+            m_hTreeView->InsertNode(JSON_ERR_PARSE, NULL, rootNode);
+        }
+        else if (errorMsg.size() != 0 && !suppressErrorMsg)
+        {
+            ShowMessage(JSON_ERROR_TITLE, errorMsg.c_str(), MB_OK | MB_ICONERROR);
+        }
     }
 
     m_hTreeView->Expand(rootNode);
@@ -183,7 +195,7 @@ void JsonViewDlg::DrawJsonTree()
     EnableControls(ctrls, true);
 }
 
-void JsonViewDlg::PopulateTreeUsingSax(HTREEITEM tree_root, const std::string &jsonText)
+std::wstring JsonViewDlg::PopulateTreeUsingSax(HTREEITEM tree_root, const std::string &jsonText)
 {
     RapidJsonHandler        handler(this, tree_root);
     rapidjson::StringBuffer sb;
@@ -204,11 +216,14 @@ void JsonViewDlg::PopulateTreeUsingSax(HTREEITEM tree_root, const std::string &j
         else
         {
             std::string err = std::format("\n\nError: ({} : {})", res.error_code, res.error_str);
-            ShowMessage(JSON_ERROR_TITLE, (JSON_ERR_VALIDATE + StringHelper::ToWstring(err)).c_str(), MB_OK | MB_ICONERROR);
+            std::wstring errorMsg = JSON_ERR_VALIDATE + StringHelper::ToWstring(err);
+            return errorMsg;
+            //ShowMessage(JSON_ERROR_TITLE, (JSON_ERR_VALIDATE + StringHelper::ToWstring(err)).c_str(), MB_OK | MB_ICONERROR);
         }
     }
 
     m_Editor->SetLangAsJson();
+    return std::wstring();
 }
 
 HTREEITEM JsonViewDlg::InsertToTree(HTREEITEM parent, const std::string &text)
