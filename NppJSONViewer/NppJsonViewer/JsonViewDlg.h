@@ -19,6 +19,14 @@ class JsonViewDlg : public DockingDlgInterface
         eSearch
     };
 
+    enum class eMethod
+    {
+        FormatJson,
+        GetCompressedJson,
+        ParseJson,
+        ValidateJson
+    };
+
 public:
     JsonViewDlg(HINSTANCE hIntance, const NppData &nppData, int nCmdId, std::shared_ptr<Setting> &pSetting);
     virtual ~JsonViewDlg();
@@ -66,6 +74,8 @@ private:
     void HandleTreeEvents(LPARAM lParam);
 
     auto GetFormatSetting() const -> std::tuple<LE, LF, char, unsigned>;
+
+    bool CheckForTokenUndefined(eMethod method, std::string selectedText, Result &res, HTREEITEM tree_root);
 
 protected:
     virtual INT_PTR CALLBACK run_dlgProc(UINT message, WPARAM wParam, LPARAM lParam);
