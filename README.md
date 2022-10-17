@@ -1,6 +1,9 @@
-# JSONViewer 2.0.3.0
+# JSONViewer for Notepad++
+[![GitHub release](https://img.shields.io/github/release/kapilratnani/JSON-Viewer.svg)](../../releases/latest)
+&nbsp;&nbsp;&nbsp;&nbsp;[![Build status](https://ci.appveyor.com/api/projects/status/github/kapilratnani/JSON-Viewer?branch=master&svg=true)](https://ci.appveyor.com/project/kapilratnani/JSON-Viewer)
 
 This plugin is meant to display a JSON string in a Treeview. It also marks the error position in case of parsing errors. That's it!!! The plugin can be used in [Notepad++](https://github.com/notepad-plus-plus/notepad-plus-plus).
+
 
 ## Instructions:
 1. Paste the file `NPPJSONViewer.dll` to Notepad++ `plugins\NPPJSONViewer` folder
