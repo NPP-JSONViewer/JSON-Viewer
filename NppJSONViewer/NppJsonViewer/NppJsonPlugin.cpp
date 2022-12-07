@@ -204,7 +204,7 @@ void NppJsonPlugin::OpenSettingDlg()
     ConstructSetting();
     auto nCmdId = m_shortcutCommands.GetCommandID(CallBackID::SETTING);
 
-    if (!m_pAboutDlg)
+    if (!m_pSettingsDlg)
         m_pSettingsDlg = std::make_unique<SettingsDlg>(reinterpret_cast<HINSTANCE>(m_hModule), m_NppData._nppHandle, nCmdId, m_configPath, m_pSetting);
     bool isShown = m_pSettingsDlg->ShowDlg(true);
 
