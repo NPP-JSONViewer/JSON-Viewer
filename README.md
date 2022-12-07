@@ -15,6 +15,14 @@ This plugin is meant to display a JSON string in a Treeview. It also marks the e
 
 ## Latest Updates:
 
+### 2.0.4.0
+1. New feature:
+    1. Show element count for list/array
+2. Bug/regression fixes:
+    1. Crash fix: Setting dialog is not shown if about dialog is opened before it.
+    2. Set language type JSON properly
+    3. Some minor UI enhancements
+
 ### 2.0.3.0
 1. New feature:
     1. Search in json tree window
