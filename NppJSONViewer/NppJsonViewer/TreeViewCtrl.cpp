@@ -320,9 +320,9 @@ HTREEITEM TreeViewCtrl::NextItem(HTREEITEM htiCurrent, HTREEITEM htiNextRoot)
 
 bool TreeViewCtrl::GetTVItem(HTREEITEM hti, TVITEM *tvi) const
 {
-    tvi->mask       = TVIF_HANDLE | TVIF_PARAM;
-    tvi->hItem      = hti;
-    tvi->lParam     = -1;
+    tvi->mask   = TVIF_HANDLE | TVIF_PARAM;
+    tvi->hItem  = hti;
+    tvi->lParam = -1;
 
     return TreeView_GetItem(m_hTree, tvi) ? true : false;
 }
