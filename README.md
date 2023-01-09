@@ -122,3 +122,11 @@ This plugin is meant to display a JSON string in a Treeview. It also marks the e
 1. Fixed hotkey, now press CTRL+SHIFT+ALT+J(default).
 2. Marks error position in JSON
 
+
+## Contributors
+
+<div align="center">
+
+<a href="https://github.com/kapilratnani/JSON-Viewer/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=kapilratnani/JSON-Viewer" />
+</a>
