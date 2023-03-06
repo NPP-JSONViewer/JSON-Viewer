@@ -40,6 +40,7 @@
 #define IDC_CHK_FORMAT_ON_OPEN          1029
 #define IDC_CHK_IGNORE_COMMA            1030
 #define IDC_CHK_IGNORE_COMMENT          1031
+#define IDC_CHK_JSON_HIGHLIGHT          1032
 #define IDM_COPY_TREEITEM               40001
 #define IDM_COPY_NODENAME               40002
 #define IDM_COPY_NODEVALUE              40003
@@ -53,7 +54,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        110
 #define _APS_NEXT_COMMAND_VALUE         40007
-#define _APS_NEXT_CONTROL_VALUE         1032
+#define _APS_NEXT_CONTROL_VALUE         1033
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

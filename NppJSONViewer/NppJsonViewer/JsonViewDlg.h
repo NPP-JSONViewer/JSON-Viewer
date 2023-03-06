@@ -33,6 +33,7 @@ public:
 
 private:
     void DrawJsonTree();
+    void HightlightAsJson(bool bForcefully = false) const;
     void PopulateTreeUsingSax(HTREEITEM tree_root, const std::string &jsonText);
 
     void ValidateJson();

@@ -72,7 +72,7 @@ void JsonViewDlg::FormatJson()
     if (res.success)
     {
         m_Editor->ReplaceSelection(res.response);
-        m_Editor->SetLangAsJson();
+        HightlightAsJson();
     }
     else
     {
@@ -157,6 +157,13 @@ void JsonViewDlg::DrawJsonTree()
     EnableControls(ctrls, true);
 }
 
+void JsonViewDlg::HightlightAsJson(bool bForcefully) const
+{
+    bool setJsonLang = bForcefully || m_pSetting->bUseJsonHighlight;
+    if (setJsonLang)
+        m_Editor->SetLangAsJson();
+}
+
 void JsonViewDlg::PopulateTreeUsingSax(HTREEITEM tree_root, const std::string &jsonText)
 {
     RapidJsonHandler        handler(this, tree_root);
@@ -183,7 +190,7 @@ void JsonViewDlg::PopulateTreeUsingSax(HTREEITEM tree_root, const std::string &j
     }
     else
     {
-        m_Editor->SetLangAsJson();
+        HightlightAsJson();
     }
 }
 
