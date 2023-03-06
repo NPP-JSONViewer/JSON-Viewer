@@ -74,15 +74,15 @@ bool ProfileSetting::GetSettings(Setting &info) const
     bool bRetVal = true;
 
     int nVal = 0;
-    bRetVal &= ReadValue(STR_INI_FORMATTING_SEC, STR_INI_FORMATTING_EOL, nVal);
+    bRetVal &= ReadValue(STR_INI_FORMATTING_SEC, STR_INI_FORMATTING_EOL, nVal, static_cast<int>(info.lineEnding));
     if (bRetVal)
         info.lineEnding = static_cast<LineEnding>(nVal);
 
-    bRetVal &= ReadValue(STR_INI_FORMATTING_SEC, STR_INI_FORMATTING_LINE, nVal);
+    bRetVal &= ReadValue(STR_INI_FORMATTING_SEC, STR_INI_FORMATTING_LINE, nVal, static_cast<int>(info.lineFormat));
     if (bRetVal)
         info.lineFormat = static_cast<LineFormat>(nVal);
 
-    bRetVal &= ReadValue(STR_INI_FORMATTING_SEC, STR_INI_FORMATTING_INDENT, nVal);
+    bRetVal &= ReadValue(STR_INI_FORMATTING_SEC, STR_INI_FORMATTING_INDENT, nVal, static_cast<int>(info.indent.style));
     if (bRetVal)
         info.indent.style = static_cast<IndentStyle>(nVal);
 
@@ -90,13 +90,17 @@ bool ProfileSetting::GetSettings(Setting &info) const
     if (bRetVal)
         info.indent.len = nVal;
 
-    bRetVal &= ReadValue(STR_INI_OTHER_SEC, STR_INI_OTHER_FOLLOW_TAB, nVal);
+    bRetVal &= ReadValue(STR_INI_OTHER_SEC, STR_INI_OTHER_FOLLOW_TAB, nVal, info.bFollowCurrentTab);
     if (bRetVal)
         info.bFollowCurrentTab = static_cast<bool>(nVal);
 
-    bRetVal &= ReadValue(STR_INI_OTHER_SEC, STR_INI_OTHER_AUTO_FORMAT, nVal);
+    bRetVal &= ReadValue(STR_INI_OTHER_SEC, STR_INI_OTHER_AUTO_FORMAT, nVal, info.bAutoFormat);
     if (bRetVal)
         info.bAutoFormat = static_cast<bool>(nVal);
+
+    bRetVal &= ReadValue(STR_INI_OTHER_SEC, STR_INI_OTHER_USE_HIGHLIGHT, nVal, info.bUseJsonHighlight);
+    if (bRetVal)
+        info.bUseJsonHighlight = static_cast<bool>(nVal);
 
     bRetVal &= ReadValue(STR_INI_OTHER_SEC, STR_INI_OTHER_IGNORE_COMMENT, nVal, info.parseOptions.bIgnoreComment);
     if (bRetVal)
@@ -120,6 +124,7 @@ bool ProfileSetting::SetSettings(const Setting &info) const
 
     bRetVal &= WriteValue(STR_INI_OTHER_SEC, STR_INI_OTHER_FOLLOW_TAB, info.bFollowCurrentTab);
     bRetVal &= WriteValue(STR_INI_OTHER_SEC, STR_INI_OTHER_AUTO_FORMAT, info.bAutoFormat);
+    bRetVal &= WriteValue(STR_INI_OTHER_SEC, STR_INI_OTHER_USE_HIGHLIGHT, info.bUseJsonHighlight);
     bRetVal &= WriteValue(STR_INI_OTHER_SEC, STR_INI_OTHER_IGNORE_COMMENT, info.parseOptions.bIgnoreComment);
     bRetVal &= WriteValue(STR_INI_OTHER_SEC, STR_INI_OTHER_IGNORE_COMMA, info.parseOptions.bIgnoreTraillingComma);
 
