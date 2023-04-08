@@ -13,7 +13,7 @@ void TreeViewCtrl::OnInit(HWND hParent)
 
 auto TreeViewCtrl::InitTree() -> HTREEITEM
 {
-    int TreeCount = TreeView_GetCount(m_hTree);
+    unsigned int TreeCount = TreeView_GetCount(m_hTree);
     if (TreeCount > 0)
         TreeView_DeleteAllItems(m_hTree);
 
@@ -55,6 +55,12 @@ void TreeViewCtrl::UpdateNodeText(HTREEITEM node, const std::wstring &text)
 
         SetTVItem(tvi.get());
     }
+}
+
+auto TreeViewCtrl::GetNodeCount() const -> unsigned int
+{
+    auto nodeCount = TreeView_GetCount(m_hTree);
+    return nodeCount;
 }
 
 bool TreeViewCtrl::IsExpanded(HTREEITEM node) const

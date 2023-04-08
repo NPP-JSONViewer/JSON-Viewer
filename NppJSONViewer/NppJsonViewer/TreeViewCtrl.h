@@ -22,6 +22,7 @@ public:
     auto InitTree() -> HTREEITEM;
     auto InsertNode(const std::wstring &text, LPARAM lparam, HTREEITEM parentNode) -> HTREEITEM;
     void UpdateNodeText(HTREEITEM node, const std::wstring &text);
+    auto GetNodeCount() const -> unsigned int;
 
     bool IsExpanded(HTREEITEM node) const;
     bool IsThisOrAnyChildExpanded(HTREEITEM node) const;
