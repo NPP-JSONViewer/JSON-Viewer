@@ -55,7 +55,7 @@ void NppJsonPlugin::ProcessNotification(const SCNotification *notifyCode)
 
     case NPPN_BUFFERACTIVATED:
     {
-        if (m_pJsonViewDlg && !m_bAboutToClose)
+        if (m_pJsonViewDlg && m_bNppReady && !m_bAboutToClose)
         {
             m_pJsonViewDlg->HandleTabActivated();
         }
@@ -70,12 +70,12 @@ void NppJsonPlugin::ProcessNotification(const SCNotification *notifyCode)
 
     case NPPN_READY:
     {
-        m_bNppReady = true;
         // This is work arround where dialog does not show tree on launch
         if (m_pJsonViewDlg && m_pJsonViewDlg->isVisible() && !m_bAboutToClose)
         {
             ::SendMessage(m_pJsonViewDlg->getHSelf(), WM_COMMAND, IDC_BTN_REFRESH, 0);
         }
+        m_bNppReady = true;
         break;
     }
 

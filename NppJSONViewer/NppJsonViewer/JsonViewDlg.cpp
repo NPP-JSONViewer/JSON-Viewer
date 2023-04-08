@@ -159,7 +159,18 @@ void JsonViewDlg::DrawJsonTree()
         auto res = PopulateTreeUsingSax(rootNode, txtForParsing);
         if (res.has_value())
         {
-            ShowMessage(JSON_ERROR_TITLE, res.value(), MB_OK | MB_ICONERROR);
+            // This is the case when Notepad++ has JsonViewer Window opened for previous intance
+            // Later on second launch, don't show the error message as this could be some text file
+            // If it is real json file but has some error, then there must be more than 1 node exist.
+
+            if (!m_IsNppReady && m_hTreeView->GetNodeCount() <= 1)
+            {
+                m_hTreeView->InsertNode(JSON_ERR_VALIDATE, NULL, rootNode);
+            }
+            else
+            {
+                ShowMessage(JSON_ERROR_TITLE, res.value(), MB_OK | MB_ICONERROR);
+            }
         }
     }
 
@@ -585,8 +596,7 @@ auto JsonViewDlg::CopyPath() const -> std::wstring
 
 int JsonViewDlg::ShowMessage(const std::wstring &title, const std::wstring &msg, int flag, bool bDontShow)
 {
-    // Don't show message untill NPP ready message is received.
-    return (!bDontShow && m_IsNppReady) ? ::MessageBox(_hParent, msg.c_str(), title.c_str(), flag) : IDOK;
+    return !bDontShow ? ::MessageBox(_hParent, msg.c_str(), title.c_str(), flag) : IDOK;
 }
 
 void JsonViewDlg::ReportError(const Result &result)
