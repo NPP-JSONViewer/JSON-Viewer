@@ -54,7 +54,10 @@ void JsonViewDlg::ShowDlg(bool bShow)
         // the dlgDlg should be the index of funcItem where the current function pointer is
         data.dlgID = static_cast<int>(CallBackID::SHOW_DOC_PANEL);
         ::SendMessage(_hParent, NPPM_DMMREGASDCKDLG, 0, (LPARAM)&data);
+    }
 
+    if (bShow)
+    {
         // Draw json tree now
         DrawJsonTree();
     }
