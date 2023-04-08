@@ -9,6 +9,7 @@ public:
     explicit ScintillaEditor(const NppData &nppData);
     ~ScintillaEditor() = default;
 
+    void        RefreshViewHandle();
     std::string GetJsonText();
     void        SetLangAsJson() const;
     bool        IsJsonFile() const;

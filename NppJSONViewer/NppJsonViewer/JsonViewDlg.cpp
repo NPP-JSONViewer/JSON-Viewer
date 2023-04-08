@@ -100,16 +100,20 @@ void JsonViewDlg::CompressJson()
 void JsonViewDlg::HandleTabActivated()
 {
     const bool bIsVisible = isCreated() && isVisible();
-    if (bIsVisible && m_Editor->IsJsonFile())
+    if (bIsVisible)
     {
-        if (m_pSetting->bFollowCurrentTab)
+        m_Editor->RefreshViewHandle();
+        if (m_Editor->IsJsonFile())
         {
-            DrawJsonTree();
-        }
+            if (m_pSetting->bFollowCurrentTab)
+            {
+                DrawJsonTree();
+            }
 
-        if (m_pSetting->bAutoFormat)
-        {
-            FormatJson();
+            if (m_pSetting->bAutoFormat)
+            {
+                FormatJson();
+            }
         }
     }
 }
