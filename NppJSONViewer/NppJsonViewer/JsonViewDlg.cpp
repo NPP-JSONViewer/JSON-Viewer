@@ -156,7 +156,11 @@ void JsonViewDlg::DrawJsonTree()
     }
     else
     {
-        PopulateTreeUsingSax(rootNode, txtForParsing);
+        auto res = PopulateTreeUsingSax(rootNode, txtForParsing);
+        if (res.has_value())
+        {
+            ShowMessage(JSON_ERROR_TITLE, res.value(), MB_OK | MB_ICONERROR);
+        }
     }
 
     m_hTreeView->Expand(rootNode);
@@ -172,8 +176,10 @@ void JsonViewDlg::HightlightAsJson(bool bForcefully) const
         m_Editor->SetLangAsJson();
 }
 
-void JsonViewDlg::PopulateTreeUsingSax(HTREEITEM tree_root, const std::string &jsonText)
+auto JsonViewDlg::PopulateTreeUsingSax(HTREEITEM tree_root, const std::string &jsonText) -> std::optional<std::wstring>
 {
+    std::optional<std::wstring> retVal = std::nullopt;
+
     RapidJsonHandler        handler(this, tree_root);
     rapidjson::StringBuffer sb;
 
@@ -183,7 +189,7 @@ void JsonViewDlg::PopulateTreeUsingSax(HTREEITEM tree_root, const std::string &j
         // Intimate user
         if (jsonText.empty())
         {
-            ShowMessage(JSON_ERROR_TITLE, JSON_ERR_PARSE, MB_OK | MB_ICONERROR);
+            retVal = std::make_optional<std::wstring>(JSON_ERR_PARSE);
         }
         else
         {
@@ -193,13 +199,15 @@ void JsonViewDlg::PopulateTreeUsingSax(HTREEITEM tree_root, const std::string &j
             m_Editor->MakeSelection(errPosition, errPosition + 1);
 
             std::string err = std::format("\n\nError: ({} : {})", res.error_code, res.error_str);
-            ShowMessage(JSON_ERROR_TITLE, (JSON_ERR_VALIDATE + StringHelper::ToWstring(err)).c_str(), MB_OK | MB_ICONERROR);
+            retVal          = std::make_optional<std::wstring>((JSON_ERR_VALIDATE + StringHelper::ToWstring(err)));
         }
     }
     else
     {
         HightlightAsJson();
     }
+
+    return retVal;
 }
 
 HTREEITEM JsonViewDlg::InsertToTree(HTREEITEM parent, const std::string &text)

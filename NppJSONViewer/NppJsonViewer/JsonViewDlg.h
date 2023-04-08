@@ -8,6 +8,7 @@
 #include <string>
 #include <memory>
 #include <vector>
+#include <optional>
 
 class JsonViewDlg : public DockingDlgInterface
 {
@@ -34,7 +35,7 @@ public:
 private:
     void DrawJsonTree();
     void HightlightAsJson(bool bForcefully = false) const;
-    void PopulateTreeUsingSax(HTREEITEM tree_root, const std::string &jsonText);
+    auto PopulateTreeUsingSax(HTREEITEM tree_root, const std::string &jsonText) -> std::optional<std::wstring>;
 
     void ValidateJson();
 
