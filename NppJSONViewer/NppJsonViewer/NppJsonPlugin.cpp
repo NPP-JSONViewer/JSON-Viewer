@@ -70,6 +70,7 @@ void NppJsonPlugin::ProcessNotification(const SCNotification *notifyCode)
 
     case NPPN_READY:
     {
+        m_bNppReady = true;
         // This is work arround where dialog does not show tree on launch
         if (m_pJsonViewDlg && m_pJsonViewDlg->isVisible() && !m_bAboutToClose)
         {
@@ -101,7 +102,7 @@ void NppJsonPlugin::SetMenuIcon()
 {
     if (m_hMenuIcon.hToolbarIcon || m_hMenuIcon.hToolbarBmp)
     {
-        toolbarIcons tbIcon;
+        toolbarIcons tbIcon {};
         tbIcon.hToolbarBmp  = m_hMenuIcon.hToolbarBmp;
         tbIcon.hToolbarIcon = m_hMenuIcon.hToolbarIcon;
         auto nCommandId     = m_shortcutCommands.GetCommandID(CallBackID::SHOW_DOC_PANEL);
@@ -155,7 +156,7 @@ void NppJsonPlugin::ConstructJsonDlg()
     {
         ConstructSetting();
         auto nCmdId    = m_shortcutCommands.GetCommandID(CallBackID::SHOW_DOC_PANEL);
-        m_pJsonViewDlg = std::make_unique<JsonViewDlg>(reinterpret_cast<HINSTANCE>(m_hModule), m_NppData, nCmdId, m_pSetting);
+        m_pJsonViewDlg = std::make_unique<JsonViewDlg>(reinterpret_cast<HINSTANCE>(m_hModule), m_NppData, m_bNppReady, nCmdId, m_pSetting);
     }
 }
 

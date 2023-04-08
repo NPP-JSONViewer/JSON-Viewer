@@ -8,9 +8,10 @@
 #include <format>
 
 
-JsonViewDlg::JsonViewDlg(HINSTANCE hIntance, const NppData &nppData, int nCmdId, std::shared_ptr<Setting> &pSetting)
-    : m_NppData(nppData)
-    , DockingDlgInterface(IDD_TREEDLG)
+JsonViewDlg::JsonViewDlg(HINSTANCE hIntance, const NppData &nppData, const bool &isReady, int nCmdId, std::shared_ptr<Setting> &pSetting)
+    : DockingDlgInterface(IDD_TREEDLG)
+    , m_NppData(nppData)
+    , m_IsNppReady(isReady)
     , m_nDlgId(nCmdId)
     , m_Editor(std::make_unique<ScintillaEditor>(nppData))
     , m_hTreeView(std::make_unique<TreeViewCtrl>())
@@ -576,7 +577,8 @@ auto JsonViewDlg::CopyPath() const -> std::wstring
 
 int JsonViewDlg::ShowMessage(const std::wstring &title, const std::wstring &msg, int flag, bool bDontShow)
 {
-    return !bDontShow ? ::MessageBox(_hParent, msg.c_str(), title.c_str(), flag) : IDOK;
+    // Don't show message untill NPP ready message is received.
+    return (!bDontShow && m_IsNppReady) ? ::MessageBox(_hParent, msg.c_str(), title.c_str(), flag) : IDOK;
 }
 
 void JsonViewDlg::ReportError(const Result &result)

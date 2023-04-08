@@ -20,7 +20,7 @@ class JsonViewDlg : public DockingDlgInterface
     };
 
 public:
-    JsonViewDlg(HINSTANCE hIntance, const NppData &nppData, int nCmdId, std::shared_ptr<Setting> &pSetting);
+    JsonViewDlg(HINSTANCE hIntance, const NppData &nppData, const bool &isReady, int nCmdId, std::shared_ptr<Setting> &pSetting);
     virtual ~JsonViewDlg();
 
     void ShowDlg(bool bShow);
@@ -73,9 +73,10 @@ protected:
     virtual INT_PTR CALLBACK run_dlgProc(UINT message, WPARAM wParam, LPARAM lParam);
 
 private:
-    int     m_nDlgId      = -1;
-    NppData m_NppData     = {};
-    HICON   m_hBtnIcon[4] = {};
+    int         m_nDlgId      = -1;
+    NppData     m_NppData     = {};
+    HICON       m_hBtnIcon[4] = {};
+    const bool &m_IsNppReady;
 
     // To handle doc panel resizing
     LONG m_lfDeltaWidth          = 0;
