@@ -15,6 +15,15 @@ This plugin is meant to display a JSON string in a Treeview. It also marks the e
 
 ## Latest Updates:
 
+### 2.0.5.0
+1. New feature:
+    1. Make json highlighter configurable
+2. Bug/regression fixes:
+    1. Handle json for both the views.
+    2. Update treeview on reopen
+    3. When file type is json, then error message is shown twice on npp launch if viewer dock was kept opened on previous instance
+	4. Don't show error message on startup for non json files
+
 ### 2.0.4.0
 1. New feature:
     1. Show element count for list/array
