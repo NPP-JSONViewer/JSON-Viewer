@@ -1,7 +1,6 @@
 #include "TreeViewCtrl.h"
 #include "Define.h"
 #include "resource.h"
-#include "StringHelper.h"
 #include <memory>
 
 
@@ -13,8 +12,7 @@ void TreeViewCtrl::OnInit(HWND hParent)
 
 auto TreeViewCtrl::InitTree() -> HTREEITEM
 {
-    unsigned int TreeCount = TreeView_GetCount(m_hTree);
-    if (TreeCount > 0)
+    if (GetNodeCount() > 0)
         TreeView_DeleteAllItems(m_hTree);
 
     return InsertNode(JSON_ROOT, -1, TVI_ROOT);
@@ -22,7 +20,7 @@ auto TreeViewCtrl::InitTree() -> HTREEITEM
 
 auto TreeViewCtrl::InsertNode(const std::wstring &text, LPARAM lparam, HTREEITEM parentNode) -> HTREEITEM
 {
-    TV_INSERTSTRUCT tvinsert;
+    TV_INSERTSTRUCT tvinsert {};
 
     if (parentNode == TVI_ROOT)
     {
@@ -105,32 +103,32 @@ bool TreeViewCtrl::IsThisOrAnyChildCollapsed(HTREEITEM node) const
     return false;
 }
 
-void TreeViewCtrl::Expand(HTREEITEM node)
+void TreeViewCtrl::Expand(HTREEITEM node) const
 {
     ExpandOrCollpase(node, TVE_EXPAND);
 }
 
-void TreeViewCtrl::Collapse(HTREEITEM node)
+void TreeViewCtrl::Collapse(HTREEITEM node) const
 {
     ExpandOrCollpase(node, TVE_COLLAPSE);
 }
 
-void TreeViewCtrl::ExpandOrCollpase(HTREEITEM node, UINT_PTR code)
+void TreeViewCtrl::ExpandOrCollpase(HTREEITEM node, UINT_PTR code) const
 {
     TreeView_Expand(m_hTree, node, code);
 }
 
-BOOL TreeViewCtrl::ScreenToTreeView(LPPOINT lpPoint)
+BOOL TreeViewCtrl::ScreenToTreeView(LPPOINT lpPoint) const
 {
     return ScreenToClient(m_hTree, lpPoint);
 }
 
-HTREEITEM TreeViewCtrl::HitTest(LPTVHITTESTINFO lpHTInfo)
+HTREEITEM TreeViewCtrl::HitTest(LPTVHITTESTINFO lpHTInfo) const
 {
     return TreeView_HitTest(m_hTree, lpHTInfo);
 }
 
-HTREEITEM TreeViewCtrl::GetRoot()
+HTREEITEM TreeViewCtrl::GetRoot() const
 {
     return TreeView_GetRoot(m_hTree);
 }
@@ -150,7 +148,7 @@ bool TreeViewCtrl::HasChild(HTREEITEM hti) const
     return htiChild ? true : false;
 }
 
-auto TreeViewCtrl::GetNodeName(HTREEITEM hti, bool removeTrailingCount) -> std::wstring
+auto TreeViewCtrl::GetNodeName(HTREEITEM hti, bool removeTrailingCount) const -> std::wstring
 {
     if (!hti)
         return TEXT("");
@@ -197,7 +195,7 @@ auto TreeViewCtrl::GetNodeName(HTREEITEM hti, bool removeTrailingCount) -> std::
     return retVal;
 }
 
-auto TreeViewCtrl::GetNodeKey(HTREEITEM hti) -> std::wstring
+auto TreeViewCtrl::GetNodeKey(HTREEITEM hti) const -> std::wstring
 {
     std::wstring retVal = GetNodeName(hti, true);
 
@@ -209,7 +207,7 @@ auto TreeViewCtrl::GetNodeKey(HTREEITEM hti) -> std::wstring
     return retVal;
 }
 
-auto TreeViewCtrl::GetNodeValue(HTREEITEM hti) -> std::wstring
+auto TreeViewCtrl::GetNodeValue(HTREEITEM hti) const -> std::wstring
 {
     std::wstring retVal = GetNodeName(hti, true);
 
@@ -221,7 +219,7 @@ auto TreeViewCtrl::GetNodeValue(HTREEITEM hti) -> std::wstring
     return retVal;
 }
 
-auto TreeViewCtrl::GetNodePath(HTREEITEM hti) -> std::wstring
+auto TreeViewCtrl::GetNodePath(HTREEITEM hti) const -> std::wstring
 {
     std::wstring wstrJsonPath;
     HTREEITEM    hitTravel = hti;
@@ -276,7 +274,7 @@ void TreeViewCtrl::SetSelection(HTREEITEM hItem) const
     TreeView_SelectItem(m_hTree, hItem);
 }
 
-bool TreeViewCtrl::IsItemVisible(HTREEITEM hti)
+bool TreeViewCtrl::IsItemVisible(HTREEITEM hti) const
 {
     RECT rect = {};
     BOOL ret  = TreeView_GetItemRect(m_hTree, hti, &rect, FALSE);
@@ -286,7 +284,7 @@ bool TreeViewCtrl::IsItemVisible(HTREEITEM hti)
     return true;
 }
 
-HTREEITEM TreeViewCtrl::GetParentItem(HTREEITEM hti)
+HTREEITEM TreeViewCtrl::GetParentItem(HTREEITEM hti) const
 {
     return TreeView_GetParent(m_hTree, hti);
 }
@@ -298,7 +296,7 @@ HTREEITEM TreeViewCtrl::GetParentItem(HTREEITEM hti)
  * If current item has no child and no sibling, next will be its parent's (parent's parent's ...) sibling item.
  * If current item's parent is ROOT and has no sibling item, it will return NULL.
  */
-HTREEITEM TreeViewCtrl::NextItem(HTREEITEM htiCurrent, HTREEITEM htiNextRoot)
+HTREEITEM TreeViewCtrl::NextItem(HTREEITEM htiCurrent, HTREEITEM htiNextRoot) const
 {
     HTREEITEM htiNext = nullptr;
 
