@@ -8,6 +8,7 @@
 #include <string>
 #include <memory>
 #include <vector>
+#include <optional>
 
 class JsonViewDlg : public DockingDlgInterface
 {
@@ -28,7 +29,7 @@ class JsonViewDlg : public DockingDlgInterface
     };
 
 public:
-    JsonViewDlg(HINSTANCE hIntance, const NppData &nppData, int nCmdId, std::shared_ptr<Setting> &pSetting);
+    JsonViewDlg(HINSTANCE hIntance, const NppData &nppData, const bool &isReady, int nCmdId, std::shared_ptr<Setting> &pSetting);
     virtual ~JsonViewDlg();
 
     void ShowDlg(bool bShow);
@@ -41,7 +42,8 @@ public:
 
 private:
     void DrawJsonTree();
-    void PopulateTreeUsingSax(HTREEITEM tree_root, const std::string &jsonText);
+    void HightlightAsJson(bool bForcefully = false) const;
+    auto PopulateTreeUsingSax(HTREEITEM tree_root, const std::string &jsonText) -> std::optional<std::wstring>;
 
     void ValidateJson();
 
@@ -65,7 +67,7 @@ private:
     auto CopyPath() const -> std::wstring;
 
     int  ShowMessage(const std::wstring &title, const std::wstring &msg, int flag, bool bDontShow = false);
-    void ReportError(const Result& result);
+    void ReportError(const Result &result);
 
     void ToggleMenuItemState(bool bVisible);
 
@@ -82,9 +84,10 @@ protected:
     virtual INT_PTR CALLBACK run_dlgProc(UINT message, WPARAM wParam, LPARAM lParam);
 
 private:
-    int     m_nDlgId      = -1;
-    NppData m_NppData     = {};
-    HICON   m_hBtnIcon[4] = {};
+    int         m_nDlgId      = -1;
+    NppData     m_NppData     = {};
+    HICON       m_hBtnIcon[4] = {};
+    const bool &m_IsNppReady;
 
     // To handle doc panel resizing
     LONG m_lfDeltaWidth          = 0;

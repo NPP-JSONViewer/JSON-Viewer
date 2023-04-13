@@ -9,9 +9,10 @@
 #include <regex>
 
 
-JsonViewDlg::JsonViewDlg(HINSTANCE hIntance, const NppData &nppData, int nCmdId, std::shared_ptr<Setting> &pSetting)
-    : m_NppData(nppData)
-    , DockingDlgInterface(IDD_TREEDLG)
+JsonViewDlg::JsonViewDlg(HINSTANCE hIntance, const NppData &nppData, const bool &isReady, int nCmdId, std::shared_ptr<Setting> &pSetting)
+    : DockingDlgInterface(IDD_TREEDLG)
+    , m_NppData(nppData)
+    , m_IsNppReady(isReady)
     , m_nDlgId(nCmdId)
     , m_Editor(std::make_unique<ScintillaEditor>(nppData))
     , m_hTreeView(std::make_unique<TreeViewCtrl>())
@@ -55,7 +56,10 @@ void JsonViewDlg::ShowDlg(bool bShow)
         // the dlgDlg should be the index of funcItem where the current function pointer is
         data.dlgID = static_cast<int>(CallBackID::SHOW_DOC_PANEL);
         ::SendMessage(_hParent, NPPM_DMMREGASDCKDLG, 0, (LPARAM)&data);
+    }
 
+    if (bShow)
+    {
         // Draw json tree now
         DrawJsonTree();
     }
@@ -73,7 +77,7 @@ void JsonViewDlg::FormatJson()
     if (res.success)
     {
         m_Editor->ReplaceSelection(res.response);
-        m_Editor->SetLangAsJson();
+        HightlightAsJson();
     }
     else
     {
@@ -163,16 +167,20 @@ bool JsonViewDlg::CheckForTokenUndefined(eMethod method, std::string selectedTex
 void JsonViewDlg::HandleTabActivated()
 {
     const bool bIsVisible = isCreated() && isVisible();
-    if (bIsVisible && m_Editor->IsJsonFile())
+    if (bIsVisible)
     {
-        if (m_pSetting->bFollowCurrentTab)
+        m_Editor->RefreshViewHandle();
+        if (m_Editor->IsJsonFile())
         {
-            DrawJsonTree();
-        }
+            if (m_pSetting->bFollowCurrentTab)
+            {
+                DrawJsonTree();
+            }
 
-        if (m_pSetting->bAutoFormat)
-        {
-            FormatJson();
+            if (m_pSetting->bAutoFormat)
+            {
+                FormatJson();
+            }
         }
     }
 }
@@ -217,7 +225,22 @@ void JsonViewDlg::DrawJsonTree()
     }
     else
     {
-        PopulateTreeUsingSax(rootNode, txtForParsing);
+        auto res = PopulateTreeUsingSax(rootNode, txtForParsing);
+        if (res.has_value())
+        {
+            // This is the case when Notepad++ has JsonViewer Window opened for previous intance
+            // Later on second launch, don't show the error message as this could be some text file
+            // If it is real json file but has some error, then there must be more than 1 node exist.
+
+            if (!m_IsNppReady && m_hTreeView->GetNodeCount() <= 1)
+            {
+                m_hTreeView->InsertNode(JSON_ERR_VALIDATE, NULL, rootNode);
+            }
+            else
+            {
+                ShowMessage(JSON_ERROR_TITLE, res.value(), MB_OK | MB_ICONERROR);
+            }
+        }
     }
 
     m_hTreeView->Expand(rootNode);
@@ -226,8 +249,17 @@ void JsonViewDlg::DrawJsonTree()
     EnableControls(ctrls, true);
 }
 
-void JsonViewDlg::PopulateTreeUsingSax(HTREEITEM tree_root, const std::string &jsonText)
+void JsonViewDlg::HightlightAsJson(bool bForcefully) const
 {
+    bool setJsonLang = bForcefully || m_pSetting->bUseJsonHighlight;
+    if (setJsonLang)
+        m_Editor->SetLangAsJson();
+}
+
+auto JsonViewDlg::PopulateTreeUsingSax(HTREEITEM tree_root, const std::string &jsonText) -> std::optional<std::wstring>
+{
+    std::optional<std::wstring> retVal = std::nullopt;
+
     RapidJsonHandler        handler(this, tree_root);
     rapidjson::StringBuffer sb;
 
@@ -235,12 +267,12 @@ void JsonViewDlg::PopulateTreeUsingSax(HTREEITEM tree_root, const std::string &j
     if (!res.success)
     {
         if (CheckForTokenUndefined(JsonViewDlg::eMethod::ParseJson, jsonText, res, tree_root))
-            return;
+            return retVal;
 
         // Intimate user
         if (jsonText.empty())
         {
-            ShowMessage(JSON_ERROR_TITLE, JSON_ERR_PARSE, MB_OK | MB_ICONERROR);
+            retVal = std::make_optional<std::wstring>(JSON_ERR_PARSE);
         }
         else
         {
@@ -250,13 +282,15 @@ void JsonViewDlg::PopulateTreeUsingSax(HTREEITEM tree_root, const std::string &j
             m_Editor->MakeSelection(errPosition, errPosition + 1);
 
             std::string err = std::format("\n\nError: ({} : {})", res.error_code, res.error_str);
-            ShowMessage(JSON_ERROR_TITLE, (JSON_ERR_VALIDATE + StringHelper::ToWstring(err)).c_str(), MB_OK | MB_ICONERROR);
+            retVal          = std::make_optional<std::wstring>((JSON_ERR_VALIDATE + StringHelper::ToWstring(err)));
         }
     }
     else
     {
-        m_Editor->SetLangAsJson();
+        HightlightAsJson();
     }
+
+    return retVal;
 }
 
 HTREEITEM JsonViewDlg::InsertToTree(HTREEITEM parent, const std::string &text)

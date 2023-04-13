@@ -62,6 +62,7 @@ const TCHAR STR_INI_FORMATTING_INDENTCOUNT[] = TEXT("INDENTATION_COUNT");
 const TCHAR STR_INI_OTHER_SEC[]               = TEXT("Others");
 const TCHAR STR_INI_OTHER_FOLLOW_TAB[]        = TEXT("FOLLOW_TAB");
 const TCHAR STR_INI_OTHER_AUTO_FORMAT[]       = TEXT("AUTO_FORMAT");
+const TCHAR STR_INI_OTHER_USE_HIGHLIGHT[]     = TEXT("USE_JSON_HIGHLIGHT");
 const TCHAR STR_INI_OTHER_IGNORE_COMMENT[]    = TEXT("IGNORE_COMMENT");
 const TCHAR STR_INI_OTHER_IGNORE_COMMA[]      = TEXT("IGNORE_TRAILLING_COMMA");
 const TCHAR STR_INI_OTHER_REPLACE_UNDEFINED[] = TEXT("REPLACE_VALUE_UNDEFINED");
@@ -111,5 +112,6 @@ struct Setting
     Indent       indent {};
     bool         bFollowCurrentTab = false;
     bool         bAutoFormat       = false;
+    bool         bUseJsonHighlight = true;
     ParseOptions parseOptions {};
 };

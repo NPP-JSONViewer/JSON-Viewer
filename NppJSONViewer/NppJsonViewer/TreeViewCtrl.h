@@ -14,7 +14,7 @@ public:
 
     void OnInit(HWND hParent);
 
-    HWND GetTreeViewHandle()
+    HWND GetTreeViewHandle() const
     {
         return m_hTree;
     }
@@ -22,42 +22,43 @@ public:
     auto InitTree() -> HTREEITEM;
     auto InsertNode(const std::wstring &text, LPARAM lparam, HTREEITEM parentNode) -> HTREEITEM;
     void UpdateNodeText(HTREEITEM node, const std::wstring &text);
+    auto GetNodeCount() const -> unsigned int;
 
     bool IsExpanded(HTREEITEM node) const;
     bool IsThisOrAnyChildExpanded(HTREEITEM node) const;
     bool IsThisOrAnyChildCollapsed(HTREEITEM node) const;
 
-    void Expand(HTREEITEM node);
-    void Collapse(HTREEITEM node);
+    void Expand(HTREEITEM node) const;
+    void Collapse(HTREEITEM node) const;
 
-    BOOL ScreenToTreeView(LPPOINT lpPoint);
-    auto HitTest(LPTVHITTESTINFO lpHTInfo) -> HTREEITEM;
+    BOOL ScreenToTreeView(LPPOINT lpPoint) const;
+    auto HitTest(LPTVHITTESTINFO lpHTInfo) const -> HTREEITEM;
 
-    auto GetRoot() -> HTREEITEM;
+    auto GetRoot() const -> HTREEITEM;
     bool SelectItem(HTREEITEM hti, bool firstVisible = false);
     bool HasChild(HTREEITEM hti) const;
 
     HTREEITEM GetSelection() const;
     void      SetSelection(HTREEITEM hItem) const;
 
-    bool IsItemVisible(HTREEITEM hti);
+    bool IsItemVisible(HTREEITEM hti) const;
 
-    HTREEITEM NextItem(HTREEITEM htiCurrent)
+    HTREEITEM NextItem(HTREEITEM htiCurrent) const
     {
         return NextItem(htiCurrent, nullptr);
     }
 
-    HTREEITEM NextItem(HTREEITEM htiCurrent, HTREEITEM htiNextRoot);
+    HTREEITEM NextItem(HTREEITEM htiCurrent, HTREEITEM htiNextRoot) const;
 
-    auto GetNodeName(HTREEITEM hti, bool removeTrailingCount) -> std::wstring;
-    auto GetNodeKey(HTREEITEM hti) -> std::wstring;
-    auto GetNodeValue(HTREEITEM hti) -> std::wstring;
-    auto GetNodePath(HTREEITEM hti) -> std::wstring;
+    auto GetNodeName(HTREEITEM hti, bool removeTrailingCount) const -> std::wstring;
+    auto GetNodeKey(HTREEITEM hti) const -> std::wstring;
+    auto GetNodeValue(HTREEITEM hti) const -> std::wstring;
+    auto GetNodePath(HTREEITEM hti) const -> std::wstring;
 
 private:
-    void ExpandOrCollpase(HTREEITEM node, UINT_PTR code);
+    void ExpandOrCollpase(HTREEITEM node, UINT_PTR code) const;
 
-    HTREEITEM GetParentItem(HTREEITEM hti);
+    HTREEITEM GetParentItem(HTREEITEM hti) const;
 
     bool GetTVItem(HTREEITEM hti, TVITEM *tvi) const;
     bool SetTVItem(TVITEM *tvi) const;

@@ -5,6 +5,11 @@
 ScintillaEditor::ScintillaEditor(const NppData &nppData)
     : m_NppData(nppData)
 {
+    RefreshViewHandle();
+}
+
+void ScintillaEditor::RefreshViewHandle()
+{
     int which = -1;
     ::SendMessage(m_NppData._nppHandle, NPPM_GETCURRENTSCINTILLA, 0, reinterpret_cast<LPARAM>(&which));
     assert(which != -1);

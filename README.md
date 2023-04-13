@@ -1,6 +1,9 @@
-# JSONViewer 2.0.3.0
+# JSONViewer for Notepad++
+[![GitHub release](https://img.shields.io/github/release/kapilratnani/JSON-Viewer.svg)](../../releases/latest)
+&nbsp;&nbsp;&nbsp;&nbsp;[![Build status](https://ci.appveyor.com/api/projects/status/github/kapilratnani/JSON-Viewer?branch=master&svg=true)](https://ci.appveyor.com/project/kapilratnani/JSON-Viewer)
 
 This plugin is meant to display a JSON string in a Treeview. It also marks the error position in case of parsing errors. That's it!!! The plugin can be used in [Notepad++](https://github.com/notepad-plus-plus/notepad-plus-plus).
+
 
 ## Instructions:
 1. Paste the file `NPPJSONViewer.dll` to Notepad++ `plugins\NPPJSONViewer` folder
@@ -11,6 +14,23 @@ This plugin is meant to display a JSON string in a Treeview. It also marks the e
 
 
 ## Latest Updates:
+
+### 2.0.5.0
+1. New feature:
+    1. Make json highlighter configurable
+2. Bug/regression fixes:
+    1. Handle json for both the views.
+    2. Update treeview on reopen
+    3. When file type is json, then error message is shown twice on npp launch if viewer dock was kept opened on previous instance
+	4. Don't show error message on startup for non json files
+
+### 2.0.4.0
+1. New feature:
+    1. Show element count for list/array
+2. Bug/regression fixes:
+    1. Crash fix: Setting dialog is not shown if about dialog is opened before it.
+    2. Set language type JSON properly
+    3. Some minor UI enhancements
 
 ### 2.0.3.0
 1. New feature:
@@ -111,3 +131,11 @@ This plugin is meant to display a JSON string in a Treeview. It also marks the e
 1. Fixed hotkey, now press CTRL+SHIFT+ALT+J(default).
 2. Marks error position in JSON
 
+
+## Contributors
+
+<div align="center">
+
+<a href="https://github.com/kapilratnani/JSON-Viewer/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=kapilratnani/JSON-Viewer" />
+</a>
