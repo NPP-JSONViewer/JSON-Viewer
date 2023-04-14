@@ -98,7 +98,7 @@ void JsonViewDlg::CompressJson()
     if (res.success)
     {
         m_Editor->ReplaceSelection(res.response);
-        m_Editor->SetLangAsJson();
+        HightlightAsJson();
     }
     else
     {
@@ -152,11 +152,11 @@ bool JsonViewDlg::CheckForTokenUndefined(eMethod method, std::string selectedTex
                 if (res.success)
                 {
                     m_Editor->ReplaceSelection((method == eMethod::ParseJson || method == eMethod::ValidateJson) ? text : res.response);
-                    m_Editor->SetLangAsJson();
+                    HightlightAsJson();
                     return true;
                 }
             }
-            catch (const std::exception)
+            catch (const std::exception&)
             {
             }
         }
