@@ -29,7 +29,6 @@ public:
     auto GetEOL() const -> unsigned;
     auto GetIndent() const -> std::tuple<char, unsigned>;
 
-private:
     void RefreshSelectionPos();
 
 private:

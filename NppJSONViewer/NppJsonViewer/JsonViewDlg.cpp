@@ -155,6 +155,12 @@ bool JsonViewDlg::CheckForTokenUndefined(eMethod method, std::string selectedTex
                     HightlightAsJson();
                     return true;
                 }
+                else
+                {
+                    m_Editor->ReplaceSelection(text);
+                    m_Editor->MakeSelection(m_Editor->GetSelectionStart(), static_cast<int>(text.length()));
+                    m_Editor->RefreshSelectionPos();
+                }
             }
             catch (const std::exception&)
             {
@@ -675,7 +681,7 @@ void JsonViewDlg::ReportError(const Result &result)
 {
     // Mark the error position
     size_t start = m_Editor->GetSelectionStart() + result.error_pos;
-    size_t end   = start + m_Editor->GetSelectionEnd();
+    size_t end   = m_Editor->GetSelectionEnd();
     m_Editor->MakeSelection(start, end);
 
     // Intimate user
