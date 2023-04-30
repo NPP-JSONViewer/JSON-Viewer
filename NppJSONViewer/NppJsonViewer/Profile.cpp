@@ -110,6 +110,10 @@ bool ProfileSetting::GetSettings(Setting &info) const
     if (bRetVal)
         info.parseOptions.bIgnoreTraillingComma = static_cast<bool>(nVal);
 
+    bRetVal &= ReadValue(STR_INI_OTHER_SEC, STR_INI_OTHER_REPLACE_UNDEFINED, nVal, info.parseOptions.bReplaceUndefined);
+    if (bRetVal)
+        info.parseOptions.bReplaceUndefined = static_cast<bool>(nVal);
+
     return bRetVal;
 }
 
@@ -127,6 +131,7 @@ bool ProfileSetting::SetSettings(const Setting &info) const
     bRetVal &= WriteValue(STR_INI_OTHER_SEC, STR_INI_OTHER_USE_HIGHLIGHT, info.bUseJsonHighlight);
     bRetVal &= WriteValue(STR_INI_OTHER_SEC, STR_INI_OTHER_IGNORE_COMMENT, info.parseOptions.bIgnoreComment);
     bRetVal &= WriteValue(STR_INI_OTHER_SEC, STR_INI_OTHER_IGNORE_COMMA, info.parseOptions.bIgnoreTraillingComma);
+    bRetVal &= WriteValue(STR_INI_OTHER_SEC, STR_INI_OTHER_REPLACE_UNDEFINED, info.parseOptions.bReplaceUndefined);
 
     return bRetVal;
 }

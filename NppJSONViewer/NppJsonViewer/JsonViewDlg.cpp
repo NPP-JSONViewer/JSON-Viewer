@@ -6,6 +6,7 @@
 #include "ScintillaEditor.h"
 #include "Profile.h"
 #include <format>
+#include <regex>
 
 
 JsonViewDlg::JsonViewDlg(HINSTANCE hIntance, const NppData &nppData, const bool &isReady, int nCmdId, std::shared_ptr<Setting> &pSetting)
@@ -80,6 +81,9 @@ void JsonViewDlg::FormatJson()
     }
     else
     {
+        if (CheckForTokenUndefined(JsonViewDlg::eMethod::FormatJson, selectedText, res, NULL))
+            return;
+
         ReportError(res);
     }
 }
@@ -94,11 +98,76 @@ void JsonViewDlg::CompressJson()
     if (res.success)
     {
         m_Editor->ReplaceSelection(res.response);
+        HightlightAsJson();
     }
     else
     {
+        if (CheckForTokenUndefined(JsonViewDlg::eMethod::GetCompressedJson, selectedText, res, NULL))
+            return;
+
         ReportError(res);
     }
+}
+
+bool JsonViewDlg::CheckForTokenUndefined(eMethod method, std::string selectedText, Result &res, HTREEITEM tree_root)
+{
+    const auto [le, lf, indentChar, indentLen] = GetFormatSetting();
+
+    if (m_pSetting->parseOptions.bReplaceUndefined)
+    {
+        auto text = selectedText.substr(res.error_pos, 9);
+        std::transform(
+            text.begin(),
+            text.end(),
+            text.begin(),
+            [](unsigned char c)
+            {
+                return (unsigned char)std::tolower(c);
+            });
+        if (text == "undefined")
+        {
+            try
+            {
+                std::regex regex("([:\\[,])([\\s]*?)undefined([\\s,}]*?)", std::regex_constants::icase);
+                text = std::regex_replace(selectedText, regex, "$1$2null");
+                switch (method)
+                {
+                case eMethod::FormatJson:
+                    res = JsonHandler(m_pSetting->parseOptions).FormatJson(text, le, lf, indentChar, indentLen);
+                    break;
+                case eMethod::GetCompressedJson:
+                    res = JsonHandler(m_pSetting->parseOptions).GetCompressedJson(text);
+                    break;
+                case eMethod::ParseJson:
+                {
+                    RapidJsonHandler        handler(this, tree_root);
+                    rapidjson::StringBuffer sb;
+                    res = JsonHandler(m_pSetting->parseOptions).ParseJson<flgBaseReader>(text, sb, handler);
+                    break;
+                }
+                case eMethod::ValidateJson:
+                    res = JsonHandler(m_pSetting->parseOptions).ValidateJson(text);
+                    break;
+                }
+                if (res.success)
+                {
+                    m_Editor->ReplaceSelection((method == eMethod::ParseJson || method == eMethod::ValidateJson) ? text : res.response);
+                    HightlightAsJson();
+                    return true;
+                }
+                else
+                {
+                    m_Editor->ReplaceSelection(text);
+                    m_Editor->MakeSelection(m_Editor->GetSelectionStart(), static_cast<int>(text.length()));
+                    m_Editor->RefreshSelectionPos();
+                }
+            }
+            catch (const std::exception&)
+            {
+            }
+        }
+    }
+    return false;
 }
 
 void JsonViewDlg::HandleTabActivated()
@@ -135,6 +204,12 @@ void JsonViewDlg::ValidateJson()
     }
     else
     {
+        if (CheckForTokenUndefined(JsonViewDlg::eMethod::ValidateJson, selectedText, res, NULL))
+        {
+            ShowMessage(JSON_INFO_TITLE, JSON_ERR_VALIDATE_SUCCESS, MB_OK | MB_ICONINFORMATION);
+            return;
+        }
+
         ReportError(res);
     }
 }
@@ -197,6 +272,9 @@ auto JsonViewDlg::PopulateTreeUsingSax(HTREEITEM tree_root, const std::string &j
     Result res = JsonHandler(m_pSetting->parseOptions).ParseJson<flgBaseReader>(jsonText, sb, handler);
     if (!res.success)
     {
+        if (CheckForTokenUndefined(JsonViewDlg::eMethod::ParseJson, jsonText, res, tree_root))
+            return retVal;
+
         // Intimate user
         if (jsonText.empty())
         {
@@ -603,7 +681,7 @@ void JsonViewDlg::ReportError(const Result &result)
 {
     // Mark the error position
     size_t start = m_Editor->GetSelectionStart() + result.error_pos;
-    size_t end   = start + m_Editor->GetSelectionEnd();
+    size_t end   = m_Editor->GetSelectionEnd();
     m_Editor->MakeSelection(start, end);
 
     // Intimate user
