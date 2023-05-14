@@ -301,7 +301,7 @@ auto JsonViewDlg::PopulateTreeUsingSax(HTREEITEM tree_root, const std::string &j
 
 HTREEITEM JsonViewDlg::InsertToTree(HTREEITEM parent, const std::string &text)
 {
-    auto wText = StringHelper::ToWstring(text);
+    auto wText = StringHelper::ToWstring(text, CP_UTF8);
     return m_hTreeView->InsertNode(wText, NULL, parent);
 }
 
