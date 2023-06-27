@@ -15,6 +15,12 @@ This plugin is meant to display a JSON string in a Treeview. It also marks the e
 
 ## Latest Updates:
 
+### 2.0.6.0
+1. New feature:
+    1. Replace value 'undefined' with 'null'. This is configurable feature.
+2. Bug/regression fixes:
+    1. Cyrillic text is not properly shown in json tree view dialog
+
 ### 2.0.5.0
 1. New feature:
     1. Make json highlighter configurable
