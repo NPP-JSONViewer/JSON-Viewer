@@ -14,6 +14,7 @@ auto TreeViewCtrl::InitTree() -> HTREEITEM
 {
     if (GetNodeCount() > 0)
         TreeView_DeleteAllItems(m_hTree);
+    maxNodeTextLength = 0;
 
     return InsertNode(JSON_ROOT, -1, TVI_ROOT);
 }
@@ -32,6 +33,9 @@ auto TreeViewCtrl::InsertNode(const std::wstring &text, LPARAM lparam, HTREEITEM
         tvinsert.hParent      = parentNode;
         tvinsert.hInsertAfter = TVI_LAST;
     }
+
+    if (text.length() + 1 > maxNodeTextLength)
+        maxNodeTextLength = (int)text.length() + 1;
 
     tvinsert.item.mask    = TVIF_HANDLE | TVIF_TEXT | TVIF_PARAM;
     tvinsert.item.pszText = const_cast<LPTSTR>(text.c_str());
@@ -153,15 +157,17 @@ auto TreeViewCtrl::GetNodeName(HTREEITEM hti, bool removeTrailingCount) const ->
     if (!hti)
         return TEXT("");
 
-    TCHAR  textBuffer[MAX_PATH] {};
+    TCHAR* textBuffer = new TCHAR[maxNodeTextLength];
     TVITEM tvItem {};
     tvItem.hItem      = hti;
     tvItem.mask       = TVIF_TEXT;
     tvItem.pszText    = textBuffer;
-    tvItem.cchTextMax = MAX_PATH;
+    tvItem.cchTextMax = maxNodeTextLength;
     SendMessage(m_hTree, TVM_GETITEM, 0, reinterpret_cast<LPARAM>(&tvItem));
 
     std::wstring retVal = tvItem.pszText ? tvItem.pszText : TEXT("");
+
+    delete[] textBuffer;
 
     // If it is an array or list then remove trailing {} or []
     if (removeTrailingCount && HasChild(hti))
