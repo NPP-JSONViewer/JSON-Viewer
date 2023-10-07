@@ -34,7 +34,7 @@ auto TreeViewCtrl::InsertNode(const std::wstring &text, LPARAM lparam, HTREEITEM
         tvinsert.hInsertAfter = TVI_LAST;
     }
 
-    if (text.length() + 1 > maxNodeTextLength)
+    if (text.length() + 1 > (size_t)maxNodeTextLength)
         maxNodeTextLength = (int)text.length() + 1;
 
     tvinsert.item.mask    = TVIF_HANDLE | TVIF_TEXT | TVIF_PARAM;
