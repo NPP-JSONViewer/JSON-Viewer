@@ -5,9 +5,9 @@
 
 class TreeViewCtrl
 {
-    HWND m_hTree   = nullptr;
-    HWND m_hParent = nullptr;
-    int  maxNodeTextLength = 0;
+    HWND   m_hTree              = nullptr;
+    HWND   m_hParent            = nullptr;
+    size_t m_nMaxNodeTextLength = 0;
 
 public:
     TreeViewCtrl()  = default;
