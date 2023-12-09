@@ -69,8 +69,8 @@ void JsonViewDlg::ShowDlg(bool bShow)
 
 void JsonViewDlg::FormatJson()
 {
-    const auto selectedText                    = m_Editor->GetJsonText();
-    const auto [le, lf, indentChar, indentLen] = GetFormatSetting();
+    const auto selectedText              = m_Editor->GetJsonText();
+    auto [le, lf, indentChar, indentLen] = GetFormatSetting();
 
     Result res = JsonHandler(m_pSetting->parseOptions).FormatJson(selectedText, le, lf, indentChar, indentLen);
 
@@ -111,7 +111,7 @@ void JsonViewDlg::CompressJson()
 
 bool JsonViewDlg::CheckForTokenUndefined(eMethod method, std::string selectedText, Result &res, HTREEITEM tree_root)
 {
-    const auto [le, lf, indentChar, indentLen] = GetFormatSetting();
+    auto [le, lf, indentChar, indentLen] = GetFormatSetting();
 
     if (m_pSetting->parseOptions.bReplaceUndefined)
     {
@@ -162,7 +162,7 @@ bool JsonViewDlg::CheckForTokenUndefined(eMethod method, std::string selectedTex
                     m_Editor->RefreshSelectionPos();
                 }
             }
-            catch (const std::exception&)
+            catch (const std::exception &)
             {
             }
         }
@@ -791,9 +791,9 @@ auto JsonViewDlg::GetFormatSetting() const -> std::tuple<LE, LF, char, unsigned>
         // Takes from Notepad++
     case IndentStyle::AUTO:
     default:
-        const auto [c, l] = m_Editor->GetIndent();
-        indentChar        = c;
-        indentLen         = l;
+        auto [c, l] = m_Editor->GetIndent();
+        indentChar  = c;
+        indentLen   = l;
         break;
     }
 
