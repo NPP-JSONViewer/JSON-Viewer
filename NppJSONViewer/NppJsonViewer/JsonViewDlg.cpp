@@ -223,6 +223,8 @@ void JsonViewDlg::DrawJsonTree()
     HTREEITEM rootNode = nullptr;
     rootNode           = m_hTreeView->InitTree();
 
+    // Refresh the view
+    m_Editor->RefreshViewHandle();
     const std::string txtForParsing = m_Editor->GetJsonText();
 
     if (txtForParsing.empty())
