@@ -22,7 +22,7 @@ const TCHAR TITLE_JSON_PANEL[]     = TEXT("JSON Viewer Panel");
 const TCHAR MENU_SHOW_JSON_PANEL[] = TEXT("Show &JSON Viewer");
 const TCHAR MENU_FORMAT_JSON[]     = TEXT("&Format JSON");
 const TCHAR MENU_COMPRESS_JSON[]   = TEXT("&Compress JSON");
-const TCHAR MENU_SETTING[]         = TEXT("&Setting");
+const TCHAR MENU_SETTING[]         = TEXT("&Settings");
 const TCHAR MENU_ABOUT[]           = TEXT("&About");
 const TCHAR MENU_SEPERATOR[]       = TEXT("-SEPARATOR-");
 

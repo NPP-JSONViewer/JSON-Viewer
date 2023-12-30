@@ -100,7 +100,7 @@ BEGIN
     PUSHBUTTON      "",IDC_HOR_BAR_TOP,0,1,300,1,WS_DISABLED,WS_EX_STATICEDGE
     CONTROL         "Follow current tab if it is json file",IDC_CHK_FOLLOW_CURRENT_DOC,
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,5,7,140,10
-    CONTROL         "Auto format json file when openend",IDC_CHK_FORMAT_ON_OPEN,
+    CONTROL         "Auto format json file when opened",IDC_CHK_FORMAT_ON_OPEN,
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,5,20,140,10
     CONTROL         "Ignore trailing comma",IDC_CHK_IGNORE_COMMA,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,5,33,140,10
     CONTROL         "Ignore comments in json",IDC_CHK_IGNORE_COMMENT,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,5,46,140,10
@@ -117,7 +117,7 @@ BEGIN
     CONTROL         "Window (CR LF)",IDC_RADIO_LINE_WINDOW,"Button",BS_AUTORADIOBUTTON,218,66,65,10
     CONTROL         "Unix (LF)",IDC_RADIO_LINE_UNIX,"Button",BS_AUTORADIOBUTTON,160,78,50,10
     CONTROL         "Macintosh (LF)",IDC_RADIO_LINE_MAC,"Button",BS_AUTORADIOBUTTON,218,78,65,10
-    GROUPBOX        " Line formating: ",IDC_STATIC,153,97,140,43
+    GROUPBOX        " Line formatting: ",IDC_STATIC,153,97,140,43
     CONTROL         "Default formatting",IDC_RADIO_LINEFORMAT_DEFAULT,"Button",BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,160,111,110,10
     CONTROL         "Format arrays on a single line",IDC_RADIO_LINEFORMAT_SINGLE,
                     "Button",BS_AUTORADIOBUTTON,160,123,110,10
