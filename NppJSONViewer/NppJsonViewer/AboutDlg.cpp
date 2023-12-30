@@ -7,11 +7,11 @@
 #include <commctrl.h>
 
 
-AboutDlg::AboutDlg(HINSTANCE hIntance, HWND hParent, int nCmdId)
+AboutDlg::AboutDlg(HINSTANCE hInstance, HWND hParent, int nCmdId)
     : m_nCmdId(nCmdId)
     , StaticDialog()
 {
-    init(hIntance, hParent);
+    init(hInstance, hParent);
 }
 
 

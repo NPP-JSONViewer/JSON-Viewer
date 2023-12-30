@@ -109,15 +109,15 @@ bool TreeViewCtrl::IsThisOrAnyChildCollapsed(HTREEITEM node) const
 
 void TreeViewCtrl::Expand(HTREEITEM node) const
 {
-    ExpandOrCollpase(node, TVE_EXPAND);
+    ExpandOrCollapse(node, TVE_EXPAND);
 }
 
 void TreeViewCtrl::Collapse(HTREEITEM node) const
 {
-    ExpandOrCollpase(node, TVE_COLLAPSE);
+    ExpandOrCollapse(node, TVE_COLLAPSE);
 }
 
-void TreeViewCtrl::ExpandOrCollpase(HTREEITEM node, UINT_PTR code) const
+void TreeViewCtrl::ExpandOrCollapse(HTREEITEM node, UINT_PTR code) const
 {
     TreeView_Expand(m_hTree, node, code);
 }
@@ -235,7 +235,7 @@ auto TreeViewCtrl::GetNodePath(HTREEITEM hti) const -> std::wstring
 
         if (!nodeKey.empty())
         {
-            // remove " from the beinging and end
+            // remove " from the beginning and end
             if (nodeKey[0] == TEXT('"'))
                 nodeKey.erase(0, 1);
             if (nodeKey[nodeKey.size() - 1] == TEXT('"'))
@@ -262,7 +262,7 @@ auto TreeViewCtrl::GetNodePath(HTREEITEM hti) const -> std::wstring
         hitTravel           = htiParent;
     }
 
-    // remove trailling dot (.)
+    // remove trailing dot (.)
     wstrJsonPath.pop_back();
 
     return wstrJsonPath;
@@ -295,7 +295,7 @@ HTREEITEM TreeViewCtrl::GetParentItem(HTREEITEM hti) const
 
 /*
  * Get next item of current item on the TreeView.
- * If current item has a child (or chidren) item, next will be the first child item.
+ * If current item has a child (or children) item, next will be the first child item.
  * If current item has no child, next will be its sibling item.
  * If current item has no child and no sibling, next will be its parent's (parent's parent's ...) sibling item.
  * If current item's parent is ROOT and has no sibling item, it will return NULL.

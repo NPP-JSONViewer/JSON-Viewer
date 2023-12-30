@@ -220,14 +220,14 @@ bool CUtility::OpenFileDlg(std::wstring &filePath, const std::wstring &dlgTitle,
 
     if (::GetOpenFileName(&ofn) != FALSE)
     {
-        filePath = ofn.lpstrFile;    // will have the full pathand file name.
+        filePath = ofn.lpstrFile;    // will have the full path and file name.
         bRetVal  = true;
     }
 
     return bRetVal;
 }
 
-bool CUtility::CopyToClipboard(const std::wstring &str2cpy, HWND hwnd)
+bool CUtility::CopyToClipboard(const std::wstring &str2cpy, HWND hWnd)
 {
     size_t  len2Allocate = (str2cpy.size() + 1) * sizeof(TCHAR);
     HGLOBAL hglbCopy     = ::GlobalAlloc(GMEM_MOVEABLE, len2Allocate);
@@ -236,7 +236,7 @@ bool CUtility::CopyToClipboard(const std::wstring &str2cpy, HWND hwnd)
         return false;
     }
 
-    if (!::OpenClipboard(hwnd))
+    if (!::OpenClipboard(hWnd))
     {
         ::GlobalFree(hglbCopy);
         ::CloseClipboard();

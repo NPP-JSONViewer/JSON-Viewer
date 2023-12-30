@@ -70,7 +70,7 @@ void NppJsonPlugin::ProcessNotification(const SCNotification *notifyCode)
 
     case NPPN_READY:
     {
-        // This is work arround where dialog does not show tree on launch
+        // This is workaround where dialog does not show tree on launch
         if (m_pJsonViewDlg && m_pJsonViewDlg->isVisible() && !m_bAboutToClose)
         {
             ::SendMessage(m_pJsonViewDlg->getHSelf(), WM_COMMAND, IDC_BTN_REFRESH, 0);
@@ -132,9 +132,9 @@ void NppJsonPlugin::InitToolbarIcon()
     auto dpi                 = GetDeviceCaps(GetWindowDC(m_NppData._nppHandle), LOGPIXELSX);
     int  size                = 16 * dpi / 96;
     m_hMenuIcon.hToolbarIcon = reinterpret_cast<HICON>(::LoadImage(static_cast<HINSTANCE>(m_hModule), MAKEINTRESOURCE(IDI_ICON_TOOLBAR), IMAGE_ICON, size, size, 0));
-    ICONINFO iconinfo;
-    GetIconInfo(m_hMenuIcon.hToolbarIcon, &iconinfo);
-    m_hMenuIcon.hToolbarBmp = iconinfo.hbmColor;
+    ICONINFO iconInfo;
+    GetIconInfo(m_hMenuIcon.hToolbarIcon, &iconInfo);
+    m_hMenuIcon.hToolbarBmp = iconInfo.hbmColor;
 }
 
 void NppJsonPlugin::InitConfigPath()

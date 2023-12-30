@@ -57,7 +57,7 @@ public:
     auto GetNodePath(HTREEITEM hti) const -> std::wstring;
 
 private:
-    void ExpandOrCollpase(HTREEITEM node, UINT_PTR code) const;
+    void ExpandOrCollapse(HTREEITEM node, UINT_PTR code) const;
 
     HTREEITEM GetParentItem(HTREEITEM hti) const;
 

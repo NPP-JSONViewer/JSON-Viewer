@@ -9,7 +9,7 @@
 #include <regex>
 
 
-JsonViewDlg::JsonViewDlg(HINSTANCE hIntance, const NppData &nppData, const bool &isReady, int nCmdId, std::shared_ptr<Setting> &pSetting)
+JsonViewDlg::JsonViewDlg(HINSTANCE hInstance, const NppData &nppData, const bool &isReady, int nCmdId, std::shared_ptr<Setting> &pSetting)
     : DockingDlgInterface(IDD_TREEDLG)
     , m_NppData(nppData)
     , m_IsNppReady(isReady)
@@ -19,7 +19,7 @@ JsonViewDlg::JsonViewDlg(HINSTANCE hIntance, const NppData &nppData, const bool 
     , m_pSetting(pSetting)
 {
     _hParent = nppData._nppHandle;
-    _hInst   = hIntance;
+    _hInst   = hInstance;
 }
 
 JsonViewDlg::~JsonViewDlg()
@@ -77,7 +77,7 @@ void JsonViewDlg::FormatJson()
     if (res.success)
     {
         m_Editor->ReplaceSelection(res.response);
-        HightlightAsJson();
+        HighlightAsJson();
     }
     else
     {
@@ -98,7 +98,7 @@ void JsonViewDlg::CompressJson()
     if (res.success)
     {
         m_Editor->ReplaceSelection(res.response);
-        HightlightAsJson();
+        HighlightAsJson();
     }
     else
     {
@@ -152,7 +152,7 @@ bool JsonViewDlg::CheckForTokenUndefined(eMethod method, std::string selectedTex
                 if (res.success)
                 {
                     m_Editor->ReplaceSelection((method == eMethod::ParseJson || method == eMethod::ValidateJson) ? text : res.response);
-                    HightlightAsJson();
+                    HighlightAsJson();
                     return true;
                 }
                 else
@@ -257,7 +257,7 @@ void JsonViewDlg::DrawJsonTree()
     EnableControls(ctrls, true);
 }
 
-void JsonViewDlg::HightlightAsJson(bool bForcefully) const
+void JsonViewDlg::HighlightAsJson(bool bForcefully) const
 {
     bool setJsonLang = bForcefully || m_pSetting->bUseJsonHighlight;
     if (setJsonLang)
@@ -295,7 +295,7 @@ auto JsonViewDlg::PopulateTreeUsingSax(HTREEITEM tree_root, const std::string &j
     }
     else
     {
-        HightlightAsJson();
+        HighlightAsJson();
     }
 
     return retVal;
@@ -338,7 +338,7 @@ void JsonViewDlg::SearchInTree()
     static std::wstring previousSearch;
     static HTREEITEM    nextNode = m_hTreeView->NextItem(m_hTreeView->GetRoot());
 
-    // New search, hence search from begining
+    // New search, hence search from beginning
     if (previousSearch != itemToSearch)
     {
         previousSearch = itemToSearch;
@@ -372,7 +372,7 @@ void JsonViewDlg::SearchInTree()
 
             // Search in node value
             //  1. If both key and value are not equal
-            //  2. If both are euaal, but not all three (key, value and keyValue)
+            //  2. If both are equal, but not all three (key, value and keyValue)
             //  3. If all three equal, but key does not start with '[' and end with ']'
 
             bool shouldSearch = (nodeKey != nodeVal);

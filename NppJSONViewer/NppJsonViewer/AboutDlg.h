@@ -4,7 +4,7 @@
 class AboutDlg : public StaticDialog
 {
 public:
-    AboutDlg(HINSTANCE hIntance, HWND hParent, int nCmdId);
+    AboutDlg(HINSTANCE hInstance, HWND hParent, int nCmdId);
     ~AboutDlg() = default;
 
     bool ShowDlg(bool bShow);

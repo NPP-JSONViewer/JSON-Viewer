@@ -29,7 +29,7 @@ class JsonViewDlg : public DockingDlgInterface
     };
 
 public:
-    JsonViewDlg(HINSTANCE hIntance, const NppData &nppData, const bool &isReady, int nCmdId, std::shared_ptr<Setting> &pSetting);
+    JsonViewDlg(HINSTANCE hInstance, const NppData &nppData, const bool &isReady, int nCmdId, std::shared_ptr<Setting> &pSetting);
     virtual ~JsonViewDlg();
 
     void ShowDlg(bool bShow);
@@ -42,7 +42,7 @@ public:
 
 private:
     void DrawJsonTree();
-    void HightlightAsJson(bool bForcefully = false) const;
+    void HighlightAsJson(bool bForcefully = false) const;
     auto PopulateTreeUsingSax(HTREEITEM tree_root, const std::string &jsonText) -> std::optional<std::wstring>;
 
     void ValidateJson();
