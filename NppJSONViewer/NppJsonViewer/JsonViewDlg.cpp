@@ -36,7 +36,7 @@ void JsonViewDlg::ShowDlg(bool bShow)
     if (!isCreated())
     {
         init(_hInst, _hParent);
-        tTbData data = {0};
+        tTbData data {};
         create(&data);
 
         // Set Initial rect, width and Height
@@ -48,10 +48,10 @@ void JsonViewDlg::ShowDlg(bool bShow)
         m_lfInitialClientHeight = rc.bottom - rc.top;
 
         // define the default docking behaviour
-        data.uMask = DWS_DF_CONT_LEFT;
-
+        data.uMask         = DWS_DF_CONT_LEFT | DWS_ICONTAB;
         data.pszModuleName = getPluginFileName();
         data.pszName       = const_cast<TCHAR *>(TITLE_JSON_PANEL);
+        data.hIconTab      = static_cast<HICON>(LoadImage(_hInst, MAKEINTRESOURCE(IDI_ICON_TOOLBAR), IMAGE_ICON, 32, 32, LR_LOADMAP3DCOLORS | LR_LOADTRANSPARENT));
 
         // the dlgDlg should be the index of funcItem where the current function pointer is
         data.dlgID = static_cast<int>(CallBackID::SHOW_DOC_PANEL);
