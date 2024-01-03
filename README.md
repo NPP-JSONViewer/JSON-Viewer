@@ -1,6 +1,7 @@
 # JSONViewer for Notepad++
 [![GitHub release](https://img.shields.io/github/release/kapilratnani/JSON-Viewer.svg)](../../releases/latest)
 &nbsp;&nbsp;&nbsp;&nbsp;[![CI Build](https://github.com/kapilratnani/JSON-Viewer/actions/workflows/ci_build.yml/badge.svg)](https://github.com/kapilratnani/JSON-Viewer/actions/workflows/ci_build.yml)
+&nbsp;&nbsp;&nbsp;&nbsp;[![Code Scanning](https://github.com/kapilratnani/JSON-Viewer/actions/workflows/codeql.yml/badge.svg)](https://github.com/kapilratnani/JSON-Viewer/actions/workflows/codeql.yml)
 
 This plugin is meant to display a JSON string in a Treeview. It also marks the error position in case of parsing errors. That's it!!! The plugin can be used in [Notepad++](https://github.com/notepad-plus-plus/notepad-plus-plus).
 
