@@ -236,7 +236,7 @@ void JsonViewDlg::DrawJsonTree()
         auto res = PopulateTreeUsingSax(rootNode, txtForParsing);
         if (res.has_value())
         {
-            // This is the case when Notepad++ has JsonViewer Window opened for previous intance
+            // This is the case when Notepad++ has JsonViewer Window opened for previous instance
             // Later on second launch, don't show the error message as this could be some text file
             // If it is real json file but has some error, then there must be more than 1 node exist.
 

@@ -81,9 +81,7 @@ bool RapidJsonHandler::String(const Ch *str, unsigned /*length*/, bool /*copy*/)
 
 bool RapidJsonHandler::Key(const Ch *str, unsigned /*length*/, bool /*copy*/)
 {
-    m_strLastKey = "\"";
-    m_strLastKey += str;
-    m_strLastKey += "\"";
+    m_strLastKey = str;
     return true;
 }
 
