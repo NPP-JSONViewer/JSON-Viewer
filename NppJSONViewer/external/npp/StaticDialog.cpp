@@ -51,15 +51,20 @@ HGLOBAL StaticDialog::makeRTLResource(int dialogID, DLGTEMPLATE **ppMyDlgTemplat
 	// Duplicate Dlg Template resource
 	unsigned long sizeDlg = ::SizeofResource(_hInst, hDialogRC);
 	HGLOBAL hMyDlgTemplate = ::GlobalAlloc(GPTR, sizeDlg);
-	*ppMyDlgTemplate = reinterpret_cast<DLGTEMPLATE *>(::GlobalLock(hMyDlgTemplate));
+    if (hMyDlgTemplate)
+    {
+        *ppMyDlgTemplate = reinterpret_cast<DLGTEMPLATE *>(::GlobalLock(hMyDlgTemplate));
+        if (*ppMyDlgTemplate)
+        {
+            ::memcpy(*ppMyDlgTemplate, pDlgTemplate, sizeDlg);
 
-	::memcpy(*ppMyDlgTemplate, pDlgTemplate, sizeDlg);
-
-	DLGTEMPLATEEX *pMyDlgTemplateEx = reinterpret_cast<DLGTEMPLATEEX *>(*ppMyDlgTemplate);
-	if (pMyDlgTemplateEx->signature == 0xFFFF)
-		pMyDlgTemplateEx->exStyle |= WS_EX_LAYOUTRTL;
-	else
-		(*ppMyDlgTemplate)->dwExtendedStyle |= WS_EX_LAYOUTRTL;
+            DLGTEMPLATEEX *pMyDlgTemplateEx = reinterpret_cast<DLGTEMPLATEEX *>(*ppMyDlgTemplate);
+            if (pMyDlgTemplateEx->signature == 0xFFFF)
+                pMyDlgTemplateEx->exStyle |= WS_EX_LAYOUTRTL;
+            else
+                (*ppMyDlgTemplate)->dwExtendedStyle |= WS_EX_LAYOUTRTL;
+        }
+    }
 
 	return hMyDlgTemplate;
 }
