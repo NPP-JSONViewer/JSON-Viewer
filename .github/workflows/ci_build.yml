@@ -38,7 +38,7 @@ jobs:
     - name: Archive symbols artifacts
       uses: actions/upload-artifact@v3
       with:
-          name: ${{ matrix.build_platform}}_${{ matrix.build_configuration}}
+          name: ${{ matrix.build_platform}}_${{ matrix.build_configuration}}_pdb
           path: NppJSONViewer\Build\Bin\${{ matrix.build_configuration}}\${{ matrix.build_platform}}\NPPJSONViewer.pdb
 
     
