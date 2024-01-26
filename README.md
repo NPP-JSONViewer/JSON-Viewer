@@ -16,6 +16,15 @@ This plugin is meant to display a JSON string in a Treeview. It also marks the e
 
 ## Latest Updates:
 
+### 2.0.7.0
+Bug/regression fixes:
+    1. "Copy value" / "Copy" not always return complete text
+	2. Format JSON option does not work if focused tab is in other view
+	3. Corrected some typos on setting dialog
+	4. Updated icons to match with dark mode as well
+	5. Removed quotes from the key in Treeview
+	6. Some other minor enhancements
+
 ### 2.0.6.0
 1. New feature:
     1. Replace value 'undefined' with 'null'. This is configurable feature.
