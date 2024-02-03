@@ -23,7 +23,7 @@ jobs:
           submodules: recursive
 
     - name: Pre Build
-      uses: microsoft/setup-msbuild@v1
+      uses: microsoft/setup-msbuild@v2
       
     - name: Build 
       working-directory: NppJSONViewer
