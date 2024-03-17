@@ -31,8 +31,8 @@ const TCHAR TOOLTIP_VALIDATE[] = TEXT("Validate JSON to detect any errors");
 const TCHAR TOOLTIP_FORMAT[]   = TEXT("Format JSON to beautify it");
 const TCHAR TOOLTIP_SEARCH[]   = TEXT("Search in JSON");
 
-const TCHAR URL_SOURCE_CODE[]  = TEXT("https://github.com/kapilratnani/JSON-Viewer");
-const TCHAR URL_REPORT_ISSUE[] = TEXT("https://github.com/kapilratnani/JSON-Viewer/issues/new");
+const TCHAR URL_SOURCE_CODE[]  = TEXT("https://github.com/NPP-JSONViewer/JSON-Viewer");
+const TCHAR URL_REPORT_ISSUE[] = TEXT("https://github.com/NPP-JSONViewer/JSON-Viewer/issues/new");
 
 const TCHAR JSON_ROOT[] = TEXT("JSON");
 
