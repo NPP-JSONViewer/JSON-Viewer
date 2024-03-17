@@ -18,12 +18,12 @@ This plugin is meant to display a JSON string in a Treeview. It also marks the e
 
 ### 2.0.7.0
 Bug/regression fixes:
-    1. "Copy value" / "Copy" not always return complete text
-	2. Format JSON option does not work if focused tab is in other view
-	3. Corrected some typos on setting dialog
-	4. Updated icons to match with dark mode as well
-	5. Removed quotes from the key in Treeview
-	6. Some other minor enhancements
+1. "Copy value" / "Copy" not always return complete text
+2. Format JSON option does not work if focused tab is in other view
+3. Corrected some typos on setting dialog
+4. Updated icons to match with dark mode as well
+5. Removed quotes from the key in Treeview
+6. Some other minor enhancements
 
 ### 2.0.6.0
 1. New feature:
@@ -38,7 +38,7 @@ Bug/regression fixes:
     1. Handle json for both the views.
     2. Update treeview on reopen
     3. When file type is json, then error message is shown twice on npp launch if viewer dock was kept opened on previous instance
-	4. Don't show error message on startup for non json files
+    4. Don't show error message on startup for non json files
 
 ### 2.0.4.0
 1. New feature:
