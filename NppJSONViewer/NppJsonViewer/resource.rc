@@ -71,7 +71,7 @@ BEGIN
     CONTROL         "<a href=""https://github.com/NPP-JSONViewer/JSON-Viewer/issues/new"">https://github.com/NPP-JSONViewer/JSON-Viewer/issues</a>",IDC_WEB_ISSUE,
                     "SysLink",WS_TABSTOP,85,85,185,8
     LTEXT           "License:",IDC_STATIC,15,105,70,8
-    LTEXT           "GPL",IDC_STATIC,85,105,185,8
+    LTEXT           "MIT license",IDC_STATIC,85,105,185,8
     LTEXT           "Special thanks to:",IDC_STATIC,15,115,70,8
     LTEXT           "Don Ho for Notepad++",IDC_STATIC,85,115,185,8
 END
