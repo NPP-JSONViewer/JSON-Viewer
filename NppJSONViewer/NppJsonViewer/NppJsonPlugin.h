@@ -20,7 +20,7 @@ public:
     void PluginCleanup();
 
     // Notepad++ APIs to be implemented
-    void SetInfo(const NppData &notpadPlusData);
+    void SetInfo(const NppData &nppData);
 
     const TCHAR *GetPluginName() const;
 

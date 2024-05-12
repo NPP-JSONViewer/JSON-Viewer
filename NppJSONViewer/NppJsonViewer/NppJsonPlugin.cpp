@@ -18,9 +18,9 @@ void NppJsonPlugin::PluginInit(HMODULE hModule)
 
 void NppJsonPlugin::PluginCleanup() {}
 
-void NppJsonPlugin::SetInfo(const NppData &notpadPlusData)
+void NppJsonPlugin::SetInfo(const NppData &nppData)
 {
-    m_NppData = notpadPlusData;
+    m_NppData = nppData;
     InitCommandMenu();
     InitToolbarIcon();
     InitConfigPath();

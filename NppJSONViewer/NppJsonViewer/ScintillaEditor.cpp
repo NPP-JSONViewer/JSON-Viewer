@@ -17,7 +17,7 @@ void ScintillaEditor::RefreshViewHandle()
         m_hScintilla = (which == 0) ? m_NppData._scintillaMainHandle : m_NppData._scintillaSecondHandle;
 }
 
-std::string ScintillaEditor::GetJsonText()
+auto ScintillaEditor::GetJsonText() -> std::string
 {
     if (!m_hScintilla)
         return std::string();
@@ -52,6 +52,13 @@ bool ScintillaEditor::IsJsonFile() const
     unsigned langType = 0;
     ::SendMessage(m_NppData._nppHandle, NPPM_GETCURRENTLANGTYPE, 0, reinterpret_cast<LPARAM>(&langType));
     return langType == LangType::L_JSON;
+}
+
+auto ScintillaEditor::GetCurrentFileName() const -> std::wstring
+{
+    wchar_t fileName[MAX_PATH] {};
+    ::SendMessage(m_NppData._nppHandle, NPPM_GETFILENAME, 0, reinterpret_cast<LPARAM>(&fileName));
+    return fileName;
 }
 
 void ScintillaEditor::ReplaceSelection(const std::string &text) const

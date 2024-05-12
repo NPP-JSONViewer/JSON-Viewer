@@ -9,10 +9,11 @@ public:
     explicit ScintillaEditor(const NppData &nppData);
     ~ScintillaEditor() = default;
 
-    void        RefreshViewHandle();
-    std::string GetJsonText();
-    void        SetLangAsJson() const;
-    bool        IsJsonFile() const;
+    void RefreshViewHandle();
+    auto GetJsonText() -> std::string;
+    void SetLangAsJson() const;
+    bool IsJsonFile() const;
+    auto GetCurrentFileName() const -> std::wstring;
 
     void ReplaceSelection(const std::string &text) const;
 
