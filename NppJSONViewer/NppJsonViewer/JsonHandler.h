@@ -56,22 +56,22 @@ inline auto JsonHandler::ParseJson(const std::string &jsonText, rj::StringBuffer
     constexpr auto flgBase_comma   = flgBase | rj::kParseTrailingCommasFlag;
     constexpr auto flgBase_Both    = flgBase_comma | flgBase_commemt;
 
-    if (m_parseOptions.bIgnoreComment && m_parseOptions.bIgnoreTraillingComma)
+    if (m_parseOptions.bIgnoreComment && m_parseOptions.bIgnoreTrailingComma)
     {
         success = reader.Parse<flgBase_Both>(ss, handler) && sb.GetString();
     }
 
-    else if (!m_parseOptions.bIgnoreComment && m_parseOptions.bIgnoreTraillingComma)
+    else if (!m_parseOptions.bIgnoreComment && m_parseOptions.bIgnoreTrailingComma)
     {
         success = reader.Parse<flgBase_comma>(ss, handler) && sb.GetString();
     }
 
-    else if (m_parseOptions.bIgnoreComment && !m_parseOptions.bIgnoreTraillingComma)
+    else if (m_parseOptions.bIgnoreComment && !m_parseOptions.bIgnoreTrailingComma)
     {
         success = reader.Parse<flgBase_commemt>(ss, handler) && sb.GetString();
     }
 
-    else if (!m_parseOptions.bIgnoreComment && !m_parseOptions.bIgnoreTraillingComma)
+    else if (!m_parseOptions.bIgnoreComment && !m_parseOptions.bIgnoreTrailingComma)
     {
         success = reader.Parse<flgBase>(ss, handler) && sb.GetString();
     }

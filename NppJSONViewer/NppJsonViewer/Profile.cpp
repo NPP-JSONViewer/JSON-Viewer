@@ -106,9 +106,9 @@ bool ProfileSetting::GetSettings(Setting &info) const
     if (bRetVal)
         info.parseOptions.bIgnoreComment = static_cast<bool>(nVal);
 
-    bRetVal &= ReadValue(STR_INI_OTHER_SEC, STR_INI_OTHER_IGNORE_COMMA, nVal, info.parseOptions.bIgnoreTraillingComma);
+    bRetVal &= ReadValue(STR_INI_OTHER_SEC, STR_INI_OTHER_IGNORE_COMMA, nVal, info.parseOptions.bIgnoreTrailingComma);
     if (bRetVal)
-        info.parseOptions.bIgnoreTraillingComma = static_cast<bool>(nVal);
+        info.parseOptions.bIgnoreTrailingComma = static_cast<bool>(nVal);
 
     bRetVal &= ReadValue(STR_INI_OTHER_SEC, STR_INI_OTHER_REPLACE_UNDEFINED, nVal, info.parseOptions.bReplaceUndefined);
     if (bRetVal)
@@ -130,7 +130,7 @@ bool ProfileSetting::SetSettings(const Setting &info) const
     bRetVal &= WriteValue(STR_INI_OTHER_SEC, STR_INI_OTHER_AUTO_FORMAT, info.bAutoFormat);
     bRetVal &= WriteValue(STR_INI_OTHER_SEC, STR_INI_OTHER_USE_HIGHLIGHT, info.bUseJsonHighlight);
     bRetVal &= WriteValue(STR_INI_OTHER_SEC, STR_INI_OTHER_IGNORE_COMMENT, info.parseOptions.bIgnoreComment);
-    bRetVal &= WriteValue(STR_INI_OTHER_SEC, STR_INI_OTHER_IGNORE_COMMA, info.parseOptions.bIgnoreTraillingComma);
+    bRetVal &= WriteValue(STR_INI_OTHER_SEC, STR_INI_OTHER_IGNORE_COMMA, info.parseOptions.bIgnoreTrailingComma);
     bRetVal &= WriteValue(STR_INI_OTHER_SEC, STR_INI_OTHER_REPLACE_UNDEFINED, info.parseOptions.bReplaceUndefined);
 
     return bRetVal;

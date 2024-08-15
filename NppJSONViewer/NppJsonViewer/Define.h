@@ -100,9 +100,9 @@ struct Indent
 
 struct ParseOptions
 {
-    bool bIgnoreComment        = true;
-    bool bIgnoreTraillingComma = true;
-    bool bReplaceUndefined     = false;
+    bool bIgnoreComment       = true;
+    bool bIgnoreTrailingComma = true;
+    bool bReplaceUndefined    = false;
 };
 
 struct Setting
