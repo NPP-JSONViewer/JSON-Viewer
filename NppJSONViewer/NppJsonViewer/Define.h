@@ -7,6 +7,7 @@ enum class CallBackID : int
     SHOW_DOC_PANEL = 0,
     FORMAT,
     COMPRESS,
+    SORT_BY_KEY,
     SEP_1,
     SETTING,
     ABOUT
@@ -22,6 +23,7 @@ const TCHAR TITLE_JSON_PANEL[]     = TEXT("JSON Viewer Panel");
 const TCHAR MENU_SHOW_JSON_PANEL[] = TEXT("Show &JSON Viewer");
 const TCHAR MENU_FORMAT_JSON[]     = TEXT("&Format JSON");
 const TCHAR MENU_COMPRESS_JSON[]   = TEXT("&Compress JSON");
+const TCHAR MENU_SORT_BY_KEY[]     = TEXT("Sort by &key (ascending)");
 const TCHAR MENU_SETTING[]         = TEXT("&Settings");
 const TCHAR MENU_ABOUT[]           = TEXT("&About");
 const TCHAR MENU_SEPERATOR[]       = TEXT("-SEPARATOR-");

@@ -4,6 +4,7 @@
 
 #include <rapidjson/reader.h>
 #include <rapidjson/writer.h>
+#include "rapidjson/document.h"
 #include <rapidjson/prettywriter.h>
 #include <rapidjson/stringbuffer.h>
 #include <rapidjson/error/en.h>
@@ -36,10 +37,16 @@ public:
 
     auto GetCompressedJson(const std::string &jsonText) -> const Result;
     auto FormatJson(const std::string &jsonText, LE le, LF lf, char indentChar, unsigned indentLen) -> const Result;
+    auto SortJsonByKey(const std::string &jsonText, LE le, LF lf, char indentChar, unsigned indentLen) -> const Result;
     auto ValidateJson(const std::string &jsonText) -> const Result;
 
     template <unsigned format, typename Handler>
     auto ParseJson(const std::string &jsonText, rj::StringBuffer &sb, Handler &handler) -> const Result;
+
+private:
+    void SortJsonObject(rj::Value &jsonObject, rj::Document::AllocatorType &allocator) const;
+    void SortJsonRecursively(rj::Value &jsonValue, rj::Document::AllocatorType &allocator) const;
+    auto SortJsonText(const std::string &jsonString) const -> std::string;
 };
 
 template <unsigned flgBase, typename Handler>
@@ -52,9 +59,9 @@ inline auto JsonHandler::ParseJson(const std::string &jsonText, rj::StringBuffer
     rj::StringStream ss(jsonText.c_str());
 
     // TODO: Find some better way
-    constexpr auto flgBase_commemt = flgBase | rj::kParseCommentsFlag;
+    constexpr auto flgBase_comment = flgBase | rj::kParseCommentsFlag;
     constexpr auto flgBase_comma   = flgBase | rj::kParseTrailingCommasFlag;
-    constexpr auto flgBase_Both    = flgBase_comma | flgBase_commemt;
+    constexpr auto flgBase_Both    = flgBase_comma | flgBase_comment;
 
     if (m_parseOptions.bIgnoreComment && m_parseOptions.bIgnoreTrailingComma)
     {
@@ -68,7 +75,7 @@ inline auto JsonHandler::ParseJson(const std::string &jsonText, rj::StringBuffer
 
     else if (m_parseOptions.bIgnoreComment && !m_parseOptions.bIgnoreTrailingComma)
     {
-        success = reader.Parse<flgBase_commemt>(ss, handler) && sb.GetString();
+        success = reader.Parse<flgBase_comment>(ss, handler) && sb.GetString();
     }
 
     else if (!m_parseOptions.bIgnoreComment && !m_parseOptions.bIgnoreTrailingComma)

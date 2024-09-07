@@ -25,7 +25,8 @@ class JsonViewDlg : public DockingDlgInterface
         FormatJson,
         GetCompressedJson,
         ParseJson,
-        ValidateJson
+        ValidateJson,
+        SortJsonByKey
     };
 
 public:
@@ -35,6 +36,7 @@ public:
     void ShowDlg(bool bShow);
     void FormatJson();
     void CompressJson();
+    void SortJsonByKey();
     void HandleTabActivated();
 
     HTREEITEM InsertToTree(HTREEITEM parent, const std::string &text);
@@ -81,7 +83,7 @@ private:
     bool CheckForTokenUndefined(eMethod method, std::string selectedText, Result &res, HTREEITEM tree_root);
 
 protected:
-    virtual INT_PTR CALLBACK run_dlgProc(UINT message, WPARAM wParam, LPARAM lParam);
+    virtual INT_PTR CALLBACK run_dlgProc(UINT message, WPARAM wParam, LPARAM lParam) override;
 
 private:
     int         m_nDlgId      = -1;

@@ -109,6 +109,27 @@ void JsonViewDlg::CompressJson()
     }
 }
 
+void JsonViewDlg::SortJsonByKey()
+{
+    const auto selectedText              = m_Editor->GetJsonText();
+    auto [le, lf, indentChar, indentLen] = GetFormatSetting();
+
+    Result res = JsonHandler(m_pSetting->parseOptions).SortJsonByKey(selectedText, le, lf, indentChar, indentLen);
+
+    if (res.success)
+    {
+        m_Editor->ReplaceSelection(res.response);
+        HighlightAsJson();
+    }
+    else
+    {
+        if (CheckForTokenUndefined(JsonViewDlg::eMethod::SortJsonByKey, selectedText, res, NULL))
+            return;
+
+        ReportError(res);
+    }
+}
+
 bool JsonViewDlg::CheckForTokenUndefined(eMethod method, std::string selectedText, Result &res, HTREEITEM tree_root)
 {
     auto [le, lf, indentChar, indentLen] = GetFormatSetting();
@@ -148,10 +169,14 @@ bool JsonViewDlg::CheckForTokenUndefined(eMethod method, std::string selectedTex
                 case eMethod::ValidateJson:
                     res = JsonHandler(m_pSetting->parseOptions).ValidateJson(text);
                     break;
+                case eMethod::SortJsonByKey:
+                    res = JsonHandler(m_pSetting->parseOptions).SortJsonByKey(text, le, lf, indentChar, indentLen);
+                    break;
                 }
                 if (res.success)
                 {
-                    m_Editor->ReplaceSelection((method == eMethod::ParseJson || method == eMethod::ValidateJson) ? text : res.response);
+                    bool bShouldReplace = method == eMethod::ParseJson || method == eMethod::ValidateJson || method == eMethod::SortJsonByKey;
+                    m_Editor->ReplaceSelection(bShouldReplace ? text : res.response);
                     HighlightAsJson();
                     return true;
                 }

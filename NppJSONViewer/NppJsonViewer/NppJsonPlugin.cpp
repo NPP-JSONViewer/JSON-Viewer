@@ -121,6 +121,9 @@ void NppJsonPlugin::InitCommandMenu()
     m_shortcutCommands.SetShortCut(CallBackID::COMPRESS, {true, true, true, 'C'});
     m_shortcutCommands.SetCommand(CallBackID::COMPRESS, MENU_COMPRESS_JSON, Callback::CompressJson, false);
 
+    m_shortcutCommands.SetShortCut(CallBackID::SORT_BY_KEY, {true, true, true, 'K'});
+    m_shortcutCommands.SetCommand(CallBackID::SORT_BY_KEY, MENU_SORT_BY_KEY, Callback::SortJsonByKey, false);
+
     m_shortcutCommands.SetCommand(CallBackID::SEP_1, MENU_SEPERATOR, NULL, true);
 
     m_shortcutCommands.SetCommand(CallBackID::SETTING, MENU_SETTING, Callback::OpenSettingDlg, false);
@@ -197,6 +200,16 @@ void NppJsonPlugin::CompressJson()
     if (m_pJsonViewDlg)    // Hope it is constructed by now.
     {
         m_pJsonViewDlg->CompressJson();
+    }
+}
+
+void NppJsonPlugin::SortJsonByKey()
+{
+    ConstructJsonDlg();
+
+    if (m_pJsonViewDlg)    // Hope it is constructed by now.
+    {
+        m_pJsonViewDlg->SortJsonByKey();
     }
 }
 
