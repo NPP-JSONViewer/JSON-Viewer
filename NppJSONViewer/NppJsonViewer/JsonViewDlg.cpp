@@ -8,15 +8,17 @@
 #include <format>
 #include <regex>
 
+constexpr int FILENAME_LEN_IN_TITLE = 16;
 
 JsonViewDlg::JsonViewDlg(HINSTANCE hInstance, const NppData &nppData, const bool &isReady, int nCmdId, std::shared_ptr<Setting> &pSetting)
     : DockingDlgInterface(IDD_TREEDLG)
     , m_NppData(nppData)
     , m_IsNppReady(isReady)
     , m_nDlgId(nCmdId)
-    , m_Editor(std::make_unique<ScintillaEditor>(nppData))
+    , m_pEditor(std::make_unique<ScintillaEditor>(nppData))
     , m_hTreeView(std::make_unique<TreeViewCtrl>())
     , m_pSetting(pSetting)
+    , m_pCurrFileName(std::make_unique<wchar_t[]>(FILENAME_LEN_IN_TITLE))
 {
     _hParent = nppData._nppHandle;
     _hInst   = hInstance;
@@ -48,10 +50,11 @@ void JsonViewDlg::ShowDlg(bool bShow)
         m_lfInitialClientHeight = rc.bottom - rc.top;
 
         // define the default docking behaviour
-        data.uMask         = DWS_DF_CONT_LEFT | DWS_ICONTAB;
+        data.uMask         = DWS_DF_CONT_LEFT | DWS_ICONTAB | DWS_ADDINFO;
         data.pszModuleName = getPluginFileName();
         data.pszName       = const_cast<TCHAR *>(TITLE_JSON_PANEL);
         data.hIconTab      = static_cast<HICON>(LoadImage(_hInst, MAKEINTRESOURCE(IDI_ICON_TOOLBAR), IMAGE_ICON, 32, 32, LR_LOADMAP3DCOLORS | LR_LOADTRANSPARENT));
+        data.pszAddInfo    = m_pCurrFileName.get();
 
         // the dlgDlg should be the index of funcItem where the current function pointer is
         data.dlgID = static_cast<int>(CallBackID::SHOW_DOC_PANEL);
@@ -64,19 +67,20 @@ void JsonViewDlg::ShowDlg(bool bShow)
         DrawJsonTree();
     }
 
+    UpdateTitle();
     DockingDlgInterface::display(bShow);
 }
 
 void JsonViewDlg::FormatJson()
 {
-    const auto selectedText              = m_Editor->GetJsonText();
+    const auto selectedText              = m_pEditor->GetJsonText();
     auto [le, lf, indentChar, indentLen] = GetFormatSetting();
 
     Result res = JsonHandler(m_pSetting->parseOptions).FormatJson(selectedText, le, lf, indentChar, indentLen);
 
     if (res.success)
     {
-        m_Editor->ReplaceSelection(res.response);
+        m_pEditor->ReplaceSelection(res.response);
         HighlightAsJson();
     }
     else
@@ -91,13 +95,13 @@ void JsonViewDlg::FormatJson()
 void JsonViewDlg::CompressJson()
 {
     // Get the current scintilla
-    const auto selectedText = m_Editor->GetJsonText();
+    const auto selectedText = m_pEditor->GetJsonText();
 
     Result res = JsonHandler(m_pSetting->parseOptions).GetCompressedJson(selectedText);
 
     if (res.success)
     {
-        m_Editor->ReplaceSelection(res.response);
+        m_pEditor->ReplaceSelection(res.response);
         HighlightAsJson();
     }
     else
@@ -111,14 +115,14 @@ void JsonViewDlg::CompressJson()
 
 void JsonViewDlg::SortJsonByKey()
 {
-    const auto selectedText              = m_Editor->GetJsonText();
+    const auto selectedText              = m_pEditor->GetJsonText();
     auto [le, lf, indentChar, indentLen] = GetFormatSetting();
 
     Result res = JsonHandler(m_pSetting->parseOptions).SortJsonByKey(selectedText, le, lf, indentChar, indentLen);
 
     if (res.success)
     {
-        m_Editor->ReplaceSelection(res.response);
+        m_pEditor->ReplaceSelection(res.response);
         HighlightAsJson();
     }
     else
@@ -176,15 +180,15 @@ bool JsonViewDlg::CheckForTokenUndefined(eMethod method, std::string selectedTex
                 if (res.success)
                 {
                     bool bShouldReplace = method == eMethod::ParseJson || method == eMethod::ValidateJson || method == eMethod::SortJsonByKey;
-                    m_Editor->ReplaceSelection(bShouldReplace ? text : res.response);
+                    m_pEditor->ReplaceSelection(bShouldReplace ? text : res.response);
                     HighlightAsJson();
                     return true;
                 }
                 else
                 {
-                    m_Editor->ReplaceSelection(text);
-                    m_Editor->MakeSelection(m_Editor->GetSelectionStart(), static_cast<int>(text.length()));
-                    m_Editor->RefreshSelectionPos();
+                    m_pEditor->ReplaceSelection(text);
+                    m_pEditor->MakeSelection(m_pEditor->GetSelectionStart(), static_cast<int>(text.length()));
+                    m_pEditor->RefreshSelectionPos();
                 }
             }
             catch (const std::exception &)
@@ -200,8 +204,8 @@ void JsonViewDlg::HandleTabActivated()
     const bool bIsVisible = isCreated() && isVisible();
     if (bIsVisible)
     {
-        m_Editor->RefreshViewHandle();
-        if (m_Editor->IsJsonFile())
+        m_pEditor->RefreshViewHandle();
+        if (m_pEditor->IsJsonFile())
         {
             if (m_pSetting->bFollowCurrentTab)
             {
@@ -212,6 +216,7 @@ void JsonViewDlg::HandleTabActivated()
             {
                 FormatJson();
             }
+            UpdateTitle();
         }
     }
 }
@@ -219,7 +224,7 @@ void JsonViewDlg::HandleTabActivated()
 void JsonViewDlg::ValidateJson()
 {
     // Get the current scintilla
-    const auto selectedText = m_Editor->GetJsonText();
+    const auto selectedText = m_pEditor->GetJsonText();
 
     Result res = JsonHandler(m_pSetting->parseOptions).ValidateJson(selectedText);
 
@@ -249,8 +254,8 @@ void JsonViewDlg::DrawJsonTree()
     rootNode           = m_hTreeView->InitTree();
 
     // Refresh the view
-    m_Editor->RefreshViewHandle();
-    const std::string txtForParsing = m_Editor->GetJsonText();
+    m_pEditor->RefreshViewHandle();
+    const std::string txtForParsing = m_pEditor->GetJsonText();
 
     if (txtForParsing.empty())
     {
@@ -286,7 +291,7 @@ void JsonViewDlg::HighlightAsJson(bool bForcefully) const
 {
     bool setJsonLang = bForcefully || m_pSetting->bUseJsonHighlight;
     if (setJsonLang)
-        m_Editor->SetLangAsJson();
+        m_pEditor->SetLangAsJson();
 }
 
 auto JsonViewDlg::PopulateTreeUsingSax(HTREEITEM tree_root, const std::string &jsonText) -> std::optional<std::wstring>
@@ -310,9 +315,9 @@ auto JsonViewDlg::PopulateTreeUsingSax(HTREEITEM tree_root, const std::string &j
         else
         {
             // Mark the error position
-            size_t start       = m_Editor->GetSelectionStart();
+            size_t start       = m_pEditor->GetSelectionStart();
             size_t errPosition = start + static_cast<size_t>(res.error_pos);
-            m_Editor->MakeSelection(errPosition, errPosition + 1);
+            m_pEditor->MakeSelection(errPosition, errPosition + 1);
 
             std::string err = std::format("\n\nError: ({} : {})", res.error_code, res.error_str);
             retVal          = std::make_optional<std::wstring>((JSON_ERR_VALIDATE + StringHelper::ToWstring(err)));
@@ -433,6 +438,32 @@ void JsonViewDlg::SearchInTree()
                 CUtility::SetEditCtrlText(::GetDlgItem(_hSelf, IDC_EDT_NODEPATH), STR_SRCH_NOTFOUND + itemToSearch);
         }
     }
+}
+
+void JsonViewDlg::UpdateTitle()
+{
+    GetTitleFileName();
+    updateDockingDlg();
+}
+
+void JsonViewDlg::GetTitleFileName()
+{
+    if (!m_pCurrFileName)
+    {
+        m_pCurrFileName = std::make_unique<wchar_t[]>(FILENAME_LEN_IN_TITLE);
+    }
+
+    auto currFile = m_pEditor->GetCurrentFileName();
+    if (currFile.length() >= FILENAME_LEN_IN_TITLE)
+    {
+        // If the filename is too long, truncate it and add "..."
+        currFile = currFile.substr(0, FILENAME_LEN_IN_TITLE - 4) + L"...";
+    }
+
+    memset(m_pCurrFileName.get(), 0, FILENAME_LEN_IN_TITLE);
+    wcsncpy_s(m_pCurrFileName.get(), FILENAME_LEN_IN_TITLE, currFile.c_str(), _TRUNCATE);
+
+    updateDockingDlg();
 }
 
 void JsonViewDlg::PrepareButtons()
@@ -707,9 +738,9 @@ int JsonViewDlg::ShowMessage(const std::wstring &title, const std::wstring &msg,
 void JsonViewDlg::ReportError(const Result &result)
 {
     // Mark the error position
-    size_t start = m_Editor->GetSelectionStart() + result.error_pos;
-    size_t end   = m_Editor->GetSelectionEnd();
-    m_Editor->MakeSelection(start, end);
+    size_t start = m_pEditor->GetSelectionStart() + result.error_pos;
+    size_t end   = m_pEditor->GetSelectionEnd();
+    m_pEditor->MakeSelection(start, end);
 
     // Intimate user
     std::string err = std::format("\n\nError: ({} : {})", result.error_code, result.error_str);
@@ -784,7 +815,7 @@ auto JsonViewDlg::GetFormatSetting() const -> std::tuple<LE, LF, char, unsigned>
     case LineEnding::AUTO:
     default:
     {
-        const auto eol = m_Editor->GetEOL();
+        const auto eol = m_pEditor->GetEOL();
         switch (eol)
         {
         case 0:
@@ -816,7 +847,7 @@ auto JsonViewDlg::GetFormatSetting() const -> std::tuple<LE, LF, char, unsigned>
         // Takes from Notepad++
     case IndentStyle::AUTO:
     default:
-        auto [c, l] = m_Editor->GetIndent();
+        auto [c, l] = m_pEditor->GetIndent();
         indentChar  = c;
         indentLen   = l;
         break;

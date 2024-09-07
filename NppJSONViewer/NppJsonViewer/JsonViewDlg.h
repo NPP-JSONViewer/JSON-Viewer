@@ -38,6 +38,7 @@ public:
     void CompressJson();
     void SortJsonByKey();
     void HandleTabActivated();
+    void UpdateTitle();
 
     HTREEITEM InsertToTree(HTREEITEM parent, const std::string &text);
     void      AppendNodeCount(HTREEITEM node, unsigned elementCount, bool bArray);
@@ -53,6 +54,7 @@ private:
 
     void SearchInTree();
 
+    void GetTitleFileName();
     void PrepareButtons();
     void SetIconAndTooltip(eButton ctrlType, const std::wstring &toolTip);
 
@@ -98,7 +100,8 @@ private:
     LONG m_lfInitialClientHeight = 0;
     RECT m_rcInitialWindowRect   = {};
 
-    std::unique_ptr<ScintillaEditor> m_Editor    = nullptr;
+    std::unique_ptr<wchar_t[]>       m_pCurrFileName;
+    std::unique_ptr<ScintillaEditor> m_pEditor   = nullptr;
     std::unique_ptr<TreeViewCtrl>    m_hTreeView = nullptr;
     std::shared_ptr<Setting>         m_pSetting  = nullptr;
 };

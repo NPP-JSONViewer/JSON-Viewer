@@ -74,6 +74,7 @@ void NppJsonPlugin::ProcessNotification(const SCNotification *notifyCode)
         if (m_pJsonViewDlg && m_pJsonViewDlg->isVisible() && !m_bAboutToClose)
         {
             ::SendMessage(m_pJsonViewDlg->getHSelf(), WM_COMMAND, IDC_BTN_REFRESH, 0);
+            m_pJsonViewDlg->UpdateTitle();
         }
         m_bNppReady = true;
         break;

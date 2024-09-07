@@ -19,7 +19,7 @@ const TCHAR PLUGIN_NAME[]   = TEXT("JSON Viewer");
 const TCHAR PLUGIN_CONFIG[] = TEXT("JSONViewer.ini");
 
 // Text which can be considered for localization
-const TCHAR TITLE_JSON_PANEL[]     = TEXT("JSON Viewer Panel");
+const TCHAR TITLE_JSON_PANEL[]     = TEXT("JSON Viewer");
 const TCHAR MENU_SHOW_JSON_PANEL[] = TEXT("Show &JSON Viewer");
 const TCHAR MENU_FORMAT_JSON[]     = TEXT("&Format JSON");
 const TCHAR MENU_COMPRESS_JSON[]   = TEXT("&Compress JSON");
