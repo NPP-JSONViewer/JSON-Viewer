@@ -1,4 +1,4 @@
-name: CI Build
+name: Build and test
 
 on:
   push:
@@ -17,28 +17,45 @@ jobs:
         build_platform: [Win32, x64, ARM64]
 
     steps:
+    # Step 1: Check out the code from the repo
     - name: Checkout repo
       uses: actions/checkout@v4
       with:
           submodules: recursive
 
+    # Step 2: Prepare for build
     - name: Pre Build
       uses: microsoft/setup-msbuild@v2
       
+    # Step 3: Build projects and unit test
     - name: Build 
       working-directory: src
       run: msbuild NppJSONViewer.sln /m /p:configuration="${{ matrix.build_configuration }}" /p:platform="${{ matrix.build_platform }}" /p:PlatformToolset="v143"
 
+    # Step 4: Upload build binary artifacts
     - name: Archive binaries artifacts
       uses: actions/upload-artifact@v3
       with:
           name: ${{ matrix.build_platform}}_${{ matrix.build_configuration}}
           path: src\Build\Bin\${{ matrix.build_configuration}}\${{ matrix.build_platform}}\NPPJSONViewer.dll
 
+    # Step 5: Upload build pdb artifacts
     - name: Archive symbols artifacts
       uses: actions/upload-artifact@v3
       with:
           name: ${{ matrix.build_platform}}_${{ matrix.build_configuration}}_pdb
           path: src\Build\Bin\${{ matrix.build_configuration}}\${{ matrix.build_platform}}\NPPJSONViewer.pdb
 
-    
+    # Step 6: Run unit tests for x86 | Release
+    - name: Run tests x86 | Release
+      if: matrix.build_platform == 'Win32' && matrix.build_configuration == 'Release'
+      run: |
+        cd src\Build\Bin\Release\Win32
+        ./UnitTest.exe
+
+    # Step 7: Run unit tests for x64 | Release
+    - name: Run tests x64 | Release
+      if: matrix.build_platform == 'x64' && matrix.build_configuration == 'Release'
+      run: |
+        cd src\Build\Bin\Release\x64
+        ./UnitTest.exe
