@@ -22,7 +22,7 @@
 *.exp
 
 # Build Results/artifacts
-NppJSONViewer/Build/
+src/Build/
 *.dll
 *.lib
 
