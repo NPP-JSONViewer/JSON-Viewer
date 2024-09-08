@@ -26,19 +26,19 @@ jobs:
       uses: microsoft/setup-msbuild@v2
       
     - name: Build 
-      working-directory: NppJSONViewer
+      working-directory: src
       run: msbuild NppJSONViewer.sln /m /p:configuration="${{ matrix.build_configuration }}" /p:platform="${{ matrix.build_platform }}" /p:PlatformToolset="v143"
 
     - name: Archive binaries artifacts
       uses: actions/upload-artifact@v3
       with:
           name: ${{ matrix.build_platform}}_${{ matrix.build_configuration}}
-          path: NppJSONViewer\Build\Bin\${{ matrix.build_configuration}}\${{ matrix.build_platform}}\NPPJSONViewer.dll
+          path: src\Build\Bin\${{ matrix.build_configuration}}\${{ matrix.build_platform}}\NPPJSONViewer.dll
 
     - name: Archive symbols artifacts
       uses: actions/upload-artifact@v3
       with:
           name: ${{ matrix.build_platform}}_${{ matrix.build_configuration}}_pdb
-          path: NppJSONViewer\Build\Bin\${{ matrix.build_configuration}}\${{ matrix.build_platform}}\NPPJSONViewer.pdb
+          path: src\Build\Bin\${{ matrix.build_configuration}}\${{ matrix.build_platform}}\NPPJSONViewer.pdb
 
     
