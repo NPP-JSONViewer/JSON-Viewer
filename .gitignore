@@ -20,11 +20,17 @@
 *.obj
 *.tlog
 *.exp
+*.log
+*.pch
+*.ilk
+*.idb
 
 # Build Results/artifacts
 src/Build/
 *.dll
 *.lib
+*.pdb
+*.recipe
 
 # Others
 *.zip
