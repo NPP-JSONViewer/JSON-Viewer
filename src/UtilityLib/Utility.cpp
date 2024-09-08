@@ -185,7 +185,7 @@ auto CUtility::GetFileExtension(const std::wstring &fileName) -> std::wstring
 
 auto CUtility::GetTempFilePath() -> std::wstring
 {
-    TCHAR tmpDir[1024];
+    TCHAR tmpDir[1024] {};
     GetTempPath(1024, tmpDir);
     return tmpDir;
 }

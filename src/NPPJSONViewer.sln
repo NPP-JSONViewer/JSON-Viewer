@@ -7,6 +7,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NPPJSONViewer", "NppJsonVie
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UtilityLib", "UtilityLib\UtilityLib.vcxproj", "{171CAFC6-E679-4B81-BF5B-049AC0FAB4F8}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UnitTest", "..\tests\UnitTest\UnitTest.vcxproj", "{5A15FD53-E7C1-4F10-85FA-B7C3BB5D4D64}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|ARM64 = Debug|ARM64
@@ -41,6 +43,18 @@ Global
 		{171CAFC6-E679-4B81-BF5B-049AC0FAB4F8}.Release|Win32.Build.0 = Release|Win32
 		{171CAFC6-E679-4B81-BF5B-049AC0FAB4F8}.Release|x64.ActiveCfg = Release|x64
 		{171CAFC6-E679-4B81-BF5B-049AC0FAB4F8}.Release|x64.Build.0 = Release|x64
+		{5A15FD53-E7C1-4F10-85FA-B7C3BB5D4D64}.Debug|ARM64.ActiveCfg = Debug|ARM64
+		{5A15FD53-E7C1-4F10-85FA-B7C3BB5D4D64}.Debug|ARM64.Build.0 = Debug|ARM64
+		{5A15FD53-E7C1-4F10-85FA-B7C3BB5D4D64}.Debug|Win32.ActiveCfg = Debug|Win32
+		{5A15FD53-E7C1-4F10-85FA-B7C3BB5D4D64}.Debug|Win32.Build.0 = Debug|Win32
+		{5A15FD53-E7C1-4F10-85FA-B7C3BB5D4D64}.Debug|x64.ActiveCfg = Debug|x64
+		{5A15FD53-E7C1-4F10-85FA-B7C3BB5D4D64}.Debug|x64.Build.0 = Debug|x64
+		{5A15FD53-E7C1-4F10-85FA-B7C3BB5D4D64}.Release|ARM64.ActiveCfg = Release|ARM64
+		{5A15FD53-E7C1-4F10-85FA-B7C3BB5D4D64}.Release|ARM64.Build.0 = Release|ARM64
+		{5A15FD53-E7C1-4F10-85FA-B7C3BB5D4D64}.Release|Win32.ActiveCfg = Release|Win32
+		{5A15FD53-E7C1-4F10-85FA-B7C3BB5D4D64}.Release|Win32.Build.0 = Release|Win32
+		{5A15FD53-E7C1-4F10-85FA-B7C3BB5D4D64}.Release|x64.ActiveCfg = Release|x64
+		{5A15FD53-E7C1-4F10-85FA-B7C3BB5D4D64}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
