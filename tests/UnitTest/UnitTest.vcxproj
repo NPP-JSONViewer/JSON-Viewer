@@ -60,22 +60,28 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ExternalIncludePath>$(SolutionDir)..\external\googletest\googletest;$(SolutionDir)..\external\googletest\googletest\include;$(SolutionDir)..\external\googletest\googlemock;$(SolutionDir)..\external\googletest\googlemock\include;$(ExternalIncludePath)</ExternalIncludePath>
     <LinkIncremental>true</LinkIncremental>
+    <IncludePath>$(SolutionDir)NppJsonViewer;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ExternalIncludePath>$(SolutionDir)..\external\googletest\googletest;$(SolutionDir)..\external\googletest\googletest\include;$(SolutionDir)..\external\googletest\googlemock;$(SolutionDir)..\external\googletest\googlemock\include;$(ExternalIncludePath)</ExternalIncludePath>
+    <IncludePath>$(SolutionDir)NppJsonViewer;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ExternalIncludePath>$(SolutionDir)..\external\googletest\googletest;$(SolutionDir)..\external\googletest\googletest\include;$(SolutionDir)..\external\googletest\googlemock;$(SolutionDir)..\external\googletest\googlemock\include;$(ExternalIncludePath)</ExternalIncludePath>
     <LinkIncremental>true</LinkIncremental>
+    <IncludePath>$(SolutionDir)NppJsonViewer;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">
     <ExternalIncludePath>$(SolutionDir)..\external\googletest\googletest;$(SolutionDir)..\external\googletest\googletest\include;$(SolutionDir)..\external\googletest\googlemock;$(SolutionDir)..\external\googletest\googlemock\include;$(ExternalIncludePath)</ExternalIncludePath>
+    <IncludePath>$(SolutionDir)NppJsonViewer;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ExternalIncludePath>$(SolutionDir)..\external\googletest\googletest;$(SolutionDir)..\external\googletest\googletest\include;$(SolutionDir)..\external\googletest\googlemock;$(SolutionDir)..\external\googletest\googlemock\include;$(ExternalIncludePath)</ExternalIncludePath>
+    <IncludePath>$(SolutionDir)NppJsonViewer;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">
     <ExternalIncludePath>$(SolutionDir)..\external\googletest\googletest;$(SolutionDir)..\external\googletest\googletest\include;$(SolutionDir)..\external\googletest\googlemock;$(SolutionDir)..\external\googletest\googlemock\include;$(ExternalIncludePath)</ExternalIncludePath>
+    <IncludePath>$(SolutionDir)NppJsonViewer;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup />
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -146,7 +152,9 @@
   <ItemGroup>
     <ClCompile Include="..\..\external\googletest\googlemock\src\gmock-all.cc" />
     <ClCompile Include="..\..\external\googletest\googletest\src\gtest-all.cc" />
+    <ClCompile Include="..\..\src\NppJsonViewer\Profile.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="ProfileTest.cpp" />
     <ClCompile Include="StringHelperTest.cpp" />
     <ClCompile Include="UtilityTest.cpp" />
   </ItemGroup>
@@ -154,6 +162,9 @@
     <ProjectReference Include="..\..\src\UtilityLib\UtilityLib.vcxproj">
       <Project>{171cafc6-e679-4b81-bf5b-049ac0fab4f8}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\src\NppJsonViewer\Profile.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -2,36 +2,50 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <UniqueIdentifier>{85c7eb1f-2b68-43cb-8405-a71e55e79fd5}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
     <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <UniqueIdentifier>{80e1a248-3f71-4247-836e-d9c0755d3a45}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
     </Filter>
     <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <UniqueIdentifier>{e63ed3dd-a0ad-4b70-b440-e132f2aec749}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
     <Filter Include="Source Files\googletest">
-      <UniqueIdentifier>{6566c3ee-c762-478e-89d9-b411a9670e1a}</UniqueIdentifier>
+      <UniqueIdentifier>{43a04267-7051-4c70-836c-2691b50401ed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\NppJsonViewer">
+      <UniqueIdentifier>{be698e04-b1a9-4f55-9035-986c6e58c21a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\external\googletest\googletest\src\gtest-all.cc">
       <Filter>Source Files\googletest</Filter>
     </ClCompile>
     <ClCompile Include="..\..\external\googletest\googlemock\src\gmock-all.cc">
       <Filter>Source Files\googletest</Filter>
     </ClCompile>
-    <ClCompile Include="StringHelperTest.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="..\..\src\NppJsonViewer\Profile.cpp">
+      <Filter>Source Files\NppJsonViewer</Filter>
     </ClCompile>
     <ClCompile Include="UtilityTest.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ProfileTest.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="StringHelperTest.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\src\NppJsonViewer\Profile.h">
+      <Filter>Source Files\NppJsonViewer</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

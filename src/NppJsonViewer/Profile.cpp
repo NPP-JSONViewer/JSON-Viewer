@@ -74,43 +74,43 @@ bool ProfileSetting::GetSettings(Setting &info) const
     bool bRetVal = true;
 
     int nVal = 0;
-    bRetVal &= ReadValue(STR_INI_FORMATTING_SEC, STR_INI_FORMATTING_EOL, nVal, static_cast<int>(info.lineEnding));
+    bRetVal  = bRetVal && ReadValue(STR_INI_FORMATTING_SEC, STR_INI_FORMATTING_EOL, nVal, static_cast<int>(info.lineEnding));
     if (bRetVal)
         info.lineEnding = static_cast<LineEnding>(nVal);
 
-    bRetVal &= ReadValue(STR_INI_FORMATTING_SEC, STR_INI_FORMATTING_LINE, nVal, static_cast<int>(info.lineFormat));
+    bRetVal = bRetVal && ReadValue(STR_INI_FORMATTING_SEC, STR_INI_FORMATTING_LINE, nVal, static_cast<int>(info.lineFormat));
     if (bRetVal)
         info.lineFormat = static_cast<LineFormat>(nVal);
 
-    bRetVal &= ReadValue(STR_INI_FORMATTING_SEC, STR_INI_FORMATTING_INDENT, nVal, static_cast<int>(info.indent.style));
+    bRetVal = bRetVal && ReadValue(STR_INI_FORMATTING_SEC, STR_INI_FORMATTING_INDENT, nVal, static_cast<int>(info.indent.style));
     if (bRetVal)
         info.indent.style = static_cast<IndentStyle>(nVal);
 
-    bRetVal &= ReadValue(STR_INI_FORMATTING_SEC, STR_INI_FORMATTING_INDENTCOUNT, nVal, info.indent.len);
+    bRetVal = bRetVal && ReadValue(STR_INI_FORMATTING_SEC, STR_INI_FORMATTING_INDENTCOUNT, nVal, info.indent.len);
     if (bRetVal)
         info.indent.len = nVal;
 
-    bRetVal &= ReadValue(STR_INI_OTHER_SEC, STR_INI_OTHER_FOLLOW_TAB, nVal, info.bFollowCurrentTab);
+    bRetVal = bRetVal && ReadValue(STR_INI_OTHER_SEC, STR_INI_OTHER_FOLLOW_TAB, nVal, info.bFollowCurrentTab);
     if (bRetVal)
         info.bFollowCurrentTab = static_cast<bool>(nVal);
 
-    bRetVal &= ReadValue(STR_INI_OTHER_SEC, STR_INI_OTHER_AUTO_FORMAT, nVal, info.bAutoFormat);
+    bRetVal = bRetVal && ReadValue(STR_INI_OTHER_SEC, STR_INI_OTHER_AUTO_FORMAT, nVal, info.bAutoFormat);
     if (bRetVal)
         info.bAutoFormat = static_cast<bool>(nVal);
 
-    bRetVal &= ReadValue(STR_INI_OTHER_SEC, STR_INI_OTHER_USE_HIGHLIGHT, nVal, info.bUseJsonHighlight);
+    bRetVal = bRetVal && ReadValue(STR_INI_OTHER_SEC, STR_INI_OTHER_USE_HIGHLIGHT, nVal, info.bUseJsonHighlight);
     if (bRetVal)
         info.bUseJsonHighlight = static_cast<bool>(nVal);
 
-    bRetVal &= ReadValue(STR_INI_OTHER_SEC, STR_INI_OTHER_IGNORE_COMMENT, nVal, info.parseOptions.bIgnoreComment);
+    bRetVal = bRetVal && ReadValue(STR_INI_OTHER_SEC, STR_INI_OTHER_IGNORE_COMMENT, nVal, info.parseOptions.bIgnoreComment);
     if (bRetVal)
         info.parseOptions.bIgnoreComment = static_cast<bool>(nVal);
 
-    bRetVal &= ReadValue(STR_INI_OTHER_SEC, STR_INI_OTHER_IGNORE_COMMA, nVal, info.parseOptions.bIgnoreTrailingComma);
+    bRetVal = bRetVal && ReadValue(STR_INI_OTHER_SEC, STR_INI_OTHER_IGNORE_COMMA, nVal, info.parseOptions.bIgnoreTrailingComma);
     if (bRetVal)
         info.parseOptions.bIgnoreTrailingComma = static_cast<bool>(nVal);
 
-    bRetVal &= ReadValue(STR_INI_OTHER_SEC, STR_INI_OTHER_REPLACE_UNDEFINED, nVal, info.parseOptions.bReplaceUndefined);
+    bRetVal = bRetVal && ReadValue(STR_INI_OTHER_SEC, STR_INI_OTHER_REPLACE_UNDEFINED, nVal, info.parseOptions.bReplaceUndefined);
     if (bRetVal)
         info.parseOptions.bReplaceUndefined = static_cast<bool>(nVal);
 
@@ -121,17 +121,17 @@ bool ProfileSetting::SetSettings(const Setting &info) const
 {
     bool bRetVal = true;
 
-    bRetVal &= WriteValue(STR_INI_FORMATTING_SEC, STR_INI_FORMATTING_EOL, static_cast<int>(info.lineEnding));
-    bRetVal &= WriteValue(STR_INI_FORMATTING_SEC, STR_INI_FORMATTING_LINE, static_cast<int>(info.lineFormat));
-    bRetVal &= WriteValue(STR_INI_FORMATTING_SEC, STR_INI_FORMATTING_INDENT, static_cast<int>(info.indent.style));
-    bRetVal &= WriteValue(STR_INI_FORMATTING_SEC, STR_INI_FORMATTING_INDENTCOUNT, info.indent.len);
+    bRetVal = bRetVal && WriteValue(STR_INI_FORMATTING_SEC, STR_INI_FORMATTING_EOL, static_cast<int>(info.lineEnding));
+    bRetVal = bRetVal && WriteValue(STR_INI_FORMATTING_SEC, STR_INI_FORMATTING_LINE, static_cast<int>(info.lineFormat));
+    bRetVal = bRetVal && WriteValue(STR_INI_FORMATTING_SEC, STR_INI_FORMATTING_INDENT, static_cast<int>(info.indent.style));
+    bRetVal = bRetVal && WriteValue(STR_INI_FORMATTING_SEC, STR_INI_FORMATTING_INDENTCOUNT, info.indent.len);
 
-    bRetVal &= WriteValue(STR_INI_OTHER_SEC, STR_INI_OTHER_FOLLOW_TAB, info.bFollowCurrentTab);
-    bRetVal &= WriteValue(STR_INI_OTHER_SEC, STR_INI_OTHER_AUTO_FORMAT, info.bAutoFormat);
-    bRetVal &= WriteValue(STR_INI_OTHER_SEC, STR_INI_OTHER_USE_HIGHLIGHT, info.bUseJsonHighlight);
-    bRetVal &= WriteValue(STR_INI_OTHER_SEC, STR_INI_OTHER_IGNORE_COMMENT, info.parseOptions.bIgnoreComment);
-    bRetVal &= WriteValue(STR_INI_OTHER_SEC, STR_INI_OTHER_IGNORE_COMMA, info.parseOptions.bIgnoreTrailingComma);
-    bRetVal &= WriteValue(STR_INI_OTHER_SEC, STR_INI_OTHER_REPLACE_UNDEFINED, info.parseOptions.bReplaceUndefined);
+    bRetVal = bRetVal && WriteValue(STR_INI_OTHER_SEC, STR_INI_OTHER_FOLLOW_TAB, info.bFollowCurrentTab);
+    bRetVal = bRetVal && WriteValue(STR_INI_OTHER_SEC, STR_INI_OTHER_AUTO_FORMAT, info.bAutoFormat);
+    bRetVal = bRetVal && WriteValue(STR_INI_OTHER_SEC, STR_INI_OTHER_USE_HIGHLIGHT, info.bUseJsonHighlight);
+    bRetVal = bRetVal && WriteValue(STR_INI_OTHER_SEC, STR_INI_OTHER_IGNORE_COMMENT, info.parseOptions.bIgnoreComment);
+    bRetVal = bRetVal && WriteValue(STR_INI_OTHER_SEC, STR_INI_OTHER_IGNORE_COMMA, info.parseOptions.bIgnoreTrailingComma);
+    bRetVal = bRetVal && WriteValue(STR_INI_OTHER_SEC, STR_INI_OTHER_REPLACE_UNDEFINED, info.parseOptions.bReplaceUndefined);
 
     return bRetVal;
 }

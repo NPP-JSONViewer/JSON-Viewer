@@ -4,6 +4,7 @@
 
 class Profile
 {
+protected:
     std::wstring m_ProfileFilePath;
 
 public:
