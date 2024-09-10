@@ -5,7 +5,7 @@
 
 #include "StringHelper.h"
 
-namespace Utility
+namespace UtilityTest
 {
     class StringHelperTest : public ::testing::Test
     {

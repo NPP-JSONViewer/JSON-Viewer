@@ -6,7 +6,7 @@
 
 #include "Utility.h"
 
-namespace Utility
+namespace UtilityTest
 {
     // Test GetXFromLPARAM with sample LPARAM
     TEST(CUtilityTest, GetXFromLPARAM)
