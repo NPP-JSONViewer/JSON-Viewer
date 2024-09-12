@@ -1,9 +1,9 @@
 #pragma once
 
+#include <optional>
 #include <string>
 #include <vector>
 #include <Windows.h>
-#include <optional>
 
 class CUtility
 {

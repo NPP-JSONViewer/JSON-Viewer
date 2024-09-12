@@ -1,5 +1,6 @@
-#include "StringHelper.h"
 #include <regex>
+
+#include "StringHelper.h"
 
 std::string StringHelper::ReplaceAll(const std::string &str, const std::string &search, const std::string &replace)
 {
