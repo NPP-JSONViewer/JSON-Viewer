@@ -67,12 +67,13 @@ void JsonViewDlg::ShowDlg(bool bShow)
         DrawJsonTree();
     }
 
-    UpdateTitle();
     DockingDlgInterface::display(bShow);
 }
 
 void JsonViewDlg::FormatJson()
 {
+    UpdateTitle();
+
     const auto selectedData = m_pEditor->GetJsonText();
     const auto selectedText = IsSelectionValidJson(selectedData);
 
@@ -103,6 +104,8 @@ void JsonViewDlg::FormatJson()
 
 void JsonViewDlg::CompressJson()
 {
+    UpdateTitle();
+
     const auto selectedData = m_pEditor->GetJsonText();
     const auto selectedText = IsSelectionValidJson(selectedData);
 
@@ -131,6 +134,8 @@ void JsonViewDlg::CompressJson()
 
 void JsonViewDlg::SortJsonByKey()
 {
+    UpdateTitle();
+
     const auto selectedData  = m_pEditor->GetJsonText();
     const auto selectedText = IsSelectionValidJson(selectedData);
 
@@ -287,13 +292,14 @@ void JsonViewDlg::HandleTabActivated()
             {
                 FormatJson();
             }
-            UpdateTitle();
         }
     }
 }
 
 void JsonViewDlg::ValidateJson()
 {
+    UpdateTitle();
+
     const auto selectedData  = m_pEditor->GetJsonText();
     const auto selectedText = IsSelectionValidJson(selectedData);
 
@@ -324,6 +330,8 @@ void JsonViewDlg::ValidateJson()
 
 void JsonViewDlg::DrawJsonTree()
 {
+    UpdateTitle();
+
     // Disable all buttons and treeView
     std::vector<DWORD> ctrls = {IDC_BTN_REFRESH, IDC_BTN_VALIDATE, IDC_BTN_FORMAT, IDC_BTN_SEARCH, IDC_EDT_SEARCH};
     EnableControls(ctrls, false);
@@ -526,17 +534,26 @@ void JsonViewDlg::SearchInTree()
 
 void JsonViewDlg::UpdateTitle()
 {
-    GetTitleFileName();
-    updateDockingDlg();
+    const auto titleFileName = GetTitleFileName();
+    if (!titleFileName.empty())
+    {
+        if (!m_pCurrFileName)
+        {
+            m_pCurrFileName = std::make_unique<wchar_t[]>(FILENAME_LEN_IN_TITLE);
+        }
+
+        if (_wcsicmp(m_pCurrFileName.get(), titleFileName.c_str()) != 0)
+        {
+            memset(m_pCurrFileName.get(), 0, FILENAME_LEN_IN_TITLE);
+            wcsncpy_s(m_pCurrFileName.get(), FILENAME_LEN_IN_TITLE, titleFileName.c_str(), _TRUNCATE);
+
+            updateDockingDlg();
+        }
+    }
 }
 
-void JsonViewDlg::GetTitleFileName()
+auto JsonViewDlg::GetTitleFileName() const -> std::wstring
 {
-    if (!m_pCurrFileName)
-    {
-        m_pCurrFileName = std::make_unique<wchar_t[]>(FILENAME_LEN_IN_TITLE);
-    }
-
     auto currFile = m_pEditor->GetCurrentFileName();
     if (currFile.length() >= FILENAME_LEN_IN_TITLE)
     {
@@ -544,10 +561,7 @@ void JsonViewDlg::GetTitleFileName()
         currFile = currFile.substr(0, FILENAME_LEN_IN_TITLE - 4) + L"...";
     }
 
-    memset(m_pCurrFileName.get(), 0, FILENAME_LEN_IN_TITLE);
-    wcsncpy_s(m_pCurrFileName.get(), FILENAME_LEN_IN_TITLE, currFile.c_str(), _TRUNCATE);
-
-    updateDockingDlg();
+    return currFile;
 }
 
 void JsonViewDlg::PrepareButtons()

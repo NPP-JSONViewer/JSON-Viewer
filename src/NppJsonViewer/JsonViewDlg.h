@@ -54,7 +54,7 @@ private:
 
     void SearchInTree();
 
-    void GetTitleFileName();
+    auto GetTitleFileName() const -> std::wstring;
     void PrepareButtons();
     void SetIconAndTooltip(eButton ctrlType, const std::wstring &toolTip);
 
