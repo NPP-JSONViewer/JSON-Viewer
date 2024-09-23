@@ -73,10 +73,19 @@ void JsonViewDlg::ShowDlg(bool bShow)
 
 void JsonViewDlg::FormatJson()
 {
-    const auto selectedText              = m_pEditor->GetJsonText();
+    const auto selectedData = m_pEditor->GetJsonText();
+    const auto selectedText = IsSelectionValidJson(selectedData);
+
+    if (!selectedText.has_value() || selectedText.value().empty())
+    {
+        const std::wstring msg = IsMultiSelection(selectedData) ? JSON_ERR_MULTI_SELECTION : JSON_ERR_PARSE;
+        ShowMessage(JSON_INFO_TITLE, msg, MB_OK | MB_ICONINFORMATION);
+        return;
+    }
+
     auto [le, lf, indentChar, indentLen] = GetFormatSetting();
 
-    Result res = JsonHandler(m_pSetting->parseOptions).FormatJson(selectedText, le, lf, indentChar, indentLen);
+    Result res = JsonHandler(m_pSetting->parseOptions).FormatJson(selectedText.value(), le, lf, indentChar, indentLen);
 
     if (res.success)
     {
@@ -85,7 +94,7 @@ void JsonViewDlg::FormatJson()
     }
     else
     {
-        if (CheckForTokenUndefined(JsonViewDlg::eMethod::FormatJson, selectedText, res, NULL))
+        if (CheckForTokenUndefined(JsonViewDlg::eMethod::FormatJson, selectedText.value(), res, NULL))
             return;
 
         ReportError(res);
@@ -94,10 +103,17 @@ void JsonViewDlg::FormatJson()
 
 void JsonViewDlg::CompressJson()
 {
-    // Get the current scintilla
-    const auto selectedText = m_pEditor->GetJsonText();
+    const auto selectedData = m_pEditor->GetJsonText();
+    const auto selectedText = IsSelectionValidJson(selectedData);
 
-    Result res = JsonHandler(m_pSetting->parseOptions).GetCompressedJson(selectedText);
+    if (!selectedText.has_value() || selectedText.value().empty())
+    {
+        const std::wstring msg = IsMultiSelection(selectedData) ? JSON_ERR_MULTI_SELECTION : JSON_ERR_PARSE;
+        ShowMessage(JSON_INFO_TITLE, msg, MB_OK | MB_ICONINFORMATION);
+        return;
+    }
+
+    Result res = JsonHandler(m_pSetting->parseOptions).GetCompressedJson(selectedText.value());
 
     if (res.success)
     {
@@ -106,7 +122,7 @@ void JsonViewDlg::CompressJson()
     }
     else
     {
-        if (CheckForTokenUndefined(JsonViewDlg::eMethod::GetCompressedJson, selectedText, res, NULL))
+        if (CheckForTokenUndefined(JsonViewDlg::eMethod::GetCompressedJson, selectedText.value(), res, NULL))
             return;
 
         ReportError(res);
@@ -115,10 +131,19 @@ void JsonViewDlg::CompressJson()
 
 void JsonViewDlg::SortJsonByKey()
 {
-    const auto selectedText              = m_pEditor->GetJsonText();
+    const auto selectedData  = m_pEditor->GetJsonText();
+    const auto selectedText = IsSelectionValidJson(selectedData);
+
+    if (!selectedText.has_value() || selectedText.value().empty())
+    {
+        const std::wstring msg = IsMultiSelection(selectedData) ? JSON_ERR_MULTI_SELECTION : JSON_ERR_PARSE;
+        ShowMessage(JSON_INFO_TITLE, msg, MB_OK | MB_ICONINFORMATION);
+        return;
+    }
+
     auto [le, lf, indentChar, indentLen] = GetFormatSetting();
 
-    Result res = JsonHandler(m_pSetting->parseOptions).SortJsonByKey(selectedText, le, lf, indentChar, indentLen);
+    Result res = JsonHandler(m_pSetting->parseOptions).SortJsonByKey(selectedText.value(), le, lf, indentChar, indentLen);
 
     if (res.success)
     {
@@ -127,7 +152,7 @@ void JsonViewDlg::SortJsonByKey()
     }
     else
     {
-        if (CheckForTokenUndefined(JsonViewDlg::eMethod::SortJsonByKey, selectedText, res, NULL))
+        if (CheckForTokenUndefined(JsonViewDlg::eMethod::SortJsonByKey, selectedText.value(), res, NULL))
             return;
 
         ReportError(res);
@@ -199,6 +224,52 @@ bool JsonViewDlg::CheckForTokenUndefined(eMethod method, std::string selectedTex
     return false;
 }
 
+bool JsonViewDlg::IsMultiSelection(const ScintillaData &scintillaData) const
+{
+    std::string   text;
+    ScintillaCode code = ScintillaCode::Unknown;
+
+    ProcessScintillaData(scintillaData, text, code);
+
+    bool bRetVal = code == ScintillaCode::MultiLineSelection ? true : false;
+    return bRetVal;
+}
+
+auto JsonViewDlg::IsSelectionValidJson(const ScintillaData &scintillaData) const -> std::optional<std::string>
+{
+    std::string   text;
+    ScintillaCode code = ScintillaCode::Unknown;
+
+    ProcessScintillaData(scintillaData, text, code);
+
+    if (code == ScintillaCode::Success)
+        return text;
+
+    return std::nullopt;
+}
+
+void JsonViewDlg::ProcessScintillaData(const ScintillaData &scintillaData, std::string &text, ScintillaCode &code) const
+{
+    text.clear();
+    code = ScintillaCode::Unknown;
+
+    std::visit(
+        [&text, &code](auto &&arg)
+        {
+            using T = std::decay_t<decltype(arg)>;
+            if constexpr (std::is_same_v<T, std::string>)
+            {
+                text = arg;
+                code = ScintillaCode::Success;
+            }
+            else if constexpr (std::is_same_v<T, ScintillaCode>)
+            {
+                code = arg;
+            }
+        },
+        scintillaData);
+}
+
 void JsonViewDlg::HandleTabActivated()
 {
     const bool bIsVisible = isCreated() && isVisible();
@@ -223,10 +294,17 @@ void JsonViewDlg::HandleTabActivated()
 
 void JsonViewDlg::ValidateJson()
 {
-    // Get the current scintilla
-    const auto selectedText = m_pEditor->GetJsonText();
+    const auto selectedData  = m_pEditor->GetJsonText();
+    const auto selectedText = IsSelectionValidJson(selectedData);
 
-    Result res = JsonHandler(m_pSetting->parseOptions).ValidateJson(selectedText);
+    if (!selectedText.has_value() || selectedText.value().empty())
+    {
+        const std::wstring msg = IsMultiSelection(selectedData) ? JSON_ERR_MULTI_SELECTION : JSON_ERR_PARSE;
+        ShowMessage(JSON_INFO_TITLE, msg, MB_OK | MB_ICONINFORMATION);
+        return;
+    }
+
+    Result res = JsonHandler(m_pSetting->parseOptions).ValidateJson(selectedText.value());
 
     if (res.success)
     {
@@ -234,7 +312,7 @@ void JsonViewDlg::ValidateJson()
     }
     else
     {
-        if (CheckForTokenUndefined(JsonViewDlg::eMethod::ValidateJson, selectedText, res, NULL))
+        if (CheckForTokenUndefined(JsonViewDlg::eMethod::ValidateJson, selectedText.value(), res, NULL))
         {
             ShowMessage(JSON_INFO_TITLE, JSON_ERR_VALIDATE_SUCCESS, MB_OK | MB_ICONINFORMATION);
             return;
@@ -255,15 +333,21 @@ void JsonViewDlg::DrawJsonTree()
 
     // Refresh the view
     m_pEditor->RefreshViewHandle();
-    const std::string txtForParsing = m_pEditor->GetJsonText();
+    const auto selectedData  = m_pEditor->GetJsonText();
+    const auto selectedText = IsSelectionValidJson(selectedData);
 
-    if (txtForParsing.empty())
+    if (!selectedText.has_value() || selectedText.value().empty())
     {
         m_hTreeView->InsertNode(JSON_ERR_PARSE, NULL, rootNode);
+
+        if (IsMultiSelection(selectedData))
+        {
+            ShowMessage(JSON_INFO_TITLE, JSON_ERR_MULTI_SELECTION, MB_OK | MB_ICONINFORMATION);
+        }
     }
     else
     {
-        auto res = PopulateTreeUsingSax(rootNode, txtForParsing);
+        auto res = PopulateTreeUsingSax(rootNode, selectedText.value());
         if (res.has_value())
         {
             // This is the case when Notepad++ has JsonViewer Window opened for previous instance

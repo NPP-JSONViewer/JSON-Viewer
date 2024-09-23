@@ -84,6 +84,10 @@ private:
 
     bool CheckForTokenUndefined(eMethod method, std::string selectedText, Result &res, HTREEITEM tree_root);
 
+    bool IsMultiSelection(const ScintillaData &scintillaData) const;
+    auto IsSelectionValidJson(const ScintillaData &scintillaData) const -> std::optional<std::string>;
+    void ProcessScintillaData(const ScintillaData &scintillaData, std::string &text, ScintillaCode &code) const;
+
 protected:
     virtual INT_PTR CALLBACK run_dlgProc(UINT message, WPARAM wParam, LPARAM lParam) override;
 

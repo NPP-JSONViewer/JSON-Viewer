@@ -2,6 +2,18 @@
 #include "Define.h"
 #include <string>
 #include <tuple>
+#include <variant>
+
+enum class ScintillaCode : short
+{
+    Unknown,
+    Success,
+    NotInitialized,
+    NoSelection,
+    MultiLineSelection
+};
+
+using ScintillaData = std::variant<std::string, ScintillaCode>;
 
 class ScintillaEditor
 {
@@ -10,7 +22,7 @@ public:
     ~ScintillaEditor() = default;
 
     void RefreshViewHandle();
-    auto GetJsonText() -> std::string;
+    auto GetJsonText() -> ScintillaData;
     void SetLangAsJson() const;
     bool IsJsonFile() const;
     auto GetCurrentFileName() const -> std::wstring;

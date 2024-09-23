@@ -42,10 +42,11 @@ const TCHAR JSON_ERROR_TITLE[]   = TEXT("JSON Viewer: Error");
 const TCHAR JSON_WARNING_TITLE[] = TEXT("JSON Viewer: Warning");
 const TCHAR JSON_INFO_TITLE[]    = TEXT("JSON Viewer: Information");
 
-const TCHAR JSON_ERR_PARSE[]            = TEXT("Cannot parse JSON. Please select a JSON string.");
-const TCHAR JSON_ERR_VALIDATE[]         = TEXT("There was an error while parsing JSON. Refer to the current selection for possible problematic area.");
-const TCHAR JSON_ERR_VALIDATE_SUCCESS[] = TEXT("JSON looks good. No errors found while validating it.");
-const TCHAR JSON_ERR_SAVE_SETTING[]     = TEXT("Failed to save the settings. Please try again.");
+const TCHAR JSON_ERR_PARSE[]            = TEXT("Unable to parse JSON. Please ensure a valid JSON string is selected.");
+const TCHAR JSON_ERR_VALIDATE[]         = TEXT("An error occurred while parsing the JSON. Check the current selection for the potential issue.");
+const TCHAR JSON_ERR_VALIDATE_SUCCESS[] = TEXT("The JSON appears valid. No errors were found during validation.");
+const TCHAR JSON_ERR_SAVE_SETTING[]     = TEXT("Could not save the settings. Please try again.");
+const TCHAR JSON_ERR_MULTI_SELECTION[]  = TEXT("Multiline selection is not currently supported in Json Viewer.");
 
 const TCHAR STR_VERSION[]     = TEXT("Version: ");
 const TCHAR STR_COPY[]        = TEXT("Copy");

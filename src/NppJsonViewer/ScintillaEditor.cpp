@@ -17,10 +17,15 @@ void ScintillaEditor::RefreshViewHandle()
         m_hScintilla = (which == 0) ? m_NppData._scintillaMainHandle : m_NppData._scintillaSecondHandle;
 }
 
-auto ScintillaEditor::GetJsonText() -> std::string
+auto ScintillaEditor::GetJsonText() -> ScintillaData
 {
     if (!m_hScintilla)
-        return std::string();
+        return ScintillaCode::NotInitialized;
+
+    // Multi selection is not supported
+    size_t nSelections = ::SendMessage(m_hScintilla, SCI_GETSELECTIONS, 0, 0);
+    if (nSelections > 1)
+        return ScintillaCode::MultiLineSelection;
 
     // Adjust the selection position
     RefreshSelectionPos();
