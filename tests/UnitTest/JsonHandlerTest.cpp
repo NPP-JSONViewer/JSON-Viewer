@@ -9,22 +9,17 @@ namespace JsonParsing
     class JsonHandlerTest : public ::testing::Test
     {
     protected:
-        JsonHandler handler {{}};
+        JsonHandler m_jsonHandler {{}};
 
     protected:
         void SetUp() override {}
         void TearDown() override {}
-
-        void setParseOptions(const ParseOptions& opt)
-        {
-            handler = JsonHandler(opt);
-        }
     };
 
     TEST_F(JsonHandlerTest, TestGetCompressedJson_Success)
     {
         std::string inputJson = R"({"key": "value"})";
-        auto        result    = handler.GetCompressedJson(inputJson);
+        auto        result    = m_jsonHandler.GetCompressedJson(inputJson);
 
         ASSERT_TRUE(result.success);
         ASSERT_EQ(result.response, R"({"key":"value"})");
@@ -33,7 +28,7 @@ namespace JsonParsing
     TEST_F(JsonHandlerTest, TestGetCompressedJson_InvalidJson)
     {
         std::string inputJson = R"({"key": "value")";    // Missing closing brace
-        auto        result    = handler.GetCompressedJson(inputJson);
+        auto        result    = m_jsonHandler.GetCompressedJson(inputJson);
 
         ASSERT_FALSE(result.success);
         ASSERT_TRUE(result.response.empty());
@@ -42,7 +37,7 @@ namespace JsonParsing
     TEST_F(JsonHandlerTest, TestFormatJson_Success)
     {
         std::string inputJson = R"({"key": "value"})";
-        auto        result    = handler.FormatJson(inputJson, {}, {}, ' ', 4);
+        auto        result    = m_jsonHandler.FormatJson(inputJson, {}, {}, ' ', 4);
 
         ASSERT_TRUE(result.success);
         ASSERT_EQ(result.response, "{\n    \"key\": \"value\"\n}");
@@ -51,7 +46,7 @@ namespace JsonParsing
     TEST_F(JsonHandlerTest, TestFormatJson_InvalidJson)
     {
         std::string inputJson = R"({"key": "value")";    // Invalid JSON
-        auto        result    = handler.FormatJson(inputJson, {}, {}, ' ', 4);
+        auto        result    = m_jsonHandler.FormatJson(inputJson, {}, {}, ' ', 4);
 
         ASSERT_FALSE(result.success);
     }
@@ -60,7 +55,7 @@ namespace JsonParsing
     TEST_F(JsonHandlerTest, TestValidateJson_Success)
     {
         std::string inputJson = R"({"key": "value"})";
-        auto        result    = handler.ValidateJson(inputJson);
+        auto        result    = m_jsonHandler.ValidateJson(inputJson);
 
         ASSERT_TRUE(result.success);
     }
@@ -68,7 +63,7 @@ namespace JsonParsing
     TEST_F(JsonHandlerTest, TestValidateJson_InvalidJson)
     {
         std::string inputJson = R"({"key": "value")";    // Invalid JSON
-        auto        result    = handler.ValidateJson(inputJson);
+        auto        result    = m_jsonHandler.ValidateJson(inputJson);
 
         ASSERT_FALSE(result.success);
     }
@@ -77,7 +72,7 @@ namespace JsonParsing
     TEST_F(JsonHandlerTest, TestSortJsonByKey_Success)
     {
         std::string inputJson = R"({"b": "valueB", "a": "valueA"})";
-        auto        result    = handler.SortJsonByKey(inputJson, {}, {}, ' ', 4);
+        auto        result    = m_jsonHandler.SortJsonByKey(inputJson, {}, {}, ' ', 4);
 
         ASSERT_TRUE(result.success);
         ASSERT_EQ(result.response, "{\n    \"a\": \"valueA\",\n    \"b\": \"valueB\"\n}");
@@ -86,7 +81,7 @@ namespace JsonParsing
     TEST_F(JsonHandlerTest, TestSortJsonByKey_InvalidJson)
     {
         std::string inputJson = R"({"b": "valueB", "a": "valueA")";    // Invalid JSON
-        auto        result    = handler.SortJsonByKey(inputJson, {}, {}, ' ', 4);
+        auto        result    = m_jsonHandler.SortJsonByKey(inputJson, {}, {}, ' ', 4);
 
         ASSERT_FALSE(result.success);
     }
