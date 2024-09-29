@@ -74,8 +74,9 @@ private:
     void InitConfigPath();
 
     void ToggleMenuItemState(int nCmdId, bool bVisible);
-
-    void ConstructJsonDlg();
+    // return FALSE if for whatever reason we cannot attempt to parse the document
+    //     (currently the only reason for this would be if there are multiple selections)
+    bool ConstructJsonDlg();
     void ConstructSetting();
 
     void ShowJsonDlg();

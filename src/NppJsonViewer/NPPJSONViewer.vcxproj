@@ -242,4 +242,46 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
+  <PropertyGroup>
+    <!-- Default values for debugging so it start correct version of Notepad++
+         $(ProgramW6432) and $(MSBuildProgramFiles32) points to the 64 and 32 bit "Program Files" directories -->
+    <NppPath64 Condition="'$(NppPath64)' == ''">$(ProgramW6432)\Notepad++</NppPath64>
+    <NppPath32 Condition="'$(NppPath32)' == ''">$(MSBuildProgramFiles32)\Notepad++</NppPath32>
+  </PropertyGroup>
+  <!-- This block here is part of molsonkiko's (thus far unsuccessful) efforts to start up Notepad++ as soon as the plugin is done building.
+  In JsonTools (and all the other plugins based on the same plugin C# plugin template), when you build the plugin, it does the following:
+  1. automatically copies the plugin to the JsonTools plugin folder for the appropriate Notepad++ installation (this is done by the Target Name="CopyBin" below)
+  2. starts up that Notepad++ installation, so that you can immediately start debugging Notepad++ with the version of the plugin you just compiled.
+  <Choose>
+    <When Condition="'$(Platform)' == 'x64'">
+      <ItemGroup>
+        <NPP_EXE Include="$(NppPath64)\notepad++.exe" />
+      </ItemGroup>
+    </When>
+    <Otherwise>
+      <ItemGroup>
+        <NPP_EXE Include="$(NppPath32)\notepad++.exe" />
+      </ItemGroup>
+    </Otherwise>
+  </Choose>
+  -->
+  <Target Name="CopyBin" DependsOnTargets="Build" AfterTargets="Build">
+    <!-- copy over the plugin DLL to the Notepad++ directory.
+    Otherwise Notepad++ will just load without the plugin. -->
+    <ItemGroup>
+      <RELEASE64 Include="..\Build\Bin\Release\x64\NPPJSONViewer.dll" />
+      <DEBUG64 Include="..\Build\Bin\Debug\x64\NPPJSONViewer.dll" />
+      <RELEASE32 Include="..\Build\Bin\Release\Win32\NPPJSONViewer.dll" />
+      <DEBUG32 Include="..\Build\Bin\Debug\Win32\NPPJSONViewer.dll" />
+      <NPP64BIT Include="$(NppPath64)\plugins\NPPJSONViewer" />
+      <NPP32BIT Include="$(NppPath32)\plugins\NPPJSONViewer" />
+    </ItemGroup>
+    <MakeDir Directories="@(NPP64BIT)" Condition=" '$(Platform)' == 'x64' " />
+    <MakeDir Directories="@(NPP32BIT)" Condition=" '$(Platform)' == 'Win32' " />
+    <!-- copy the plugin DLL to NPP plugin dir -->
+    <Copy SourceFiles="@(RELEASE64)" Condition=" '$(Configuration)|$(Platform)' == 'Release|x64' " DestinationFolder="@(NPP64BIT)" SkipUnchangedFiles="true" />
+    <Copy SourceFiles="@(RELEASE32)" Condition=" '$(Configuration)|$(Platform)' == 'Release|Win32' " DestinationFolder="@(NPP32BIT)" SkipUnchangedFiles="true" />
+    <Copy SourceFiles="@(DEBUG64)" Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' " DestinationFolder="@(NPP64BIT)" SkipUnchangedFiles="true" />
+    <Copy SourceFiles="@(DEBUG32)" Condition=" '$(Configuration)|$(Platform)' == 'Debug|Win32' " DestinationFolder="@(NPP32BIT)" SkipUnchangedFiles="true" />
+  </Target>
 </Project>
