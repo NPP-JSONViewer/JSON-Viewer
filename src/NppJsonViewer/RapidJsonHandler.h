@@ -1,11 +1,14 @@
 #pragma once
 
-#include "JsonNode.h"
-
 #include <stack>
+#include <memory>
 #include <Windows.h>
 #include <commctrl.h>
-#include <rapidjson/reader.h>
+
+#include "rapidjson/reader.h"
+
+#include "JsonNode.h"
+#include "TrackingStream.h"
 
 class JsonViewDlg;
 
@@ -16,17 +19,20 @@ struct TreeNode
     int       counter {};
 };
 
+
 class RapidJsonHandler : public rapidjson::BaseReaderHandler<rapidjson::UTF8<>, RapidJsonHandler>
 {
-    std::string            m_strLastKey;
+    JsonLastKey            m_jsonLastKey {};
     std::stack<TreeNode *> m_NodeStack;
 
-    JsonViewDlg *m_dlg      = nullptr;
-    HTREEITEM    m_treeRoot = nullptr;
+    SharedTrackingStream m_pTS;
+    JsonViewDlg         *m_dlg      = nullptr;
+    HTREEITEM            m_treeRoot = nullptr;
 
 public:
-    RapidJsonHandler(JsonViewDlg *dlg, HTREEITEM treeRoot)
-        : m_dlg(dlg)
+    RapidJsonHandler(JsonViewDlg *dlg, HTREEITEM treeRoot, SharedTrackingStream ts = nullptr)
+        : m_pTS(ts /*? ts->GetShared() : ts*/)
+        , m_dlg(dlg)
         , m_treeRoot(treeRoot)
     {
     }

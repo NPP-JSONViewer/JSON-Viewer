@@ -11,9 +11,31 @@ enum class JsonNodeType : short
     OBJECT,
 };
 
+struct Position
+{
+    int nLine {};
+    int nColumn {};
+    void clear()
+    {
+        nLine = nColumn = 0;
+    }
+};
+
+struct JsonLastKey
+{
+    Position    pos {};
+    std::string strKey;
+
+    void clear()
+    {
+        pos.clear();
+        strKey.clear();
+    }
+};
+
 struct JsonNode
 {
-    std::string  key;
+    JsonLastKey  key;
     std::string  value;
     JsonNodeType type = JsonNodeType::UNKNOWN;
 };

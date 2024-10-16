@@ -197,6 +197,7 @@
     <ClCompile Include="ScintillaEditor.cpp" />
     <ClCompile Include="SettingsDlg.cpp" />
     <ClCompile Include="ShortcutCommand.cpp" />
+    <ClCompile Include="TrackingStream.cpp" />
     <ClCompile Include="TreeViewCtrl.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -222,6 +223,7 @@
     <ClInclude Include="SettingsDlg.h" />
     <ClInclude Include="ShortcutCommand.h" />
     <ClInclude Include="StopWatch.h" />
+    <ClInclude Include="TrackingStream.h" />
     <ClInclude Include="TreeViewCtrl.h" />
   </ItemGroup>
   <ItemGroup>

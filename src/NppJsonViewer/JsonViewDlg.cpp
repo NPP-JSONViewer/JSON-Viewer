@@ -1,3 +1,6 @@
+#include <format>
+#include <regex>
+
 #include "JsonViewDlg.h"
 #include "Define.h"
 #include "Utility.h"
@@ -5,8 +8,7 @@
 #include "RapidJsonHandler.h"
 #include "ScintillaEditor.h"
 #include "Profile.h"
-#include <format>
-#include <regex>
+
 
 constexpr int FILENAME_LEN_IN_TITLE = 16;
 
@@ -136,7 +138,7 @@ void JsonViewDlg::SortJsonByKey()
 {
     UpdateTitle();
 
-    const auto selectedData  = m_pEditor->GetJsonText();
+    const auto selectedData = m_pEditor->GetJsonText();
     const auto selectedText = IsSelectionValidJson(selectedData);
 
     if (!selectedText.has_value() || selectedText.value().empty())
@@ -300,7 +302,7 @@ void JsonViewDlg::ValidateJson()
 {
     UpdateTitle();
 
-    const auto selectedData  = m_pEditor->GetJsonText();
+    const auto selectedData = m_pEditor->GetJsonText();
     const auto selectedText = IsSelectionValidJson(selectedData);
 
     if (!selectedText.has_value() || selectedText.value().empty())
@@ -341,7 +343,7 @@ void JsonViewDlg::DrawJsonTree()
 
     // Refresh the view
     m_pEditor->RefreshViewHandle();
-    const auto selectedData  = m_pEditor->GetJsonText();
+    const auto selectedData = m_pEditor->GetJsonText();
     const auto selectedText = IsSelectionValidJson(selectedData);
 
     if (!selectedText.has_value() || selectedText.value().empty())
@@ -390,10 +392,11 @@ auto JsonViewDlg::PopulateTreeUsingSax(HTREEITEM tree_root, const std::string &j
 {
     std::optional<std::wstring> retVal = std::nullopt;
 
-    RapidJsonHandler        handler(this, tree_root);
+    auto                    pTS = std::make_shared<TrackingStream>(jsonText);
+    RapidJsonHandler        handler(this, tree_root, pTS);
     rapidjson::StringBuffer sb;
 
-    Result res = JsonHandler(m_pSetting->parseOptions).ParseJson<flgBaseReader>(jsonText, sb, handler);
+    Result res = JsonHandler(m_pSetting->parseOptions).ParseJson<flgBaseReader>(jsonText, sb, handler, pTS);
     if (!res.success)
     {
         if (CheckForTokenUndefined(JsonViewDlg::eMethod::ParseJson, jsonText, res, tree_root))
@@ -429,6 +432,13 @@ HTREEITEM JsonViewDlg::InsertToTree(HTREEITEM parent, const std::string &text)
     return m_hTreeView->InsertNode(wText, NULL, parent);
 }
 
+HTREEITEM JsonViewDlg::InsertToTree(HTREEITEM parent, const std::string &text, const Position &pos)
+{
+    auto wText  = StringHelper::ToWstring(text, CP_UTF8);
+    auto lparam = new Position(pos);
+    return m_hTreeView->InsertNode(wText, reinterpret_cast<LPARAM>(lparam), parent);
+}
+
 void JsonViewDlg::AppendNodeCount(HTREEITEM node, unsigned elementCount, bool bArray)
 {
     if (!node)
@@ -448,6 +458,16 @@ void JsonViewDlg::UpdateNodePath(HTREEITEM htiNode)
 {
     std::wstring nodePath = m_hTreeView->GetNodePath(htiNode);
     CUtility::SetEditCtrlText(::GetDlgItem(_hSelf, IDC_EDT_NODEPATH), nodePath);
+}
+
+void JsonViewDlg::GoToLine(int nLineToGo)
+{
+    m_pEditor->GoToLine(0, nLineToGo);
+}
+
+void JsonViewDlg::GoToPosition(int nLineToGo, int nPos)
+{
+    m_pEditor->GoToPosition(0, nLineToGo, nPos);
 }
 
 void JsonViewDlg::SearchInTree()
@@ -869,6 +889,24 @@ void JsonViewDlg::HandleTreeEvents(LPARAM lParam)
     if (!lpnmh || lpnmh->idFrom != IDC_TREE)
         return;    // Not click inside JsonTree
 
+    auto GoToPosition = [this](HTREEITEM hItem)
+    {
+        if (hItem != nullptr)
+        {
+            LPARAM nodePos = m_hTreeView->GetNodePos(hItem);
+            if (nodePos != -1)
+            {
+                Position *pPosition = reinterpret_cast<Position *>(nodePos);
+                if (pPosition != nullptr)
+                {
+                    int nLine = pPosition->nLine;
+                    GoToLine(--nLine);    // line index start with 0 in editor, hence --
+                }
+            }
+        }
+    };
+
+    static bool bAvoidLineJump = false;    // on double click TVN_SELCHANGED is also fired.
     switch (lpnmh->code)
     {
     case TVN_SELCHANGED:
@@ -878,7 +916,22 @@ void JsonViewDlg::HandleTreeEvents(LPARAM lParam)
         if (hItem && (pnmtv->action == TVC_BYMOUSE || pnmtv->action == TVC_BYKEYBOARD))
         {
             UpdateNodePath(hItem);
+
+            //if (!bAvoidLineJump)
+            {
+                GoToPosition(hItem);
+            }
+            bAvoidLineJump = false;
         }
+    }
+    break;
+
+    case NM_DBLCLK:
+    {
+        bAvoidLineJump  = true;
+        //HTREEITEM hItem = m_hTreeView->GetSelection();
+
+        //GoToPosition(hItem);
     }
     break;
     }

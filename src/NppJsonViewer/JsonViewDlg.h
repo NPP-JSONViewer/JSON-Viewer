@@ -1,14 +1,18 @@
 #pragma once
+
+#include <string>
+#include <memory>
+#include <vector>
+#include <optional>
+
 #include "DockingDlgInterface.h"
 #include "PluginInterface.h"
 #include "resource.h"
 #include "TreeViewCtrl.h"
 #include "ScintillaEditor.h"
 #include "JsonHandler.h"
-#include <string>
-#include <memory>
-#include <vector>
-#include <optional>
+#include "JsonNode.h"
+
 
 class JsonViewDlg : public DockingDlgInterface
 {
@@ -41,6 +45,7 @@ public:
     void UpdateTitle();
 
     HTREEITEM InsertToTree(HTREEITEM parent, const std::string &text);
+    HTREEITEM InsertToTree(HTREEITEM parent, const std::string &text, const Position &pos);
     void      AppendNodeCount(HTREEITEM node, unsigned elementCount, bool bArray);
 
 private:
@@ -51,6 +56,8 @@ private:
     void ValidateJson();
 
     void UpdateNodePath(HTREEITEM htiNode);
+    void GoToLine(int nLineToGo);
+    void GoToPosition(int nLineToGo, int nPos);
 
     void SearchInTree();
 
