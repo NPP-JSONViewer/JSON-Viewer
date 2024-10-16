@@ -16,6 +16,19 @@ This plugin is meant to display a JSON string in a Treeview. It also marks the e
 
 ## Latest Updates:
 
+### 2.0.8.0
+
+1. New feature:
+    1. Sort ascending by key
+    2. Add file name in the title for visibility
+
+
+2. Bug/regression fixes:
+    1. Updated license text on UI as per GitHub link
+    2. Excplicit callout for no support on multi selection
+    3. Some other minor code and UI enhancements
+
+
 ### 2.0.7.0
 Bug/regression fixes:
 1. "Copy value" / "Copy" not always return complete text
