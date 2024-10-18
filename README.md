@@ -3,15 +3,15 @@
 &nbsp;&nbsp;&nbsp;&nbsp;[![CI Build](https://github.com/kapilratnani/JSON-Viewer/actions/workflows/ci_build.yml/badge.svg)](https://github.com/kapilratnani/JSON-Viewer/actions/workflows/ci_build.yml)
 &nbsp;&nbsp;&nbsp;&nbsp;[![Code Scanning](https://github.com/kapilratnani/JSON-Viewer/actions/workflows/codeql.yml/badge.svg)](https://github.com/kapilratnani/JSON-Viewer/actions/workflows/codeql.yml)
 
-This plugin is meant to display a JSON string in a Treeview. It also marks the error position in case of parsing errors. That's it!!! The plugin can be used in [Notepad++](https://github.com/notepad-plus-plus/notepad-plus-plus).
+This plugin is designed to display JSON strings in a Treeview format and highlight the error position if any parsing issues occur. It's a simple and efficient tool, compatible with [Notepad++](https://github.com/notepad-plus-plus/notepad-plus-plus).
 
 
 ## Instructions:
-1. Paste the file `NPPJSONViewer.dll` to Notepad++ `plugins\NPPJSONViewer` folder.
-2. Restart Notepad++ and verify that the plugin appears under the Plugins menu.
+1. Copy the file `NPPJSONViewer.dll` to the `plugins\NPPJSONViewer` folder in the Notepad++ installation directory..
+2. Restart Notepad++ and ensure the plugin appears under the Plugins menu.
 3. Open a document containing a JSON string (or paste in some JSON text).
-4. Select JSON fragment and navigate to plugins/JSON Viewer/show JSON Viewer or press <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>J</kbd>.
-5. Voila!! If the JSON is valid, it will be shown in a Treeview.
+4. Select the JSON fragment and go to <b>Plugins > JSON Viewer > Show JSON Viewer</b> or press  or press <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>J</kbd>.
+5. Voila, that's it! If the JSON is valid, it will be displayed in a Treeview format.
 
 
 ## Latest Updates:
