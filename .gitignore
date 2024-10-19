@@ -7,8 +7,9 @@
 *.userosscache
 *.sln.docstates
 
-# Visual Studio 2015 cache/options directory
+# Visual Studio/ VSCode cache/options directory
 .vs/
+.vscode/
 
 # Visual C++ cache files
 *.aps
@@ -28,6 +29,7 @@
 # Build Results/artifacts
 src/Build/
 *.dll
+*.exe
 *.lib
 *.pdb
 *.recipe
