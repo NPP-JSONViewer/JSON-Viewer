@@ -13,7 +13,8 @@ void TreeViewCtrl::OnInit(HWND hParent)
 auto TreeViewCtrl::InitTree() -> HTREEITEM
 {
     if (GetNodeCount() > 0)
-        TreeView_DeleteAllItems(m_hTree);
+        DeleteAllNodes();
+
     m_nMaxNodeTextLength = 0;
 
     return InsertNode(JSON_ROOT, -1, TVI_ROOT);
@@ -199,6 +200,17 @@ auto TreeViewCtrl::GetNodeName(HTREEITEM hti, bool removeTrailingCount) const ->
     return retVal;
 }
 
+auto TreeViewCtrl::GetNodePos(HTREEITEM hti) const -> LPARAM
+{
+    TVITEM tvItem {};
+    tvItem.hItem = hti;
+    tvItem.mask  = TVIF_PARAM;
+
+    if (SendMessage(m_hTree, TVM_GETITEM, 0, reinterpret_cast<LPARAM>(&tvItem)))
+        return tvItem.lParam;
+    return -1;
+}
+
 auto TreeViewCtrl::GetNodeKey(HTREEITEM hti) const -> std::wstring
 {
     std::wstring retVal = GetNodeName(hti, true);
@@ -338,4 +350,43 @@ bool TreeViewCtrl::GetTVItem(HTREEITEM hti, TVITEM* tvi) const
 bool TreeViewCtrl::SetTVItem(TVITEM* tvi) const
 {
     return TreeView_SetItem(m_hTree, tvi) ? true : false;
+}
+
+void TreeViewCtrl::FreeNodeData(HTREEITEM hItem)
+{
+    if (hItem == nullptr)
+        return;
+
+    TVITEM tvi {};
+    tvi.hItem = hItem;
+    tvi.mask  = TVIF_PARAM;
+
+    if (SendDlgItemMessage(m_hParent, IDC_TREE, TVM_GETITEM, 0, reinterpret_cast<LPARAM>(&tvi)))
+    {
+        /*JsonLastKey *pLastKey = reinterpret_cast<JsonLastKey *>(tvi.lParam);
+        if (pLastKey)
+        {
+            delete pLastKey;
+            pLastKey = nullptr;
+        }*/
+    }
+
+    HTREEITEM hChild = TreeView_GetChild(m_hTree, hItem);
+    while (hChild != nullptr)
+    {
+        FreeNodeData(hChild);
+        hChild = TreeView_GetNextSibling(m_hTree, hChild);
+    }
+}
+
+void TreeViewCtrl::DeleteAllNodes()
+{
+    HTREEITEM hRoot = GetRoot();
+
+    if (hRoot != nullptr)
+    {
+        FreeNodeData(hRoot);
+    }
+
+    TreeView_DeleteAllItems(m_hTree);
 }

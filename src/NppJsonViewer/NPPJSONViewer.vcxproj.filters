@@ -128,6 +128,9 @@
     <ClInclude Include="..\..\external\npp\Window.h">
       <Filter>ThirdParty\npp</Filter>
     </ClInclude>
+    <ClInclude Include="TrackingStream.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc">

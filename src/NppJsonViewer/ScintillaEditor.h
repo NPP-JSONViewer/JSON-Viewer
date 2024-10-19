@@ -44,6 +44,9 @@ public:
 
     void RefreshSelectionPos();
 
+    void GoToLine(size_t nStartLine, size_t nLineToGo) const;
+    void GoToPosition(size_t nStartLine, size_t nLineToGo, size_t nColumnIndex) const;
+
 private:
     NppData m_NppData    = {};
     HWND    m_hScintilla = nullptr;

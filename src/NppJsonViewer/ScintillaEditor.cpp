@@ -98,3 +98,15 @@ void ScintillaEditor::RefreshSelectionPos()
     if (m_nEndPos < m_nStartPos)
         std::swap(m_nStartPos, m_nEndPos);
 }
+
+void ScintillaEditor::GoToLine(size_t nStartLine, size_t nLineToGo) const
+{
+    ::SendMessage(m_hScintilla, SCI_GOTOLINE, nStartLine + nLineToGo, 0);
+}
+
+void ScintillaEditor::GoToPosition(size_t nStartLine, size_t nLineToGo, size_t nColumnIndex) const
+{
+    size_t lineStartPos = SendMessage(m_hScintilla, SCI_POSITIONFROMLINE, nStartLine + nLineToGo, 0);
+    size_t targetPos    = lineStartPos + nColumnIndex;
+    ::SendMessage(m_hScintilla, SCI_GOTOPOS, targetPos, 0);
+}

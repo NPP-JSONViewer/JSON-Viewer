@@ -81,7 +81,9 @@ bool RapidJsonHandler::String(const Ch* str, unsigned /*length*/, bool /*copy*/)
 
 bool RapidJsonHandler::Key(const Ch* str, unsigned /*length*/, bool /*copy*/)
 {
-    m_strLastKey = str;
+    m_jsonLastKey.strKey      = str;
+    m_jsonLastKey.pos.nLine   = m_pTS->getLine();
+    m_jsonLastKey.pos.nColumn = m_pTS->getColumn();
     return true;
 }
 
@@ -101,13 +103,13 @@ bool RapidJsonHandler::StartObject()
         parent = m_NodeStack.top();
     }
 
-    if (!m_strLastKey.empty() || parent->node.type == JsonNodeType::ARRAY)
+    if (!m_jsonLastKey.strKey.empty() || parent->node.type == JsonNodeType::ARRAY)
     {
         HTREEITEM newNode = nullptr;
         if (parent->node.type != JsonNodeType::ARRAY)
         {
-            newNode = m_dlg->InsertToTree(parent->subRoot, m_strLastKey);
-            m_strLastKey.clear();
+            newNode = m_dlg->InsertToTree(parent->subRoot, m_jsonLastKey.strKey, m_jsonLastKey.pos);
+            m_jsonLastKey.clear();
         }
         else
         {
@@ -150,13 +152,13 @@ bool RapidJsonHandler::StartArray()
         parent = m_NodeStack.top();
     }
 
-    if (!m_strLastKey.empty() || parent->node.type == JsonNodeType::ARRAY)
+    if (!m_jsonLastKey.strKey.empty() || parent->node.type == JsonNodeType::ARRAY)
     {
         HTREEITEM newNode;
         if (parent->node.type != JsonNodeType::ARRAY)
         {
-            newNode = m_dlg->InsertToTree(parent->subRoot, m_strLastKey);
-            m_strLastKey.clear();
+            newNode = m_dlg->InsertToTree(parent->subRoot, m_jsonLastKey.strKey, m_jsonLastKey.pos);
+            m_jsonLastKey.clear();
         }
         else
         {
@@ -188,22 +190,22 @@ void RapidJsonHandler::InsertToTree(TreeNode* node, const char* const str, bool 
 
     if (node->node.type != JsonNodeType::ARRAY)
     {
-        node->node.key   = m_strLastKey;
+        node->node.key   = m_jsonLastKey;
         node->node.value = str;
-        m_strLastKey.clear();
+        m_jsonLastKey.clear();
     }
     else
     {
-        node->node.key   = "[" + std::to_string(node->counter) + "]";
-        node->node.value = str;
+        node->node.key.strKey = "[" + std::to_string(node->counter) + "]";
+        node->node.value      = str;
         node->counter++;
     }
 
     // Insert item to tree
     if (bQuote)
-        m_dlg->InsertToTree(node->subRoot, node->node.key + " : \"" + node->node.value + "\"");
+        m_dlg->InsertToTree(node->subRoot, node->node.key.strKey + " : \"" + node->node.value + "\"", node->node.key.pos);
     else
-        m_dlg->InsertToTree(node->subRoot, node->node.key + " : " + node->node.value);
+        m_dlg->InsertToTree(node->subRoot, node->node.key.strKey + " : " + node->node.value, node->node.key.pos);
 }
 
 void RapidJsonHandler::AppendNodeCount(unsigned elementCount, bool bArray)

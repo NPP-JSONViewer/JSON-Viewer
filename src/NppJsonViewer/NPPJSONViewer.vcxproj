@@ -222,6 +222,7 @@
     <ClInclude Include="SettingsDlg.h" />
     <ClInclude Include="ShortcutCommand.h" />
     <ClInclude Include="StopWatch.h" />
+    <ClInclude Include="TrackingStream.h" />
     <ClInclude Include="TreeViewCtrl.h" />
   </ItemGroup>
   <ItemGroup>

@@ -11,6 +11,7 @@
 #include "TreeViewCtrl.h"
 #include "ScintillaEditor.h"
 #include "JsonHandler.h"
+#include "JsonNode.h"
 
 
 class JsonViewDlg : public DockingDlgInterface
@@ -44,6 +45,7 @@ public:
     void UpdateTitle();
 
     HTREEITEM InsertToTree(HTREEITEM parent, const std::string& text);
+    HTREEITEM InsertToTree(HTREEITEM parent, const std::string& text, const Position& pos);
     void      AppendNodeCount(HTREEITEM node, unsigned elementCount, bool bArray);
 
 private:
@@ -54,6 +56,8 @@ private:
     void ValidateJson();
 
     void UpdateNodePath(HTREEITEM htiNode);
+    void GoToLine(size_t nLineToGo);
+    void GoToPosition(size_t nLineToGo, size_t nPos);
 
     void SearchInTree();
 

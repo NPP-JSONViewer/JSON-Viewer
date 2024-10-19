@@ -52,6 +52,7 @@ public:
     HTREEITEM NextItem(HTREEITEM htiCurrent, HTREEITEM htiNextRoot) const;
 
     auto GetNodeName(HTREEITEM hti, bool removeTrailingCount) const -> std::wstring;
+    auto GetNodePos(HTREEITEM hti) const -> LPARAM;
     auto GetNodeKey(HTREEITEM hti) const -> std::wstring;
     auto GetNodeValue(HTREEITEM hti) const -> std::wstring;
     auto GetNodePath(HTREEITEM hti) const -> std::wstring;
@@ -63,4 +64,7 @@ private:
 
     bool GetTVItem(HTREEITEM hti, TVITEM* tvi) const;
     bool SetTVItem(TVITEM* tvi) const;
+
+    void FreeNodeData(HTREEITEM hItem);
+    void DeleteAllNodes();
 };
