@@ -25,9 +25,9 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID /*lpRese
 
 // Below are the mandatory function to be implemented as Notepad++ requires them
 
-extern "C" __declspec(dllexport) void setInfo(NppData notpadPlusData)
+extern "C" __declspec(dllexport) void setInfo(NppData notepadPlusData)
 {
-    g_NppJsonPlugin.SetInfo(notpadPlusData);
+    g_NppJsonPlugin.SetInfo(notepadPlusData);
 }
 
 extern "C" __declspec(dllexport) const TCHAR *getName()

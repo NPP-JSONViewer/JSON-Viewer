@@ -99,16 +99,16 @@ std::vector<std::wstring> StringHelper::Split(const std::wstring &input, const s
     return tokens;
 }
 
-bool StringHelper::Contains(const std::string &input, const std::string &search, bool ignorecase)
+bool StringHelper::Contains(const std::string &input, const std::string &search, bool ignoreCase)
 {
-    return Contains(ToWstring(input), ToWstring(search), ignorecase);
+    return Contains(ToWstring(input), ToWstring(search), ignoreCase);
 }
 
-bool StringHelper::Contains(const std::wstring &input, const std::wstring &search, bool ignorecase)
+bool StringHelper::Contains(const std::wstring &input, const std::wstring &search, bool ignoreCase)
 {
     std::wstring lower_input  = input;
     std::wstring lower_search = search;
-    if (ignorecase)
+    if (ignoreCase)
     {
         ToLower(lower_input);
         ToLower(lower_search);

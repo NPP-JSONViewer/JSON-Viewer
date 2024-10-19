@@ -49,24 +49,24 @@ bool Profile::WriteValue(const std::wstring &section, const std::wstring &key, c
 
 void Profile::Init()
 {
-    auto appDatapath = CUtility::GetSpecialFolderLocation(CSIDL_APPDATA);
-    if (appDatapath.empty())
+    auto appDataPath = CUtility::GetSpecialFolderLocation(CSIDL_APPDATA);
+    if (appDataPath.empty())
     {
         ::MessageBox(NULL, L"Failed to get %appdata% path. Please contact developer. Inconvenience regretted.", JSON_ERROR_TITLE, MB_OK | MB_ICONERROR);
         return;
     }
 
-    appDatapath += L"\\config";
-    if (!CUtility::DirExist(appDatapath) && !CUtility::CreateDir(appDatapath))
+    appDataPath += L"\\config";
+    if (!CUtility::DirExist(appDataPath) && !CUtility::CreateDir(appDataPath))
     {
         std::wstring msg = L"Failed to get below directory. Please contact developer. Inconvenience regretted.";
-        msg += L"\n\n" + appDatapath;
+        msg += L"\n\n" + appDataPath;
 
         ::MessageBox(NULL, msg.c_str(), JSON_ERROR_TITLE, MB_OK | MB_ICONERROR);
         return;
     }
 
-    m_ProfileFilePath = appDatapath + L"\\" + PLUGIN_CONFIG;
+    m_ProfileFilePath = appDataPath + L"\\" + PLUGIN_CONFIG;
 }
 
 bool ProfileSetting::GetSettings(Setting &info) const

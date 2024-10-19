@@ -1,11 +1,14 @@
 #pragma once
 
-#include "JsonNode.h"
-
 #include <stack>
+#include <memory>
 #include <Windows.h>
 #include <commctrl.h>
+
 #include <rapidjson/reader.h>
+
+#include "JsonNode.h"
+
 
 class JsonViewDlg;
 

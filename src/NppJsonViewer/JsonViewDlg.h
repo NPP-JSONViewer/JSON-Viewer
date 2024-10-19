@@ -1,14 +1,17 @@
 #pragma once
+
+#include <string>
+#include <memory>
+#include <vector>
+#include <optional>
+
 #include "DockingDlgInterface.h"
 #include "PluginInterface.h"
 #include "resource.h"
 #include "TreeViewCtrl.h"
 #include "ScintillaEditor.h"
 #include "JsonHandler.h"
-#include <string>
-#include <memory>
-#include <vector>
-#include <optional>
+
 
 class JsonViewDlg : public DockingDlgInterface
 {
