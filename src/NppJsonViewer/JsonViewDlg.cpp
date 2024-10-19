@@ -901,20 +901,6 @@ void JsonViewDlg::HandleTreeEvents(LPARAM lParam)
     if (!lpnmh || lpnmh->idFrom != IDC_TREE)
         return;    // Not click inside JsonTree
 
-    auto GetNodePosition = [this](HTREEITEM hItem)
-    {
-        Position* pPosition = nullptr;
-        if (hItem != nullptr)
-        {
-            LPARAM nodePos = m_hTreeView->GetNodePos(hItem);
-            if (nodePos != -1)
-            {
-                pPosition = reinterpret_cast<Position*>(nodePos);
-            }
-        }
-        return pPosition;
-    };
-
     switch (lpnmh->code)
     {
     case TVN_SELCHANGED:
@@ -925,7 +911,7 @@ void JsonViewDlg::HandleTreeEvents(LPARAM lParam)
         {
             UpdateNodePath(hItem);
 
-            auto pPosition = GetNodePosition(hItem);
+            auto pPosition = m_hTreeView->GetNodePosition(hItem);
             if (pPosition != nullptr)
             {
                 GoToLine(pPosition->nLine);
@@ -938,7 +924,7 @@ void JsonViewDlg::HandleTreeEvents(LPARAM lParam)
     {
         HTREEITEM hItem = m_hTreeView->GetSelection();
 
-        auto pPosition = GetNodePosition(hItem);
+        auto pPosition = m_hTreeView->GetNodePosition(hItem);
         if (pPosition != nullptr)
         {
             GoToPosition(pPosition->nLine, pPosition->nColumn);

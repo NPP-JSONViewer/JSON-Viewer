@@ -1,7 +1,8 @@
+#include <memory>
+
 #include "TreeViewCtrl.h"
 #include "Define.h"
 #include "resource.h"
-#include <memory>
 
 
 void TreeViewCtrl::OnInit(HWND hParent)
@@ -280,6 +281,20 @@ auto TreeViewCtrl::GetNodePath(HTREEITEM hti) const -> std::wstring
     return wstrJsonPath;
 }
 
+auto TreeViewCtrl::GetNodePosition(HTREEITEM hti) const -> Position*
+{
+    Position* pPosition = nullptr;
+    if (hti != nullptr)
+    {
+        LPARAM nodePos = GetNodePos(hti);
+        if (nodePos != -1)
+        {
+            pPosition = reinterpret_cast<Position*>(nodePos);
+        }
+    }
+    return pPosition;
+}
+
 HTREEITEM TreeViewCtrl::GetSelection() const
 {
     return TreeView_GetSelection(m_hTree);
@@ -357,18 +372,11 @@ void TreeViewCtrl::FreeNodeData(HTREEITEM hItem)
     if (hItem == nullptr)
         return;
 
-    TVITEM tvi {};
-    tvi.hItem = hItem;
-    tvi.mask  = TVIF_PARAM;
-
-    if (SendDlgItemMessage(m_hParent, IDC_TREE, TVM_GETITEM, 0, reinterpret_cast<LPARAM>(&tvi)))
+    Position* pNodeKeyPos = GetNodePosition(hItem);
+    if (pNodeKeyPos)
     {
-        /*JsonLastKey *pLastKey = reinterpret_cast<JsonLastKey *>(tvi.lParam);
-        if (pLastKey)
-        {
-            delete pLastKey;
-            pLastKey = nullptr;
-        }*/
+        delete pNodeKeyPos;
+        pNodeKeyPos = nullptr;
     }
 
     HTREEITEM hChild = TreeView_GetChild(m_hTree, hItem);
