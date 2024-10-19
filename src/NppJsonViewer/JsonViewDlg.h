@@ -50,6 +50,7 @@ public:
 
 private:
     void DrawJsonTree();
+    void ReDrawJsonTree(bool bForce = false);
     void HighlightAsJson(bool bForcefully = false) const;
     auto PopulateTreeUsingSax(HTREEITEM tree_root, const std::string& jsonText) -> std::optional<std::wstring>;
 

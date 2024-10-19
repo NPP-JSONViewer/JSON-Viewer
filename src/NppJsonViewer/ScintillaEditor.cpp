@@ -69,6 +69,9 @@ auto ScintillaEditor::GetCurrentFileName() const -> std::wstring
 void ScintillaEditor::ReplaceSelection(const std::string& text) const
 {
     ::SendMessage(m_hScintilla, SCI_REPLACESEL, 0, reinterpret_cast<LPARAM>(text.c_str()));
+
+    // Restore the selection
+    MakeSelection(m_nStartPos, m_nStartPos + text.length());
 }
 
 void ScintillaEditor::MakeSelection(size_t start, size_t end) const
@@ -97,16 +100,18 @@ void ScintillaEditor::RefreshSelectionPos()
 
     if (m_nEndPos < m_nStartPos)
         std::swap(m_nStartPos, m_nEndPos);
+
+    m_nStartLine = ::SendMessage(m_hScintilla, SCI_LINEFROMPOSITION, m_nStartPos, 0);
 }
 
-void ScintillaEditor::GoToLine(size_t nStartLine, size_t nLineToGo) const
+void ScintillaEditor::GoToLine(size_t nLineToGo) const
 {
-    ::SendMessage(m_hScintilla, SCI_GOTOLINE, nStartLine + nLineToGo, 0);
+    ::SendMessage(m_hScintilla, SCI_GOTOLINE, m_nStartLine + nLineToGo, 0);
 }
 
-void ScintillaEditor::GoToPosition(size_t nStartLine, size_t nLineToGo, size_t nColumnIndex) const
+void ScintillaEditor::GoToPosition(size_t nLineToGo, size_t nColumnIndex) const
 {
-    size_t lineStartPos = SendMessage(m_hScintilla, SCI_POSITIONFROMLINE, nStartLine + nLineToGo, 0);
+    size_t lineStartPos = SendMessage(m_hScintilla, SCI_POSITIONFROMLINE, m_nStartLine + nLineToGo, 0);
     size_t targetPos    = lineStartPos + nColumnIndex;
     ::SendMessage(m_hScintilla, SCI_GOTOPOS, targetPos, 0);
 }

@@ -102,6 +102,8 @@ void JsonViewDlg::FormatJson()
 
         ReportError(res);
     }
+
+    ReDrawJsonTree();
 }
 
 void JsonViewDlg::CompressJson()
@@ -132,6 +134,8 @@ void JsonViewDlg::CompressJson()
 
         ReportError(res);
     }
+
+    ReDrawJsonTree();
 }
 
 void JsonViewDlg::SortJsonByKey()
@@ -164,6 +168,8 @@ void JsonViewDlg::SortJsonByKey()
 
         ReportError(res);
     }
+
+    ReDrawJsonTree();
 }
 
 bool JsonViewDlg::CheckForTokenUndefined(eMethod method, std::string selectedText, Result& res, HTREEITEM tree_root)
@@ -213,7 +219,7 @@ bool JsonViewDlg::CheckForTokenUndefined(eMethod method, std::string selectedTex
                 else
                 {
                     m_pEditor->ReplaceSelection(text);
-                    m_pEditor->MakeSelection(m_pEditor->GetSelectionStart(), static_cast<int>(text.length()));
+                    m_pEditor->MakeSelection(m_pEditor->GetSelectionStart(), text.length());
                     m_pEditor->RefreshSelectionPos();
                 }
             }
@@ -322,6 +328,8 @@ void JsonViewDlg::ValidateJson()
 
         ReportError(res);
     }
+
+    DrawJsonTree();
 }
 
 void JsonViewDlg::DrawJsonTree()
@@ -373,6 +381,16 @@ void JsonViewDlg::DrawJsonTree()
 
     // Enable all buttons and treeView
     EnableControls(ctrls, true);
+}
+
+void JsonViewDlg::ReDrawJsonTree(bool bForce)
+{
+    const bool bIsVisible = isCreated() && isVisible();
+    const bool bReDraw    = bForce || bIsVisible;
+    if (bReDraw)
+    {
+        DrawJsonTree();
+    }
 }
 
 void JsonViewDlg::HighlightAsJson(bool bForcefully) const
@@ -456,12 +474,12 @@ void JsonViewDlg::UpdateNodePath(HTREEITEM htiNode)
 
 void JsonViewDlg::GoToLine(size_t nLineToGo)
 {
-    m_pEditor->GoToLine(0, nLineToGo);
+    m_pEditor->GoToLine(nLineToGo);
 }
 
 void JsonViewDlg::GoToPosition(size_t nLineToGo, size_t nPos)
 {
-    m_pEditor->GoToPosition(0, nLineToGo, nPos);
+    m_pEditor->GoToPosition(nLineToGo, nPos);
 }
 
 void JsonViewDlg::SearchInTree()
@@ -910,7 +928,7 @@ void JsonViewDlg::HandleTreeEvents(LPARAM lParam)
             auto pPosition = GetNodePosition(hItem);
             if (pPosition != nullptr)
             {
-                GoToLine(pPosition->nLine - 1);    // line index start with 0 in editor, hence --
+                GoToLine(pPosition->nLine);
             }
         }
     }
@@ -923,7 +941,7 @@ void JsonViewDlg::HandleTreeEvents(LPARAM lParam)
         auto pPosition = GetNodePosition(hItem);
         if (pPosition != nullptr)
         {
-            GoToPosition(pPosition->nLine - 1, pPosition->nColumn);    // line index start with 0 in editor, hence --
+            GoToPosition(pPosition->nLine, pPosition->nColumn);
         }
     }
     break;

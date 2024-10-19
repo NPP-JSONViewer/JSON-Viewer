@@ -19,8 +19,8 @@ public:
 
     TrackingStream(const std::string& jsonText)
         : m_ss(jsonText.c_str())
-        , m_nLine(1)
-        , m_nColumn(1)
+        , m_nLine(0)
+        , m_nColumn(0)
         , m_chPrevChar('\0')
     {
     }
