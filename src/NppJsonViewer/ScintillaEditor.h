@@ -18,7 +18,7 @@ using ScintillaData = std::variant<std::string, ScintillaCode>;
 class ScintillaEditor
 {
 public:
-    explicit ScintillaEditor(const NppData &nppData);
+    explicit ScintillaEditor(const NppData& nppData);
     ~ScintillaEditor() = default;
 
     void RefreshViewHandle();
@@ -27,7 +27,7 @@ public:
     bool IsJsonFile() const;
     auto GetCurrentFileName() const -> std::wstring;
 
-    void ReplaceSelection(const std::string &text) const;
+    void ReplaceSelection(const std::string& text) const;
 
     void MakeSelection(size_t start, size_t end) const;
     auto GetSelectionStart() const -> size_t

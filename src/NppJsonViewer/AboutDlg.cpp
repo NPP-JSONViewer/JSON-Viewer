@@ -36,14 +36,14 @@ bool AboutDlg::ShowDlg(bool bShow)
 
 INT_PTR AboutDlg::run_dlgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-    AboutDlg *pSelf = nullptr;
+    AboutDlg* pSelf = nullptr;
     switch (uMsg)
     {
     case WM_INITDIALOG:
     {
         ::SetWindowLongPtr(_hSelf, DWLP_USER, lParam);
 
-        pSelf = reinterpret_cast<AboutDlg *>(static_cast<LONG_PTR>(::GetWindowLongPtr(_hSelf, DWLP_USER)));
+        pSelf = reinterpret_cast<AboutDlg*>(static_cast<LONG_PTR>(::GetWindowLongPtr(_hSelf, DWLP_USER)));
         if (pSelf)
         {
             pSelf->SetVersion(_hSelf);
@@ -82,7 +82,7 @@ INT_PTR AboutDlg::run_dlgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 
     case WM_COMMAND:
     {
-        pSelf = reinterpret_cast<AboutDlg *>(static_cast<LONG_PTR>(::GetWindowLongPtr(_hSelf, DWLP_USER)));
+        pSelf = reinterpret_cast<AboutDlg*>(static_cast<LONG_PTR>(::GetWindowLongPtr(_hSelf, DWLP_USER)));
         switch (LOWORD(wParam))
         {
         case IDCANCEL:    // Close this dialog when clicking to close button

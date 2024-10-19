@@ -21,14 +21,14 @@ struct TreeNode
 
 class RapidJsonHandler : public rapidjson::BaseReaderHandler<rapidjson::UTF8<>, RapidJsonHandler>
 {
-    std::string            m_strLastKey;
-    std::stack<TreeNode *> m_NodeStack;
+    std::string           m_strLastKey;
+    std::stack<TreeNode*> m_NodeStack;
 
-    JsonViewDlg *m_dlg      = nullptr;
+    JsonViewDlg* m_dlg      = nullptr;
     HTREEITEM    m_treeRoot = nullptr;
 
 public:
-    RapidJsonHandler(JsonViewDlg *dlg, HTREEITEM treeRoot)
+    RapidJsonHandler(JsonViewDlg* dlg, HTREEITEM treeRoot)
         : m_dlg(dlg)
         , m_treeRoot(treeRoot)
     {
@@ -42,15 +42,15 @@ public:
     bool Int64(int64_t i);
     bool Uint64(uint64_t i);
     bool Double(double d);
-    bool RawNumber(const Ch *str, unsigned length, bool copy);
-    bool String(const Ch *str, unsigned length, bool copy);
-    bool Key(const Ch *str, unsigned length, bool copy);
+    bool RawNumber(const Ch* str, unsigned length, bool copy);
+    bool String(const Ch* str, unsigned length, bool copy);
+    bool Key(const Ch* str, unsigned length, bool copy);
     bool StartObject();
     bool EndObject(unsigned memberCount);
     bool StartArray();
     bool EndArray(unsigned elementCount);
 
 private:
-    void InsertToTree(TreeNode *node, const char *const str, bool bQuote);
+    void InsertToTree(TreeNode* node, const char* const str, bool bQuote);
     void AppendNodeCount(unsigned elementCount, bool bArray);
 };

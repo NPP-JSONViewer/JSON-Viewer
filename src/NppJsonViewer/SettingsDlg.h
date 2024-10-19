@@ -7,7 +7,7 @@
 class SettingsDlg : public StaticDialog
 {
 public:
-    SettingsDlg(HINSTANCE hInstance, HWND hParent, int nCmdId, const std::wstring &configPath, std::shared_ptr<Setting> &pSetting);
+    SettingsDlg(HINSTANCE hInstance, HWND hParent, int nCmdId, const std::wstring& configPath, std::shared_ptr<Setting>& pSetting);
     ~SettingsDlg() = default;
 
     bool ShowDlg(bool bShow);

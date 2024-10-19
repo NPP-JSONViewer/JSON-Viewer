@@ -10,7 +10,7 @@
 
 constexpr int FILENAME_LEN_IN_TITLE = 16;
 
-JsonViewDlg::JsonViewDlg(HINSTANCE hInstance, const NppData &nppData, const bool &isReady, int nCmdId, std::shared_ptr<Setting> &pSetting)
+JsonViewDlg::JsonViewDlg(HINSTANCE hInstance, const NppData& nppData, const bool& isReady, int nCmdId, std::shared_ptr<Setting>& pSetting)
     : DockingDlgInterface(IDD_TREEDLG)
     , m_NppData(nppData)
     , m_IsNppReady(isReady)
@@ -52,7 +52,7 @@ void JsonViewDlg::ShowDlg(bool bShow)
         // define the default docking behaviour
         data.uMask         = DWS_DF_CONT_LEFT | DWS_ICONTAB | DWS_ADDINFO;
         data.pszModuleName = getPluginFileName();
-        data.pszName       = const_cast<TCHAR *>(TITLE_JSON_PANEL);
+        data.pszName       = const_cast<TCHAR*>(TITLE_JSON_PANEL);
         data.hIconTab      = static_cast<HICON>(LoadImage(_hInst, MAKEINTRESOURCE(IDI_ICON_TOOLBAR), IMAGE_ICON, 32, 32, LR_LOADMAP3DCOLORS | LR_LOADTRANSPARENT));
         data.pszAddInfo    = m_pCurrFileName.get();
 
@@ -136,7 +136,7 @@ void JsonViewDlg::SortJsonByKey()
 {
     UpdateTitle();
 
-    const auto selectedData  = m_pEditor->GetJsonText();
+    const auto selectedData = m_pEditor->GetJsonText();
     const auto selectedText = IsSelectionValidJson(selectedData);
 
     if (!selectedText.has_value() || selectedText.value().empty())
@@ -164,7 +164,7 @@ void JsonViewDlg::SortJsonByKey()
     }
 }
 
-bool JsonViewDlg::CheckForTokenUndefined(eMethod method, std::string selectedText, Result &res, HTREEITEM tree_root)
+bool JsonViewDlg::CheckForTokenUndefined(eMethod method, std::string selectedText, Result& res, HTREEITEM tree_root)
 {
     auto [le, lf, indentChar, indentLen] = GetFormatSetting();
 
@@ -221,7 +221,7 @@ bool JsonViewDlg::CheckForTokenUndefined(eMethod method, std::string selectedTex
                     m_pEditor->RefreshSelectionPos();
                 }
             }
-            catch (const std::exception &)
+            catch (const std::exception&)
             {
             }
         }
@@ -229,7 +229,7 @@ bool JsonViewDlg::CheckForTokenUndefined(eMethod method, std::string selectedTex
     return false;
 }
 
-bool JsonViewDlg::IsMultiSelection(const ScintillaData &scintillaData) const
+bool JsonViewDlg::IsMultiSelection(const ScintillaData& scintillaData) const
 {
     std::string   text;
     ScintillaCode code = ScintillaCode::Unknown;
@@ -240,7 +240,7 @@ bool JsonViewDlg::IsMultiSelection(const ScintillaData &scintillaData) const
     return bRetVal;
 }
 
-auto JsonViewDlg::IsSelectionValidJson(const ScintillaData &scintillaData) const -> std::optional<std::string>
+auto JsonViewDlg::IsSelectionValidJson(const ScintillaData& scintillaData) const -> std::optional<std::string>
 {
     std::string   text;
     ScintillaCode code = ScintillaCode::Unknown;
@@ -253,13 +253,13 @@ auto JsonViewDlg::IsSelectionValidJson(const ScintillaData &scintillaData) const
     return std::nullopt;
 }
 
-void JsonViewDlg::ProcessScintillaData(const ScintillaData &scintillaData, std::string &text, ScintillaCode &code) const
+void JsonViewDlg::ProcessScintillaData(const ScintillaData& scintillaData, std::string& text, ScintillaCode& code) const
 {
     text.clear();
     code = ScintillaCode::Unknown;
 
     std::visit(
-        [&text, &code](auto &&arg)
+        [&text, &code](auto&& arg)
         {
             using T = std::decay_t<decltype(arg)>;
             if constexpr (std::is_same_v<T, std::string>)
@@ -300,7 +300,7 @@ void JsonViewDlg::ValidateJson()
 {
     UpdateTitle();
 
-    const auto selectedData  = m_pEditor->GetJsonText();
+    const auto selectedData = m_pEditor->GetJsonText();
     const auto selectedText = IsSelectionValidJson(selectedData);
 
     if (!selectedText.has_value() || selectedText.value().empty())
@@ -341,7 +341,7 @@ void JsonViewDlg::DrawJsonTree()
 
     // Refresh the view
     m_pEditor->RefreshViewHandle();
-    const auto selectedData  = m_pEditor->GetJsonText();
+    const auto selectedData = m_pEditor->GetJsonText();
     const auto selectedText = IsSelectionValidJson(selectedData);
 
     if (!selectedText.has_value() || selectedText.value().empty())
@@ -386,7 +386,7 @@ void JsonViewDlg::HighlightAsJson(bool bForcefully) const
         m_pEditor->SetLangAsJson();
 }
 
-auto JsonViewDlg::PopulateTreeUsingSax(HTREEITEM tree_root, const std::string &jsonText) -> std::optional<std::wstring>
+auto JsonViewDlg::PopulateTreeUsingSax(HTREEITEM tree_root, const std::string& jsonText) -> std::optional<std::wstring>
 {
     std::optional<std::wstring> retVal = std::nullopt;
 
@@ -423,7 +423,7 @@ auto JsonViewDlg::PopulateTreeUsingSax(HTREEITEM tree_root, const std::string &j
     return retVal;
 }
 
-HTREEITEM JsonViewDlg::InsertToTree(HTREEITEM parent, const std::string &text)
+HTREEITEM JsonViewDlg::InsertToTree(HTREEITEM parent, const std::string& text)
 {
     auto wText = StringHelper::ToWstring(text, CP_UTF8);
     return m_hTreeView->InsertNode(wText, NULL, parent);
@@ -579,7 +579,7 @@ void JsonViewDlg::PrepareButtons()
     SetIconAndTooltip(eButton::eSearch, TOOLTIP_SEARCH);
 }
 
-void JsonViewDlg::SetIconAndTooltip(eButton ctrlType, const std::wstring &toolTip)
+void JsonViewDlg::SetIconAndTooltip(eButton ctrlType, const std::wstring& toolTip)
 {
     int nCtrlID   = 0;
     int iconResID = 0;
@@ -828,12 +828,12 @@ auto JsonViewDlg::CopyPath() const -> std::wstring
     return std::wstring();
 }
 
-int JsonViewDlg::ShowMessage(const std::wstring &title, const std::wstring &msg, int flag, bool bDontShow)
+int JsonViewDlg::ShowMessage(const std::wstring& title, const std::wstring& msg, int flag, bool bDonotShow)
 {
-    return !bDontShow ? ::MessageBox(_hParent, msg.c_str(), title.c_str(), flag) : IDOK;
+    return !bDonotShow ? ::MessageBox(_hParent, msg.c_str(), title.c_str(), flag) : IDOK;
 }
 
-void JsonViewDlg::ReportError(const Result &result)
+void JsonViewDlg::ReportError(const Result& result)
 {
     // Mark the error position
     size_t start = m_pEditor->GetSelectionStart() + result.error_pos;
@@ -851,13 +851,13 @@ void JsonViewDlg::ToggleMenuItemState(bool bVisible)
     ::SendMessage(_hParent, NPPM_SETMENUITEMCHECK, static_cast<WPARAM>(m_nDlgId), bVisible);
 }
 
-void JsonViewDlg::ShowControls(const std::vector<DWORD> &ids, bool show)
+void JsonViewDlg::ShowControls(const std::vector<DWORD>& ids, bool show)
 {
     for (auto id : ids)
         ShowWindow(GetDlgItem(getHSelf(), id), show ? SW_SHOW : SW_HIDE);
 }
 
-void JsonViewDlg::EnableControls(const std::vector<DWORD> &ids, bool enable)
+void JsonViewDlg::EnableControls(const std::vector<DWORD>& ids, bool enable)
 {
     for (auto id : ids)
         EnableWindow(GetDlgItem(getHSelf(), id), enable ? TRUE : FALSE);
@@ -873,7 +873,7 @@ void JsonViewDlg::HandleTreeEvents(LPARAM lParam)
     {
     case TVN_SELCHANGED:
     {
-        NMTREEVIEW *pnmtv = reinterpret_cast<LPNMTREEVIEW>(lParam);
+        NMTREEVIEW* pnmtv = reinterpret_cast<LPNMTREEVIEW>(lParam);
         HTREEITEM   hItem = pnmtv->itemNew.hItem;
         if (hItem && (pnmtv->action == TVC_BYMOUSE || pnmtv->action == TVC_BYKEYBOARD))
         {
@@ -960,7 +960,7 @@ INT_PTR JsonViewDlg::run_dlgProc(UINT message, WPARAM wParam, LPARAM lParam)
     {
     case WM_GETMINMAXINFO:
     {
-        MINMAXINFO *mmi       = reinterpret_cast<MINMAXINFO *>(lParam);
+        MINMAXINFO* mmi       = reinterpret_cast<MINMAXINFO*>(lParam);
         mmi->ptMinTrackSize.x = m_rcInitialWindowRect.right;
         return 0;
     }
@@ -976,7 +976,7 @@ INT_PTR JsonViewDlg::run_dlgProc(UINT message, WPARAM wParam, LPARAM lParam)
 
     case WM_INITDIALOG:
     {
-        // Save ourself in GWLP_USERDATA.
+        // Save ourselves in GWLP_USERDATA.
         ::SetWindowLongPtr(getHSelf(), GWLP_USERDATA, reinterpret_cast<LONG_PTR>(this));
 
         m_hTreeView->OnInit(getHSelf());

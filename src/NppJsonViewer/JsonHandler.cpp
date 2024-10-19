@@ -6,12 +6,12 @@
 namespace rj = rapidjson;
 
 
-JsonHandler::JsonHandler(const ParseOptions &options)
+JsonHandler::JsonHandler(const ParseOptions& options)
     : m_parseOptions(options)
 {
 }
 
-auto JsonHandler::GetCompressedJson(const std::string &jsonText) -> const Result
+auto JsonHandler::GetCompressedJson(const std::string& jsonText) -> const Result
 {
     rj::StringBuffer                                                                                sb;
     rj::Writer<rj::StringBuffer, rj::UTF8<>, rj::UTF8<>, rj::CrtAllocator, rj::kWriteNanAndInfFlag> handler(sb);
@@ -19,7 +19,7 @@ auto JsonHandler::GetCompressedJson(const std::string &jsonText) -> const Result
     return ParseJson<flgBaseWriter>(jsonText, sb, handler);
 }
 
-auto JsonHandler::FormatJson(const std::string &jsonText, LE le, LF lf, char indentChar, unsigned indentLen) -> const Result
+auto JsonHandler::FormatJson(const std::string& jsonText, LE le, LF lf, char indentChar, unsigned indentLen) -> const Result
 {
     rj::StringBuffer                                                                                      sb;
     rj::PrettyWriter<rj::StringBuffer, rj::UTF8<>, rj::UTF8<>, rj::CrtAllocator, rj::kWriteNanAndInfFlag> handler(sb);
@@ -30,7 +30,7 @@ auto JsonHandler::FormatJson(const std::string &jsonText, LE le, LF lf, char ind
     return ParseJson<flgBaseWriter>(jsonText, sb, handler);
 }
 
-auto JsonHandler::SortJsonByKey(const std::string &jsonText, LE le, LF lf, char indentChar, unsigned indentLen) -> const Result
+auto JsonHandler::SortJsonByKey(const std::string& jsonText, LE le, LF lf, char indentChar, unsigned indentLen) -> const Result
 {
     auto res = ValidateJson(jsonText);
     if (res.success)
@@ -42,7 +42,7 @@ auto JsonHandler::SortJsonByKey(const std::string &jsonText, LE le, LF lf, char 
     return res;
 }
 
-auto JsonHandler::ValidateJson(const std::string &jsonText) -> const Result
+auto JsonHandler::ValidateJson(const std::string& jsonText) -> const Result
 {
     rj::StringBuffer                                                                                sb;
     rj::Writer<rj::StringBuffer, rj::UTF8<>, rj::UTF8<>, rj::CrtAllocator, rj::kWriteNanAndInfFlag> handler(sb);
@@ -50,7 +50,7 @@ auto JsonHandler::ValidateJson(const std::string &jsonText) -> const Result
     return ParseJson<flgBaseWriter>(jsonText, sb, handler);
 }
 
-void JsonHandler::SortJsonObject(rj::Value &jsonObject, rj::Document::AllocatorType &allocator) const
+void JsonHandler::SortJsonObject(rj::Value& jsonObject, rj::Document::AllocatorType& allocator) const
 {
     if (!jsonObject.IsObject())
     {
@@ -72,10 +72,10 @@ void JsonHandler::SortJsonObject(rj::Value &jsonObject, rj::Document::AllocatorT
     rj::Value sortedObject(rj::kObjectType);
 
     // Add members to the sorted object in sorted order
-    for (const auto &key : keys)
+    for (const auto& key : keys)
     {
         rj::Value  name(key.c_str(), allocator);           // Create key as a RapidJSON value
-        rj::Value &value = jsonObject[key.c_str()];        // Get corresponding value
+        rj::Value& value = jsonObject[key.c_str()];        // Get corresponding value
         sortedObject.AddMember(name, value, allocator);    // Add key-value pair to sorted object
     }
 
@@ -83,7 +83,7 @@ void JsonHandler::SortJsonObject(rj::Value &jsonObject, rj::Document::AllocatorT
     jsonObject = std::move(sortedObject);
 }
 
-void JsonHandler::SortJsonRecursively(rj::Value &jsonValue, rj::Document::AllocatorType &allocator) const
+void JsonHandler::SortJsonRecursively(rj::Value& jsonValue, rj::Document::AllocatorType& allocator) const
 {
     if (jsonValue.IsObject())
     {
@@ -105,7 +105,7 @@ void JsonHandler::SortJsonRecursively(rj::Value &jsonValue, rj::Document::Alloca
     }
 }
 
-auto JsonHandler::SortJsonText(const std::string &jsonString) const -> std::string
+auto JsonHandler::SortJsonText(const std::string& jsonString) const -> std::string
 {
     rj::Document document;
 

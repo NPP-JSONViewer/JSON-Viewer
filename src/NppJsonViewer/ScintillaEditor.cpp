@@ -2,7 +2,7 @@
 #include <cassert>
 #include <memory>
 
-ScintillaEditor::ScintillaEditor(const NppData &nppData)
+ScintillaEditor::ScintillaEditor(const NppData& nppData)
     : m_NppData(nppData)
 {
     RefreshViewHandle();
@@ -54,9 +54,9 @@ void ScintillaEditor::SetLangAsJson() const
 
 bool ScintillaEditor::IsJsonFile() const
 {
-    unsigned langType = 0;
-    ::SendMessage(m_NppData._nppHandle, NPPM_GETCURRENTLANGTYPE, 0, reinterpret_cast<LPARAM>(&langType));
-    return langType == LangType::L_JSON;
+    unsigned languageType = 0;
+    ::SendMessage(m_NppData._nppHandle, NPPM_GETCURRENTLANGTYPE, 0, reinterpret_cast<LPARAM>(&languageType));
+    return languageType == LangType::L_JSON;
 }
 
 auto ScintillaEditor::GetCurrentFileName() const -> std::wstring
@@ -66,7 +66,7 @@ auto ScintillaEditor::GetCurrentFileName() const -> std::wstring
     return fileName;
 }
 
-void ScintillaEditor::ReplaceSelection(const std::string &text) const
+void ScintillaEditor::ReplaceSelection(const std::string& text) const
 {
     ::SendMessage(m_hScintilla, SCI_REPLACESEL, 0, reinterpret_cast<LPARAM>(text.c_str()));
 }

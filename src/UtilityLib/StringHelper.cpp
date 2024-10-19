@@ -2,17 +2,17 @@
 
 #include "StringHelper.h"
 
-std::string StringHelper::ReplaceAll(const std::string &str, const std::string &search, const std::string &replace)
+std::string StringHelper::ReplaceAll(const std::string& str, const std::string& search, const std::string& replace)
 {
     return std::regex_replace(str, std::regex(search), replace);
 }
 
-std::wstring StringHelper::ReplaceAll(const std::wstring &wstr, const std::wstring &search, const std::wstring &replace)
+std::wstring StringHelper::ReplaceAll(const std::wstring& wstr, const std::wstring& search, const std::wstring& replace)
 {
     return std::regex_replace(wstr, std::wregex(search), replace);
 }
 
-std::wstring StringHelper::ToWstring(const std::string &str, UINT codePage)
+std::wstring StringHelper::ToWstring(const std::string& str, UINT codePage)
 {
     std::wstring wstr;
 
@@ -34,7 +34,7 @@ std::wstring StringHelper::ToWstring(const std::string &str, UINT codePage)
     return wstr;
 }
 
-std::string StringHelper::ToString(const std::wstring &wstr, UINT codePage)
+std::string StringHelper::ToString(const std::wstring& wstr, UINT codePage)
 {
     std::string str;
     if (!wstr.empty())
@@ -55,7 +55,7 @@ std::string StringHelper::ToString(const std::wstring &wstr, UINT codePage)
     return str;
 }
 
-std::vector<std::string> StringHelper::Split(const std::string &input, const std::string &delim)
+std::vector<std::string> StringHelper::Split(const std::string& input, const std::string& delim)
 {
     // Vector is created on stack and copied on return
     std::vector<std::string> tokens;
@@ -77,7 +77,7 @@ std::vector<std::string> StringHelper::Split(const std::string &input, const std
     return tokens;
 }
 
-std::vector<std::wstring> StringHelper::Split(const std::wstring &input, const std::wstring &delim)
+std::vector<std::wstring> StringHelper::Split(const std::wstring& input, const std::wstring& delim)
 {
     // Vector is created on stack and copied on return
     std::vector<std::wstring> tokens;
@@ -99,12 +99,12 @@ std::vector<std::wstring> StringHelper::Split(const std::wstring &input, const s
     return tokens;
 }
 
-bool StringHelper::Contains(const std::string &input, const std::string &search, bool ignoreCase)
+bool StringHelper::Contains(const std::string& input, const std::string& search, bool ignoreCase)
 {
     return Contains(ToWstring(input), ToWstring(search), ignoreCase);
 }
 
-bool StringHelper::Contains(const std::wstring &input, const std::wstring &search, bool ignoreCase)
+bool StringHelper::Contains(const std::wstring& input, const std::wstring& search, bool ignoreCase)
 {
     std::wstring lower_input  = input;
     std::wstring lower_search = search;
@@ -117,14 +117,14 @@ bool StringHelper::Contains(const std::wstring &input, const std::wstring &searc
     return lower_input.find(lower_search) != std::wstring::npos;
 }
 
-void StringHelper::ToLower(std::string &input)
+void StringHelper::ToLower(std::string& input)
 {
     auto s = ToWstring(input);
     ToLower(s);
     input = ToString(s);
 }
 
-void StringHelper::ToLower(std::wstring &input)
+void StringHelper::ToLower(std::wstring& input)
 {
     std::transform(input.begin(), input.end(), input.begin(), ::towlower);
 }

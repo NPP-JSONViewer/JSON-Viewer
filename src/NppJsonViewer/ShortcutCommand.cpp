@@ -8,7 +8,7 @@ ShortcutCommand::ShortcutCommand(int nCommandCount)
 {
 }
 
-bool ShortcutCommand::SetCommand(CallBackID id, const TCHAR *cmdName, const PFUNCPLUGINCMD pFunc, bool checkOnInit)
+bool ShortcutCommand::SetCommand(CallBackID id, const TCHAR* cmdName, const PFUNCPLUGINCMD pFunc, bool checkOnInit)
 {
     int nIndex = static_cast<int>(id);
 
@@ -23,7 +23,7 @@ bool ShortcutCommand::SetCommand(CallBackID id, const TCHAR *cmdName, const PFUN
     return true;
 }
 
-bool ShortcutCommand::SetShortCut(CallBackID id, const ShortcutKey &scKey)
+bool ShortcutCommand::SetShortCut(CallBackID id, const ShortcutKey& scKey)
 {
     int nIndex = static_cast<int>(id);
 

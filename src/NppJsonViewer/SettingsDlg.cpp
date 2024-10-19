@@ -6,7 +6,7 @@
 #include <Uxtheme.h>
 
 
-SettingsDlg::SettingsDlg(HINSTANCE hInstance, HWND hParent, int nCmdId, const std::wstring &configPath, std::shared_ptr<Setting> &pSetting)
+SettingsDlg::SettingsDlg(HINSTANCE hInstance, HWND hParent, int nCmdId, const std::wstring& configPath, std::shared_ptr<Setting>& pSetting)
     : m_nCmdId(nCmdId)
     , m_configPath(configPath)
     , StaticDialog()

@@ -1,4 +1,4 @@
-// dllmain.cpp : Defines the entry point for the DLL application.
+// DllMain.cpp : Defines the entry point for the DLL application.
 
 #include "NppJsonPlugin.h"
 
@@ -30,17 +30,17 @@ extern "C" __declspec(dllexport) void setInfo(NppData notepadPlusData)
     g_NppJsonPlugin.SetInfo(notepadPlusData);
 }
 
-extern "C" __declspec(dllexport) const TCHAR *getName()
+extern "C" __declspec(dllexport) const TCHAR* getName()
 {
     return g_NppJsonPlugin.GetPluginName();
 }
 
-extern "C" __declspec(dllexport) FuncItem *getFuncsArray(int *nbF)
+extern "C" __declspec(dllexport) FuncItem* getFuncsArray(int* nbF)
 {
     return g_NppJsonPlugin.GetFuncsArray(nbF);
 }
 
-extern "C" __declspec(dllexport) void beNotified(SCNotification *notifyCode)
+extern "C" __declspec(dllexport) void beNotified(SCNotification* notifyCode)
 {
     g_NppJsonPlugin.ProcessNotification(notifyCode);
 }

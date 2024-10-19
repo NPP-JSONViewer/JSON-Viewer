@@ -1,6 +1,6 @@
 #include "Execute.h"
 
-Execute::Execute(const TCHAR *cmd, const TCHAR *args, const TCHAR *cDir, bool show)
+Execute::Execute(const TCHAR* cmd, const TCHAR* args, const TCHAR* cDir, bool show)
     : m_Command(cmd)
     , m_Args(args)
     , m_CurDir(cDir)

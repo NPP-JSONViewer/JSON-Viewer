@@ -7,7 +7,7 @@
 class Execute
 {
 public:
-    Execute(const TCHAR *cmd, const TCHAR *args, const TCHAR *cDir, bool show = false);
+    Execute(const TCHAR* cmd, const TCHAR* args, const TCHAR* cDir, bool show = false);
 
     bool  Run(bool isElevationRequired = false);
     DWORD RunSync(bool isElevationRequired = false);

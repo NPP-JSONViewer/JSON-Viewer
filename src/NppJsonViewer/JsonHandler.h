@@ -33,25 +33,25 @@ class JsonHandler
     ParseOptions m_parseOptions {};
 
 public:
-    explicit JsonHandler(const ParseOptions &options);
+    explicit JsonHandler(const ParseOptions& options);
     ~JsonHandler() = default;
 
-    auto GetCompressedJson(const std::string &jsonText) -> const Result;
-    auto FormatJson(const std::string &jsonText, LE le, LF lf, char indentChar, unsigned indentLen) -> const Result;
-    auto SortJsonByKey(const std::string &jsonText, LE le, LF lf, char indentChar, unsigned indentLen) -> const Result;
-    auto ValidateJson(const std::string &jsonText) -> const Result;
+    auto GetCompressedJson(const std::string& jsonText) -> const Result;
+    auto FormatJson(const std::string& jsonText, LE le, LF lf, char indentChar, unsigned indentLen) -> const Result;
+    auto SortJsonByKey(const std::string& jsonText, LE le, LF lf, char indentChar, unsigned indentLen) -> const Result;
+    auto ValidateJson(const std::string& jsonText) -> const Result;
 
     template <unsigned format, typename Handler>
-    auto ParseJson(const std::string &jsonText, rj::StringBuffer &sb, Handler &handler) -> const Result;
+    auto ParseJson(const std::string& jsonText, rj::StringBuffer& sb, Handler& handler) -> const Result;
 
 private:
-    void SortJsonObject(rj::Value &jsonObject, rj::Document::AllocatorType &allocator) const;
-    void SortJsonRecursively(rj::Value &jsonValue, rj::Document::AllocatorType &allocator) const;
-    auto SortJsonText(const std::string &jsonString) const -> std::string;
+    void SortJsonObject(rj::Value& jsonObject, rj::Document::AllocatorType& allocator) const;
+    void SortJsonRecursively(rj::Value& jsonValue, rj::Document::AllocatorType& allocator) const;
+    auto SortJsonText(const std::string& jsonString) const -> std::string;
 };
 
 template <unsigned flgBase, typename Handler>
-inline auto JsonHandler::ParseJson(const std::string &jsonText, rj::StringBuffer &sb, Handler &handler) -> const Result
+inline auto JsonHandler::ParseJson(const std::string& jsonText, rj::StringBuffer& sb, Handler& handler) -> const Result
 {
     Result retVal {};
 

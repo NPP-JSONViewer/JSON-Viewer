@@ -19,41 +19,41 @@ auto TreeViewCtrl::InitTree() -> HTREEITEM
     return InsertNode(JSON_ROOT, -1, TVI_ROOT);
 }
 
-auto TreeViewCtrl::InsertNode(const std::wstring &text, LPARAM lparam, HTREEITEM parentNode) -> HTREEITEM
+auto TreeViewCtrl::InsertNode(const std::wstring& text, LPARAM lparam, HTREEITEM parentNode) -> HTREEITEM
 {
-    TV_INSERTSTRUCT tvinsert {};
+    TV_INSERTSTRUCT tvInsert {};
 
     if (parentNode == TVI_ROOT)
     {
-        tvinsert.hParent      = NULL;
-        tvinsert.hInsertAfter = TVI_ROOT;
+        tvInsert.hParent      = NULL;
+        tvInsert.hInsertAfter = TVI_ROOT;
     }
     else
     {
-        tvinsert.hParent      = parentNode;
-        tvinsert.hInsertAfter = TVI_LAST;
+        tvInsert.hParent      = parentNode;
+        tvInsert.hInsertAfter = TVI_LAST;
     }
 
     if (text.length() + 1 > m_nMaxNodeTextLength)
         m_nMaxNodeTextLength = text.length() + 1;
 
-    tvinsert.item.mask    = TVIF_HANDLE | TVIF_TEXT | TVIF_PARAM;
-    tvinsert.item.pszText = const_cast<LPTSTR>(text.c_str());
-    tvinsert.item.lParam  = lparam;
+    tvInsert.item.mask    = TVIF_HANDLE | TVIF_TEXT | TVIF_PARAM;
+    tvInsert.item.pszText = const_cast<LPTSTR>(text.c_str());
+    tvInsert.item.lParam  = lparam;
 
-    HTREEITEM item = reinterpret_cast<HTREEITEM>(SendDlgItemMessage(m_hParent, IDC_TREE, TVM_INSERTITEM, 0, reinterpret_cast<LPARAM>(&tvinsert)));
+    HTREEITEM item = reinterpret_cast<HTREEITEM>(SendDlgItemMessage(m_hParent, IDC_TREE, TVM_INSERTITEM, 0, reinterpret_cast<LPARAM>(&tvInsert)));
 
     return item;
 }
 
-void TreeViewCtrl::UpdateNodeText(HTREEITEM node, const std::wstring &text)
+void TreeViewCtrl::UpdateNodeText(HTREEITEM node, const std::wstring& text)
 {
     auto tvi = std::make_unique<TVITEMW>();
     if (GetTVItem(node, tvi.get()))
     {
         tvi->mask |= TVIF_TEXT;
         tvi->cchTextMax = static_cast<int>(text.size());
-        tvi->pszText    = const_cast<wchar_t *>(text.c_str());
+        tvi->pszText    = const_cast<wchar_t*>(text.c_str());
 
         SetTVItem(tvi.get());
     }
@@ -137,7 +137,7 @@ HTREEITEM TreeViewCtrl::GetRoot() const
     return TreeView_GetRoot(m_hTree);
 }
 
-bool TreeViewCtrl::SelectItem(HTREEITEM hti, bool firstVisible)
+bool TreeViewCtrl::SelectItem(HTREEITEM hti, bool firstVisible) const
 {
     UINT flag = TVGN_CARET;
     if (firstVisible)
@@ -170,7 +170,7 @@ auto TreeViewCtrl::GetNodeName(HTREEITEM hti, bool removeTrailingCount) const ->
     // If it is an array or list then remove trailing {} or []
     if (removeTrailingCount && HasChild(hti))
     {
-        auto remove = [](std::wstring &input, const wchar_t ch)
+        auto remove = [](std::wstring& input, const wchar_t ch)
         {
             wchar_t removeTill = ch == L'}' ? L'{' : L'[';
             wchar_t current    = input.back();
@@ -326,7 +326,7 @@ HTREEITEM TreeViewCtrl::NextItem(HTREEITEM htiCurrent, HTREEITEM htiNextRoot) co
     return nullptr;
 }
 
-bool TreeViewCtrl::GetTVItem(HTREEITEM hti, TVITEM *tvi) const
+bool TreeViewCtrl::GetTVItem(HTREEITEM hti, TVITEM* tvi) const
 {
     tvi->mask   = TVIF_HANDLE | TVIF_PARAM;
     tvi->hItem  = hti;
@@ -335,7 +335,7 @@ bool TreeViewCtrl::GetTVItem(HTREEITEM hti, TVITEM *tvi) const
     return TreeView_GetItem(m_hTree, tvi) ? true : false;
 }
 
-bool TreeViewCtrl::SetTVItem(TVITEM *tvi) const
+bool TreeViewCtrl::SetTVItem(TVITEM* tvi) const
 {
     return TreeView_SetItem(m_hTree, tvi) ? true : false;
 }

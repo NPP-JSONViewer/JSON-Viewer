@@ -13,7 +13,7 @@
 #pragma comment(lib, "Comctl32.lib")
 
 
-std::wstring CUtility::GetVersion(const std::wstring &filePath)
+std::wstring CUtility::GetVersion(const std::wstring& filePath)
 {
     std::wstring retVer;
 
@@ -27,9 +27,9 @@ std::wstring CUtility::GetVersion(const std::wstring &filePath)
             auto buffer = std::make_unique<unsigned char[]>(bufferSize);
             ::GetFileVersionInfo(filePath.c_str(), 0, bufferSize, reinterpret_cast<LPVOID>(buffer.get()));
 
-            VS_FIXEDFILEINFO *lpFileInfo = nullptr;
+            VS_FIXEDFILEINFO* lpFileInfo = nullptr;
             UINT              cbFileInfo = 0;
-            VerQueryValue(buffer.get(), TEXT("\\"), reinterpret_cast<LPVOID *>(&lpFileInfo), &cbFileInfo);
+            VerQueryValue(buffer.get(), TEXT("\\"), reinterpret_cast<LPVOID*>(&lpFileInfo), &cbFileInfo);
             if (cbFileInfo)
             {
                 std::wostringstream os;
@@ -49,7 +49,7 @@ std::wstring CUtility::GetVersion(const std::wstring &filePath)
     return retVer;
 }
 
-HWND CUtility::CreateToolTip(HWND hWnd, int nCtrlID, const std::wstring &tooltipText, HINSTANCE hInst)
+HWND CUtility::CreateToolTip(HWND hWnd, int nCtrlID, const std::wstring& tooltipText, HINSTANCE hInst)
 {
     if (nCtrlID == 0 || hWnd == nullptr || tooltipText.empty())
     {
@@ -74,7 +74,7 @@ HWND CUtility::CreateToolTip(HWND hWnd, int nCtrlID, const std::wstring &tooltip
     toolInfo.hwnd     = hWnd;
     toolInfo.uFlags   = TTF_IDISHWND | TTF_SUBCLASS;
     toolInfo.uId      = reinterpret_cast<UINT_PTR>(hControl);
-    toolInfo.lpszText = const_cast<wchar_t *>(tooltipText.c_str());
+    toolInfo.lpszText = const_cast<wchar_t*>(tooltipText.c_str());
     SendMessage(hToolTip, TTM_ADDTOOL, 0, reinterpret_cast<LPARAM>(&toolInfo));
 
     return hToolTip;
@@ -106,7 +106,7 @@ std::wstring CUtility::GetEditCtrlText(HWND hWnd)
     return buf.data();
 }
 
-void CUtility::SetEditCtrlText(HWND hWnd, const std::wstring &txt)
+void CUtility::SetEditCtrlText(HWND hWnd, const std::wstring& txt)
 {
     Edit_SetText(hWnd, txt.data());
 }
@@ -121,36 +121,36 @@ void CUtility::SetCheckboxStatus(HWND hWnd, bool bCheck)
     Button_SetCheck(hWnd, bCheck);
 }
 
-bool CUtility::DirExist(const std::wstring &dirPath)
+bool CUtility::DirExist(const std::wstring& dirPath)
 {
     return std::filesystem::exists(dirPath);
 }
 
-bool CUtility::FileExist(const std::wstring &filePath)
+bool CUtility::FileExist(const std::wstring& filePath)
 {
     bool r = std::filesystem::exists(filePath);
     return r;
 }
 
-long CUtility::FileSize(const std::wstring &filePath)
+long CUtility::FileSize(const std::wstring& filePath)
 {
     auto r = std::filesystem::file_size(filePath);
     return static_cast<long>(r);
 }
 
-bool CUtility::CreateDir(const std::wstring &dirPath)
+bool CUtility::CreateDir(const std::wstring& dirPath)
 {
     bool r = std::filesystem::create_directories(dirPath);
     return r;
 }
 
-bool CUtility::Copy(const std::wstring &srcFile, const std::wstring &dstFile)
+bool CUtility::Copy(const std::wstring& srcFile, const std::wstring& dstFile)
 {
     bool r = std::filesystem::copy_file(srcFile, dstFile);
     return r;
 }
 
-auto CUtility::GetFileName(const std::wstring &fullPath, bool withExtension) -> std::wstring
+auto CUtility::GetFileName(const std::wstring& fullPath, bool withExtension) -> std::wstring
 {
     std::filesystem::path pathObj(fullPath);
 
@@ -169,7 +169,7 @@ auto CUtility::GetFileName(const std::wstring &fullPath, bool withExtension) -> 
     return pathObj.filename().wstring();
 }
 
-auto CUtility::GetFileExtension(const std::wstring &fileName) -> std::wstring
+auto CUtility::GetFileExtension(const std::wstring& fileName) -> std::wstring
 {
     std::wstring retVal;
 
@@ -203,7 +203,7 @@ auto CUtility::GetSpecialFolderLocation(int folderKind) -> std::wstring
     return result;
 }
 
-bool CUtility::OpenFileDlg(std::wstring &filePath, const std::wstring &dlgTitle, const std::vector<wchar_t> &dlgFilter, DWORD flags)
+bool CUtility::OpenFileDlg(std::wstring& filePath, const std::wstring& dlgTitle, const std::vector<wchar_t>& dlgFilter, DWORD flags)
 {
     bool bRetVal = false;
 
@@ -227,7 +227,7 @@ bool CUtility::OpenFileDlg(std::wstring &filePath, const std::wstring &dlgTitle,
     return bRetVal;
 }
 
-bool CUtility::CopyToClipboard(const std::wstring &str2cpy, HWND hWnd)
+bool CUtility::CopyToClipboard(const std::wstring& str2cpy, HWND hWnd)
 {
     size_t  len2Allocate = (str2cpy.size() + 1) * sizeof(TCHAR);
     HGLOBAL hglbCopy     = ::GlobalAlloc(GMEM_MOVEABLE, len2Allocate);
@@ -251,7 +251,7 @@ bool CUtility::CopyToClipboard(const std::wstring &str2cpy, HWND hWnd)
     }
 
     // Lock the handle and copy the text to the buffer.
-    wchar_t *pStr = reinterpret_cast<wchar_t *>(::GlobalLock(hglbCopy));
+    wchar_t* pStr = reinterpret_cast<wchar_t*>(::GlobalLock(hglbCopy));
     if (pStr == NULL)
     {
         ::GlobalUnlock(hglbCopy);
@@ -280,13 +280,20 @@ bool CUtility::CopyToClipboard(const std::wstring &str2cpy, HWND hWnd)
     return true;
 }
 
-bool CUtility::IsNumber(const std::wstring &str)
+bool CUtility::IsNumber(const std::wstring& str)
 {
-	return !str.empty() && std::find_if(str.begin(),
-		str.end(), [](wchar_t c) { return !std::isdigit(c); }) == str.end();
+    return !str.empty()
+           && std::find_if(
+                  str.begin(),
+                  str.end(),
+                  [](wchar_t c)
+                  {
+                      return !std::isdigit(c);
+                  })
+                  == str.end();
 }
 
-auto CUtility::GetNumber(const std::wstring &str) -> std::optional<int>
+auto CUtility::GetNumber(const std::wstring& str) -> std::optional<int>
 {
     std::optional<int> retVal = std::nullopt;
     if (IsNumber(str))

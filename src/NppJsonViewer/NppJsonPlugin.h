@@ -20,13 +20,13 @@ public:
     void PluginCleanup();
 
     // Notepad++ APIs to be implemented
-    void SetInfo(const NppData &nppData);
+    void SetInfo(const NppData& nppData);
 
-    const TCHAR *GetPluginName() const;
+    const TCHAR* GetPluginName() const;
 
-    FuncItem *GetFuncsArray(int *nbF);
+    FuncItem* GetFuncsArray(int* nbF);
 
-    void ProcessNotification(const SCNotification *notifyCode);
+    void ProcessNotification(const SCNotification* notifyCode);
 
     LRESULT MessageProc(UINT msg, WPARAM wParam, LPARAM lParam);
 
@@ -36,7 +36,7 @@ private:
     class Callback
     {
         friend class NppJsonPlugin;
-        static NppJsonPlugin *m_pNppJsonPlugin;
+        static NppJsonPlugin* m_pNppJsonPlugin;
 
     public:
         Callback()  = default;

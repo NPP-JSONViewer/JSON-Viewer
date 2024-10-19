@@ -21,8 +21,8 @@ public:
     }
 
     auto InitTree() -> HTREEITEM;
-    auto InsertNode(const std::wstring &text, LPARAM lparam, HTREEITEM parentNode) -> HTREEITEM;
-    void UpdateNodeText(HTREEITEM node, const std::wstring &text);
+    auto InsertNode(const std::wstring& text, LPARAM lparam, HTREEITEM parentNode) -> HTREEITEM;
+    void UpdateNodeText(HTREEITEM node, const std::wstring& text);
     auto GetNodeCount() const -> unsigned int;
 
     bool IsExpanded(HTREEITEM node) const;
@@ -36,7 +36,7 @@ public:
     auto HitTest(LPTVHITTESTINFO lpHTInfo) const -> HTREEITEM;
 
     auto GetRoot() const -> HTREEITEM;
-    bool SelectItem(HTREEITEM hti, bool firstVisible = false);
+    bool SelectItem(HTREEITEM hti, bool firstVisible = false) const;
     bool HasChild(HTREEITEM hti) const;
 
     HTREEITEM GetSelection() const;
@@ -61,6 +61,6 @@ private:
 
     HTREEITEM GetParentItem(HTREEITEM hti) const;
 
-    bool GetTVItem(HTREEITEM hti, TVITEM *tvi) const;
-    bool SetTVItem(TVITEM *tvi) const;
+    bool GetTVItem(HTREEITEM hti, TVITEM* tvi) const;
+    bool SetTVItem(TVITEM* tvi) const;
 };

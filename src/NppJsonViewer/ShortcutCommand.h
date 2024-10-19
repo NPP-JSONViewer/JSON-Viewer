@@ -12,13 +12,13 @@ public:
     {
         return m_pFuncItem[At(id)]._cmdID;
     }
-    auto GetFuncItem() const -> FuncItem *
+    auto GetFuncItem() const -> FuncItem*
     {
         return m_pFuncItem.get();
     }
 
-    bool SetCommand(CallBackID id, const TCHAR *cmdName, const PFUNCPLUGINCMD pFunc, bool checkOnInit);
-    bool SetShortCut(CallBackID id, const ShortcutKey &scKey);
+    bool SetCommand(CallBackID id, const TCHAR* cmdName, const PFUNCPLUGINCMD pFunc, bool checkOnInit);
+    bool SetShortCut(CallBackID id, const ShortcutKey& scKey);
 
 private:
     int At(CallBackID id) const

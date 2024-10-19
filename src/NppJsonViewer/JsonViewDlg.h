@@ -33,7 +33,7 @@ class JsonViewDlg : public DockingDlgInterface
     };
 
 public:
-    JsonViewDlg(HINSTANCE hInstance, const NppData &nppData, const bool &isReady, int nCmdId, std::shared_ptr<Setting> &pSetting);
+    JsonViewDlg(HINSTANCE hInstance, const NppData& nppData, const bool& isReady, int nCmdId, std::shared_ptr<Setting>& pSetting);
     virtual ~JsonViewDlg();
 
     void ShowDlg(bool bShow);
@@ -43,13 +43,13 @@ public:
     void HandleTabActivated();
     void UpdateTitle();
 
-    HTREEITEM InsertToTree(HTREEITEM parent, const std::string &text);
+    HTREEITEM InsertToTree(HTREEITEM parent, const std::string& text);
     void      AppendNodeCount(HTREEITEM node, unsigned elementCount, bool bArray);
 
 private:
     void DrawJsonTree();
     void HighlightAsJson(bool bForcefully = false) const;
-    auto PopulateTreeUsingSax(HTREEITEM tree_root, const std::string &jsonText) -> std::optional<std::wstring>;
+    auto PopulateTreeUsingSax(HTREEITEM tree_root, const std::string& jsonText) -> std::optional<std::wstring>;
 
     void ValidateJson();
 
@@ -59,7 +59,7 @@ private:
 
     auto GetTitleFileName() const -> std::wstring;
     void PrepareButtons();
-    void SetIconAndTooltip(eButton ctrlType, const std::wstring &toolTip);
+    void SetIconAndTooltip(eButton ctrlType, const std::wstring& toolTip);
 
     void AdjustDocPanelSize(int nWidth, int nHeight);
 
@@ -73,23 +73,23 @@ private:
     auto CopyValue() const -> std::wstring;
     auto CopyPath() const -> std::wstring;
 
-    int  ShowMessage(const std::wstring &title, const std::wstring &msg, int flag, bool bDontShow = false);
-    void ReportError(const Result &result);
+    int  ShowMessage(const std::wstring& title, const std::wstring& msg, int flag, bool bDonotShow = false);
+    void ReportError(const Result& result);
 
     void ToggleMenuItemState(bool bVisible);
 
-    void ShowControls(const std::vector<DWORD> &ids, bool show);
-    void EnableControls(const std::vector<DWORD> &ids, bool enable);
+    void ShowControls(const std::vector<DWORD>& ids, bool show);
+    void EnableControls(const std::vector<DWORD>& ids, bool enable);
 
     void HandleTreeEvents(LPARAM lParam);
 
     auto GetFormatSetting() const -> std::tuple<LE, LF, char, unsigned>;
 
-    bool CheckForTokenUndefined(eMethod method, std::string selectedText, Result &res, HTREEITEM tree_root);
+    bool CheckForTokenUndefined(eMethod method, std::string selectedText, Result& res, HTREEITEM tree_root);
 
-    bool IsMultiSelection(const ScintillaData &scintillaData) const;
-    auto IsSelectionValidJson(const ScintillaData &scintillaData) const -> std::optional<std::string>;
-    void ProcessScintillaData(const ScintillaData &scintillaData, std::string &text, ScintillaCode &code) const;
+    bool IsMultiSelection(const ScintillaData& scintillaData) const;
+    auto IsSelectionValidJson(const ScintillaData& scintillaData) const -> std::optional<std::string>;
+    void ProcessScintillaData(const ScintillaData& scintillaData, std::string& text, ScintillaCode& code) const;
 
 protected:
     virtual INT_PTR CALLBACK run_dlgProc(UINT message, WPARAM wParam, LPARAM lParam) override;
@@ -98,7 +98,7 @@ private:
     int         m_nDlgId      = -1;
     NppData     m_NppData     = {};
     HICON       m_hBtnIcon[4] = {};
-    const bool &m_IsNppReady;
+    const bool& m_IsNppReady;
 
     // To handle doc panel resizing
     LONG m_lfDeltaWidth          = 0;

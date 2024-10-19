@@ -3,7 +3,7 @@
 #include "Profile.h"
 #include <tchar.h>
 
-NppJsonPlugin *NppJsonPlugin::Callback::m_pNppJsonPlugin = nullptr;
+NppJsonPlugin* NppJsonPlugin::Callback::m_pNppJsonPlugin = nullptr;
 
 NppJsonPlugin::NppJsonPlugin()
     : m_shortcutCommands(nTotalCommandCount)
@@ -18,7 +18,7 @@ void NppJsonPlugin::PluginInit(HMODULE hModule)
 
 void NppJsonPlugin::PluginCleanup() {}
 
-void NppJsonPlugin::SetInfo(const NppData &nppData)
+void NppJsonPlugin::SetInfo(const NppData& nppData)
 {
     m_NppData = nppData;
     InitCommandMenu();
@@ -26,18 +26,18 @@ void NppJsonPlugin::SetInfo(const NppData &nppData)
     InitConfigPath();
 }
 
-const TCHAR *NppJsonPlugin::GetPluginName() const
+const TCHAR* NppJsonPlugin::GetPluginName() const
 {
     return PLUGIN_NAME;
 }
 
-FuncItem *NppJsonPlugin::GetFuncsArray(int *nbF)
+FuncItem* NppJsonPlugin::GetFuncsArray(int* nbF)
 {
     *nbF = nTotalCommandCount;
     return m_shortcutCommands.GetFuncItem();
 }
 
-void NppJsonPlugin::ProcessNotification(const SCNotification *notifyCode)
+void NppJsonPlugin::ProcessNotification(const SCNotification* notifyCode)
 {
     switch (notifyCode->nmhdr.code)
     {
@@ -107,7 +107,7 @@ void NppJsonPlugin::SetMenuIcon()
         tbIcon.hToolbarBmp  = m_hMenuIcon.hToolbarBmp;
         tbIcon.hToolbarIcon = m_hMenuIcon.hToolbarIcon;
         auto nCommandId     = m_shortcutCommands.GetCommandID(CallBackID::SHOW_DOC_PANEL);
-        ::SendMessage(m_NppData._nppHandle, NPPM_ADDTOOLBARICON, reinterpret_cast<WPARAM &>(nCommandId), reinterpret_cast<LPARAM>(&tbIcon));
+        ::SendMessage(m_NppData._nppHandle, NPPM_ADDTOOLBARICON, reinterpret_cast<WPARAM&>(nCommandId), reinterpret_cast<LPARAM>(&tbIcon));
     }
 }
 

@@ -5,21 +5,21 @@
 #include <shlobj.h>
 #include <memory>
 
-Profile::Profile(const std::wstring &path)
+Profile::Profile(const std::wstring& path)
     : m_ProfileFilePath(path)
 {
     if (path.empty())
         Init();
 }
 
-bool Profile::ReadValue(const std::wstring &section, const std::wstring &key, int &retVal, int defaultVal) const
+bool Profile::ReadValue(const std::wstring& section, const std::wstring& key, int& retVal, int defaultVal) const
 {
     retVal = GetPrivateProfileInt(section.c_str(), key.c_str(), defaultVal, m_ProfileFilePath.c_str());
 
     return true;
 }
 
-bool Profile::ReadValue(const std::wstring &section, const std::wstring &key, std::wstring &retVal, const std::wstring &defaultVal) const
+bool Profile::ReadValue(const std::wstring& section, const std::wstring& key, std::wstring& retVal, const std::wstring& defaultVal) const
 {
     bool bRetVal = false;
 
@@ -37,12 +37,12 @@ bool Profile::ReadValue(const std::wstring &section, const std::wstring &key, st
     return bRetVal;
 }
 
-bool Profile::WriteValue(const std::wstring &section, const std::wstring &key, int value) const
+bool Profile::WriteValue(const std::wstring& section, const std::wstring& key, int value) const
 {
     return WriteValue(section, key, std::to_wstring(value));
 }
 
-bool Profile::WriteValue(const std::wstring &section, const std::wstring &key, const std::wstring &value) const
+bool Profile::WriteValue(const std::wstring& section, const std::wstring& key, const std::wstring& value) const
 {
     return WritePrivateProfileString(section.c_str(), key.c_str(), value.c_str(), m_ProfileFilePath.c_str()) ? true : false;
 }
@@ -69,7 +69,7 @@ void Profile::Init()
     m_ProfileFilePath = appDataPath + L"\\" + PLUGIN_CONFIG;
 }
 
-bool ProfileSetting::GetSettings(Setting &info) const
+bool ProfileSetting::GetSettings(Setting& info) const
 {
     bool bRetVal = true;
 
@@ -117,7 +117,7 @@ bool ProfileSetting::GetSettings(Setting &info) const
     return bRetVal;
 }
 
-bool ProfileSetting::SetSettings(const Setting &info) const
+bool ProfileSetting::SetSettings(const Setting& info) const
 {
     bool bRetVal = true;
 
