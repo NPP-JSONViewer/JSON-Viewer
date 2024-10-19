@@ -1,7 +1,11 @@
 #pragma once
+
+#include <string>
+
 #include <Windows.h>
 #include <CommCtrl.h>
-#include <string>
+
+#include "JsonNode.h"
 
 class TreeViewCtrl
 {
@@ -52,9 +56,11 @@ public:
     HTREEITEM NextItem(HTREEITEM htiCurrent, HTREEITEM htiNextRoot) const;
 
     auto GetNodeName(HTREEITEM hti, bool removeTrailingCount) const -> std::wstring;
+    auto GetNodePos(HTREEITEM hti) const -> LPARAM;
     auto GetNodeKey(HTREEITEM hti) const -> std::wstring;
     auto GetNodeValue(HTREEITEM hti) const -> std::wstring;
     auto GetNodePath(HTREEITEM hti) const -> std::wstring;
+    auto GetNodePosition(HTREEITEM hti) const -> Position*;
 
 private:
     void ExpandOrCollapse(HTREEITEM node, UINT_PTR code) const;
@@ -63,4 +69,7 @@ private:
 
     bool GetTVItem(HTREEITEM hti, TVITEM* tvi) const;
     bool SetTVItem(TVITEM* tvi) const;
+
+    void FreeNodeData(HTREEITEM hItem);
+    void DeleteAllNodes();
 };

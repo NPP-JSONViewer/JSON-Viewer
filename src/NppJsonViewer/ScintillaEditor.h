@@ -29,14 +29,18 @@ public:
 
     void ReplaceSelection(const std::string& text) const;
 
-    void MakeSelection(size_t start, size_t end) const;
-    auto GetSelectionStart() const -> size_t
+    void        MakeSelection(size_t start, size_t end) const;
+    inline auto GetSelectionStart() const -> size_t
     {
         return m_nStartPos;
     }
-    auto GetSelectionEnd() const -> size_t
+    inline auto GetSelectionEnd() const -> size_t
     {
         return m_nEndPos;
+    }
+    inline auto GetSelectionStartLine() const -> size_t
+    {
+        return m_nStartLine;
     }
 
     auto GetEOL() const -> unsigned;
@@ -44,10 +48,14 @@ public:
 
     void RefreshSelectionPos();
 
+    void GoToLine(size_t nLineToGo) const;
+    void GoToPosition(size_t nLineToGo, size_t nColumnIndex) const;
+
 private:
     NppData m_NppData    = {};
     HWND    m_hScintilla = nullptr;
 
-    size_t m_nStartPos = 0;
-    size_t m_nEndPos   = 0;
+    size_t m_nStartLine = 0;
+    size_t m_nStartPos  = 0;
+    size_t m_nEndPos    = 0;
 };

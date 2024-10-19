@@ -1,3 +1,6 @@
+#include <format>
+#include <regex>
+
 #include "JsonViewDlg.h"
 #include "Define.h"
 #include "Utility.h"
@@ -5,8 +8,7 @@
 #include "RapidJsonHandler.h"
 #include "ScintillaEditor.h"
 #include "Profile.h"
-#include <format>
-#include <regex>
+
 
 constexpr int FILENAME_LEN_IN_TITLE = 16;
 
@@ -100,6 +102,8 @@ void JsonViewDlg::FormatJson()
 
         ReportError(res);
     }
+
+    ReDrawJsonTree();
 }
 
 void JsonViewDlg::CompressJson()
@@ -130,6 +134,8 @@ void JsonViewDlg::CompressJson()
 
         ReportError(res);
     }
+
+    ReDrawJsonTree();
 }
 
 void JsonViewDlg::SortJsonByKey()
@@ -162,6 +168,8 @@ void JsonViewDlg::SortJsonByKey()
 
         ReportError(res);
     }
+
+    ReDrawJsonTree();
 }
 
 bool JsonViewDlg::CheckForTokenUndefined(eMethod method, std::string selectedText, Result& res, HTREEITEM tree_root)
@@ -171,14 +179,8 @@ bool JsonViewDlg::CheckForTokenUndefined(eMethod method, std::string selectedTex
     if (m_pSetting->parseOptions.bReplaceUndefined)
     {
         auto text = selectedText.substr(res.error_pos, 9);
-        std::transform(
-            text.begin(),
-            text.end(),
-            text.begin(),
-            [](unsigned char c)
-            {
-                return (unsigned char)std::tolower(c);
-            });
+        StringHelper::ToLower(text);
+
         if (text == "undefined")
         {
             try
@@ -217,7 +219,7 @@ bool JsonViewDlg::CheckForTokenUndefined(eMethod method, std::string selectedTex
                 else
                 {
                     m_pEditor->ReplaceSelection(text);
-                    m_pEditor->MakeSelection(m_pEditor->GetSelectionStart(), static_cast<int>(text.length()));
+                    m_pEditor->MakeSelection(m_pEditor->GetSelectionStart(), text.length());
                     m_pEditor->RefreshSelectionPos();
                 }
             }
@@ -326,6 +328,8 @@ void JsonViewDlg::ValidateJson()
 
         ReportError(res);
     }
+
+    DrawJsonTree();
 }
 
 void JsonViewDlg::DrawJsonTree()
@@ -379,6 +383,16 @@ void JsonViewDlg::DrawJsonTree()
     EnableControls(ctrls, true);
 }
 
+void JsonViewDlg::ReDrawJsonTree(bool bForce)
+{
+    const bool bIsVisible = isCreated() && isVisible();
+    const bool bReDraw    = bForce || bIsVisible;
+    if (bReDraw)
+    {
+        DrawJsonTree();
+    }
+}
+
 void JsonViewDlg::HighlightAsJson(bool bForcefully) const
 {
     bool setJsonLang = bForcefully || m_pSetting->bUseJsonHighlight;
@@ -390,10 +404,11 @@ auto JsonViewDlg::PopulateTreeUsingSax(HTREEITEM tree_root, const std::string& j
 {
     std::optional<std::wstring> retVal = std::nullopt;
 
-    RapidJsonHandler        handler(this, tree_root);
+    auto                    pTS = std::make_shared<TrackingStream>(jsonText);
+    RapidJsonHandler        handler(this, tree_root, pTS);
     rapidjson::StringBuffer sb;
 
-    Result res = JsonHandler(m_pSetting->parseOptions).ParseJson<flgBaseReader>(jsonText, sb, handler);
+    Result res = JsonHandler(m_pSetting->parseOptions).ParseJson<flgBaseReader>(jsonText, sb, handler, pTS);
     if (!res.success)
     {
         if (CheckForTokenUndefined(JsonViewDlg::eMethod::ParseJson, jsonText, res, tree_root))
@@ -429,6 +444,13 @@ HTREEITEM JsonViewDlg::InsertToTree(HTREEITEM parent, const std::string& text)
     return m_hTreeView->InsertNode(wText, NULL, parent);
 }
 
+HTREEITEM JsonViewDlg::InsertToTree(HTREEITEM parent, const std::string& text, const Position& pos)
+{
+    auto wText  = StringHelper::ToWstring(text, CP_UTF8);
+    auto lparam = new Position(pos);
+    return m_hTreeView->InsertNode(wText, reinterpret_cast<LPARAM>(lparam), parent);
+}
+
 void JsonViewDlg::AppendNodeCount(HTREEITEM node, unsigned elementCount, bool bArray)
 {
     if (!node)
@@ -448,6 +470,16 @@ void JsonViewDlg::UpdateNodePath(HTREEITEM htiNode)
 {
     std::wstring nodePath = m_hTreeView->GetNodePath(htiNode);
     CUtility::SetEditCtrlText(::GetDlgItem(_hSelf, IDC_EDT_NODEPATH), nodePath);
+}
+
+void JsonViewDlg::GoToLine(size_t nLineToGo)
+{
+    m_pEditor->GoToLine(nLineToGo);
+}
+
+void JsonViewDlg::GoToPosition(size_t nLineToGo, size_t nPos)
+{
+    m_pEditor->GoToPosition(nLineToGo, nPos);
 }
 
 void JsonViewDlg::SearchInTree()
@@ -878,6 +910,24 @@ void JsonViewDlg::HandleTreeEvents(LPARAM lParam)
         if (hItem && (pnmtv->action == TVC_BYMOUSE || pnmtv->action == TVC_BYKEYBOARD))
         {
             UpdateNodePath(hItem);
+
+            auto pPosition = m_hTreeView->GetNodePosition(hItem);
+            if (pPosition != nullptr)
+            {
+                GoToLine(pPosition->nLine);
+            }
+        }
+    }
+    break;
+
+    case NM_DBLCLK:
+    {
+        HTREEITEM hItem = m_hTreeView->GetSelection();
+
+        auto pPosition = m_hTreeView->GetNodePosition(hItem);
+        if (pPosition != nullptr)
+        {
+            GoToPosition(pPosition->nLine, pPosition->nColumn);
         }
     }
     break;

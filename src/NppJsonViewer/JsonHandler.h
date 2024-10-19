@@ -10,6 +10,7 @@
 #include <rapidjson/error/en.h>
 
 #include "Define.h"
+#include "TrackingStream.h"
 
 namespace rj = rapidjson;
 
@@ -42,7 +43,7 @@ public:
     auto ValidateJson(const std::string& jsonText) -> const Result;
 
     template <unsigned format, typename Handler>
-    auto ParseJson(const std::string& jsonText, rj::StringBuffer& sb, Handler& handler) -> const Result;
+    auto ParseJson(const std::string& jsonText, rj::StringBuffer& sb, Handler& handler, TrackingStreamSharedPtr pTS = nullptr) -> const Result;
 
 private:
     void SortJsonObject(rj::Value& jsonObject, rj::Document::AllocatorType& allocator) const;
@@ -51,13 +52,18 @@ private:
 };
 
 template <unsigned flgBase, typename Handler>
-inline auto JsonHandler::ParseJson(const std::string& jsonText, rj::StringBuffer& sb, Handler& handler) -> const Result
+inline auto JsonHandler::ParseJson(const std::string& jsonText, rj::StringBuffer& sb, Handler& handler, TrackingStreamSharedPtr pTS) -> const Result
 {
     Result retVal {};
 
-    bool             success = false;
-    rj::Reader       reader;
-    rj::StringStream ss(jsonText.c_str());
+    bool       success = false;
+    rj::Reader reader;
+
+    std::shared_ptr<rj::StringStream> pSS = nullptr;
+    if (!pTS)
+    {
+        pSS = std::make_shared<rj::StringStream>(jsonText.c_str());
+    }
 
     // TODO: Find some better way
     constexpr auto flgBase_comment = flgBase | rj::kParseCommentsFlag;
@@ -66,22 +72,22 @@ inline auto JsonHandler::ParseJson(const std::string& jsonText, rj::StringBuffer
 
     if (m_parseOptions.bIgnoreComment && m_parseOptions.bIgnoreTrailingComma)
     {
-        success = reader.Parse<flgBase_Both>(ss, handler) && sb.GetString();
+        success = pTS ? reader.Parse<flgBase_Both>(*pTS, handler) && sb.GetString() : reader.Parse<flgBase_Both>(*pSS, handler) && sb.GetString();
     }
 
     else if (!m_parseOptions.bIgnoreComment && m_parseOptions.bIgnoreTrailingComma)
     {
-        success = reader.Parse<flgBase_comma>(ss, handler) && sb.GetString();
+        success = pTS ? reader.Parse<flgBase_comma>(*pTS, handler) && sb.GetString() : reader.Parse<flgBase_comma>(*pSS, handler) && sb.GetString();
     }
 
     else if (m_parseOptions.bIgnoreComment && !m_parseOptions.bIgnoreTrailingComma)
     {
-        success = reader.Parse<flgBase_comment>(ss, handler) && sb.GetString();
+        success = pTS ? reader.Parse<flgBase_comment>(*pTS, handler) && sb.GetString() : reader.Parse<flgBase_comment>(*pSS, handler) && sb.GetString();
     }
 
     else if (!m_parseOptions.bIgnoreComment && !m_parseOptions.bIgnoreTrailingComma)
     {
-        success = reader.Parse<flgBase>(ss, handler) && sb.GetString();
+        success = pTS ? reader.Parse<flgBase>(*pTS, handler) && sb.GetString() : reader.Parse<flgBase>(*pSS, handler) && sb.GetString();
     }
 
     if (success)
