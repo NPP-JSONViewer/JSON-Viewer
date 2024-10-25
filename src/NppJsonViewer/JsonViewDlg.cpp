@@ -477,9 +477,9 @@ void JsonViewDlg::GoToLine(size_t nLineToGo)
     m_pEditor->GoToLine(nLineToGo);
 }
 
-void JsonViewDlg::GoToPosition(size_t nLineToGo, size_t nPos)
+void JsonViewDlg::GoToPosition(size_t nLineToGo, size_t nPos, size_t nLen)
 {
-    m_pEditor->GoToPosition(nLineToGo, nPos);
+    m_pEditor->GoToPosition(nLineToGo, nPos, nLen);
 }
 
 void JsonViewDlg::SearchInTree()
@@ -927,7 +927,7 @@ void JsonViewDlg::HandleTreeEvents(LPARAM lParam)
         auto pPosition = m_hTreeView->GetNodePosition(hItem);
         if (pPosition != nullptr)
         {
-            GoToPosition(pPosition->nLine, pPosition->nColumn);
+            GoToPosition(pPosition->nLine, pPosition->nColumn, pPosition->nKeyLength);
         }
     }
     break;

@@ -15,10 +15,11 @@ struct Position
 {
     size_t nLine {};
     size_t nColumn {};
+    size_t nKeyLength {};
 
     void clear()
     {
-        nLine = nColumn = 0;
+        nLine = nColumn = nKeyLength = 0;
     }
 };
 

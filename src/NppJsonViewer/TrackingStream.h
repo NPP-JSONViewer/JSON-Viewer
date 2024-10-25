@@ -47,7 +47,7 @@ public:
         if (ch == '\n')
         {
             ++m_nLine;
-            m_nColumn = 1;
+            m_nColumn = 0;
         }
         else
         {

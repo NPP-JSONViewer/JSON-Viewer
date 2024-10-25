@@ -79,11 +79,12 @@ bool RapidJsonHandler::String(const Ch* str, unsigned /*length*/, bool /*copy*/)
     return true;
 }
 
-bool RapidJsonHandler::Key(const Ch* str, unsigned /*length*/, bool /*copy*/)
+bool RapidJsonHandler::Key(const Ch* str, unsigned length, bool /*copy*/)
 {
-    m_jsonLastKey.strKey      = str;
-    m_jsonLastKey.pos.nLine   = m_pTS->getLine();
-    m_jsonLastKey.pos.nColumn = m_pTS->getColumn();
+    m_jsonLastKey.strKey         = str;
+    m_jsonLastKey.pos.nLine      = m_pTS->getLine();
+    m_jsonLastKey.pos.nColumn    = m_pTS->getColumn() - length - 1;
+    m_jsonLastKey.pos.nKeyLength = length;
     return true;
 }
 
@@ -198,6 +199,12 @@ void RapidJsonHandler::InsertToTree(TreeNode* node, const char* const str, bool 
     {
         node->node.key.strKey = "[" + std::to_string(node->counter) + "]";
         node->node.value      = str;
+
+        size_t valueLen               = node->node.value.size();
+        node->node.key.pos.nLine      = m_pTS->getLine();
+        node->node.key.pos.nColumn    = m_pTS->getColumn() - valueLen - (bQuote ? 1 : 0);    // -1 to deal with double quote in string
+        node->node.key.pos.nKeyLength = valueLen;
+
         node->counter++;
     }
 

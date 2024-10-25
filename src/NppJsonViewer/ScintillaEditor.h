@@ -49,7 +49,7 @@ public:
     void RefreshSelectionPos();
 
     void GoToLine(size_t nLineToGo) const;
-    void GoToPosition(size_t nLineToGo, size_t nColumnIndex) const;
+    void GoToPosition(size_t nLineToGo, size_t nColumnIndex, size_t nWordLen, bool selectWord = true) const;
 
 private:
     NppData m_NppData    = {};

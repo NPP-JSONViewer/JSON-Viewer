@@ -109,9 +109,13 @@ void ScintillaEditor::GoToLine(size_t nLineToGo) const
     ::SendMessage(m_hScintilla, SCI_GOTOLINE, m_nStartLine + nLineToGo, 0);
 }
 
-void ScintillaEditor::GoToPosition(size_t nLineToGo, size_t nColumnIndex) const
+void ScintillaEditor::GoToPosition(size_t nLineToGo, size_t nColumnIndex, size_t nWordLen, bool selectWord /*= true*/) const
 {
     size_t lineStartPos = SendMessage(m_hScintilla, SCI_POSITIONFROMLINE, m_nStartLine + nLineToGo, 0);
     size_t targetPos    = lineStartPos + nColumnIndex;
     ::SendMessage(m_hScintilla, SCI_GOTOPOS, targetPos, 0);
+    if (selectWord)
+    {
+        MakeSelection(targetPos, targetPos + nWordLen);
+    }
 }

@@ -58,7 +58,7 @@ private:
 
     void UpdateNodePath(HTREEITEM htiNode);
     void GoToLine(size_t nLineToGo);
-    void GoToPosition(size_t nLineToGo, size_t nPos);
+    void GoToPosition(size_t nLineToGo, size_t nPos, size_t nLen);
 
     void SearchInTree();
 
