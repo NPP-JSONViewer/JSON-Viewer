@@ -34,14 +34,14 @@ jobs:
 
     # Step 4: Upload build binary artifacts
     - name: Archive binaries artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
           name: ${{ matrix.build_platform}}_${{ matrix.build_configuration}}
           path: src\Build\Bin\${{ matrix.build_configuration}}\${{ matrix.build_platform}}\NPPJSONViewer.dll
 
     # Step 5: Upload build pdb artifacts
     - name: Archive symbols artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
           name: ${{ matrix.build_platform}}_${{ matrix.build_configuration}}_pdb
           path: src\Build\Bin\${{ matrix.build_configuration}}\${{ matrix.build_platform}}\NPPJSONViewer.pdb
