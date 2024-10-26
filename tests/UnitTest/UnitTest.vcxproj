@@ -154,10 +154,12 @@
     <ClCompile Include="..\..\external\googletest\googletest\src\gtest-all.cc" />
     <ClCompile Include="..\..\src\NppJsonViewer\JsonHandler.cpp" />
     <ClCompile Include="..\..\src\NppJsonViewer\Profile.cpp" />
+    <ClCompile Include="..\..\src\NppJsonViewer\RapidJsonHandler.cpp" />
     <ClCompile Include="JsonCompressTest.cpp" />
     <ClCompile Include="JsonFormatTest.cpp" />
     <ClCompile Include="JsonHandlerTest.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="NavigationTest.cpp" />
     <ClCompile Include="ProfileTest.cpp" />
     <ClCompile Include="StringHelperTest.cpp" />
     <ClCompile Include="UtilityTest.cpp" />
@@ -170,6 +172,7 @@
   <ItemGroup>
     <ClInclude Include="..\..\src\NppJsonViewer\JsonHandler.h" />
     <ClInclude Include="..\..\src\NppJsonViewer\Profile.h" />
+    <ClInclude Include="..\..\src\NppJsonViewer\RapidJsonHandler.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

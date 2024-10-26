@@ -54,12 +54,21 @@
     <ClCompile Include="JsonCompressTest.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="NavigationTest.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\NppJsonViewer\RapidJsonHandler.cpp">
+      <Filter>Source Files\NppJsonViewer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\NppJsonViewer\Profile.h">
       <Filter>Source Files\NppJsonViewer</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\NppJsonViewer\JsonHandler.h">
+      <Filter>Source Files\NppJsonViewer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\NppJsonViewer\RapidJsonHandler.h">
       <Filter>Source Files\NppJsonViewer</Filter>
     </ClInclude>
   </ItemGroup>

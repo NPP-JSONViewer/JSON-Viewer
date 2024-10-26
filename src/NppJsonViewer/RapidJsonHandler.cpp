@@ -1,5 +1,5 @@
 #include "RapidJsonHandler.h"
-#include "JsonViewDlg.h"
+#include "TreeHandler.h"
 
 const char* const STR_NULL  = "null";
 const char* const STR_TRUE  = "true";
@@ -69,7 +69,7 @@ bool RapidJsonHandler::String(const Ch* str, unsigned /*length*/, bool /*copy*/)
     // handle case, when there is only a value in input
     if (m_NodeStack.empty())
     {
-        m_dlg->InsertToTree(m_treeRoot, str);
+        m_pTreeHandler->InsertToTree(m_treeRoot, str);
         return true;
     }
 
@@ -109,14 +109,14 @@ bool RapidJsonHandler::StartObject()
         HTREEITEM newNode = nullptr;
         if (parent->node.type != JsonNodeType::ARRAY)
         {
-            newNode = m_dlg->InsertToTree(parent->subRoot, m_jsonLastKey.strKey, m_jsonLastKey.pos);
+            newNode = m_pTreeHandler->InsertToTree(parent->subRoot, m_jsonLastKey.strKey, m_jsonLastKey.pos);
             m_jsonLastKey.clear();
         }
         else
         {
             // It is an array
             std::string arr = "[" + std::to_string(parent->counter) + "]";
-            newNode         = m_dlg->InsertToTree(parent->subRoot, arr);
+            newNode         = m_pTreeHandler->InsertToTree(parent->subRoot, arr);
         }
 
         parent->counter++;
@@ -158,14 +158,14 @@ bool RapidJsonHandler::StartArray()
         HTREEITEM newNode;
         if (parent->node.type != JsonNodeType::ARRAY)
         {
-            newNode = m_dlg->InsertToTree(parent->subRoot, m_jsonLastKey.strKey, m_jsonLastKey.pos);
+            newNode = m_pTreeHandler->InsertToTree(parent->subRoot, m_jsonLastKey.strKey, m_jsonLastKey.pos);
             m_jsonLastKey.clear();
         }
         else
         {
             // It is an array
             std::string arr = "[" + std::to_string(parent->counter) + "]";
-            newNode         = m_dlg->InsertToTree(parent->subRoot, arr);
+            newNode         = m_pTreeHandler->InsertToTree(parent->subRoot, arr);
         }
 
         parent->counter++;
@@ -210,9 +210,9 @@ void RapidJsonHandler::InsertToTree(TreeNode* node, const char* const str, bool 
 
     // Insert item to tree
     if (bQuote)
-        m_dlg->InsertToTree(node->subRoot, node->node.key.strKey + " : \"" + node->node.value + "\"", node->node.key.pos);
+        m_pTreeHandler->InsertToTree(node->subRoot, node->node.key.strKey + " : \"" + node->node.value + "\"", node->node.key.pos);
     else
-        m_dlg->InsertToTree(node->subRoot, node->node.key.strKey + " : " + node->node.value, node->node.key.pos);
+        m_pTreeHandler->InsertToTree(node->subRoot, node->node.key.strKey + " : " + node->node.value, node->node.key.pos);
 }
 
 void RapidJsonHandler::AppendNodeCount(unsigned elementCount, bool bArray)
@@ -223,7 +223,7 @@ void RapidJsonHandler::AppendNodeCount(unsigned elementCount, bool bArray)
         m_NodeStack.pop();
 
         if (node->subRoot && node->subRoot != m_treeRoot)
-            m_dlg->AppendNodeCount(node->subRoot, elementCount, bArray);
+            m_pTreeHandler->AppendNodeCount(node->subRoot, elementCount, bArray);
 
         delete node;
     }

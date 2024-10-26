@@ -12,9 +12,12 @@
 #include "ScintillaEditor.h"
 #include "JsonHandler.h"
 #include "JsonNode.h"
+#include "TreeHandler.h"
 
 
-class JsonViewDlg : public DockingDlgInterface
+class JsonViewDlg
+    : public DockingDlgInterface
+    , public TreeHandler
 {
     enum class eButton
     {
@@ -44,9 +47,9 @@ public:
     void HandleTabActivated();
     void UpdateTitle();
 
-    HTREEITEM InsertToTree(HTREEITEM parent, const std::string& text);
-    HTREEITEM InsertToTree(HTREEITEM parent, const std::string& text, const Position& pos);
-    void      AppendNodeCount(HTREEITEM node, unsigned elementCount, bool bArray);
+    HTREEITEM InsertToTree(HTREEITEM parent, const std::string& text) override;
+    HTREEITEM InsertToTree(HTREEITEM parent, const std::string& text, const Position& pos) override;
+    void      AppendNodeCount(HTREEITEM node, unsigned elementCount, bool bArray) override;
 
 private:
     void DrawJsonTree();
