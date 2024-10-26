@@ -10,7 +10,7 @@
 #include "JsonNode.h"
 #include "TrackingStream.h"
 
-class JsonViewDlg;
+class TreeHandler;
 
 struct TreeNode
 {
@@ -26,13 +26,13 @@ class RapidJsonHandler : public rapidjson::BaseReaderHandler<rapidjson::UTF8<>, 
     std::stack<TreeNode*> m_NodeStack;
 
     TrackingStreamSharedPtr m_pTS;
-    JsonViewDlg*            m_dlg      = nullptr;
-    HTREEITEM               m_treeRoot = nullptr;
+    TreeHandler*            m_pTreeHandler = nullptr;
+    HTREEITEM               m_treeRoot    = nullptr;
 
 public:
-    RapidJsonHandler(JsonViewDlg* dlg, HTREEITEM treeRoot, TrackingStreamSharedPtr pTS = nullptr)
+    RapidJsonHandler(TreeHandler* handler, HTREEITEM treeRoot, TrackingStreamSharedPtr pTS = nullptr)
         : m_pTS(pTS ? pTS->GetShared() : nullptr)
-        , m_dlg(dlg)
+        , m_pTreeHandler(handler)
         , m_treeRoot(treeRoot)
     {
     }

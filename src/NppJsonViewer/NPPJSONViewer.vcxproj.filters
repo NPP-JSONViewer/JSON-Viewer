@@ -57,6 +57,9 @@
     <ClCompile Include="..\..\external\npp\StaticDialog.cpp">
       <Filter>ThirdParty\npp</Filter>
     </ClCompile>
+    <ClCompile Include="TreeHandler.h">
+      <Filter>Header Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h">

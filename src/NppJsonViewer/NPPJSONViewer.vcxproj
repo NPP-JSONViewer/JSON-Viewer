@@ -197,6 +197,7 @@
     <ClCompile Include="ScintillaEditor.cpp" />
     <ClCompile Include="SettingsDlg.cpp" />
     <ClCompile Include="ShortcutCommand.cpp" />
+    <ClCompile Include="TreeHandler.h" />
     <ClCompile Include="TreeViewCtrl.cpp" />
   </ItemGroup>
   <ItemGroup>
