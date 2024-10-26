@@ -16,9 +16,22 @@ This plugin is designed to display JSON strings in a Treeview format and highlig
 
 ## Latest Updates:
 
+### 2.1.0.0
+
+1. New features:
+    1. Navigate directly to the JSON node in the editor upon node selection (using left mouse click or arrow keys).
+    2. Select the JSON key in the editor when double-clicking on a node.
+
+
+2. Bug/regression fixes:
+    1. Updated to the latest RapidJSON parser.
+    2. Minor code enhancements for improved performance.
+    3. Added unit tests
+
+
 ### 2.0.8.0
 
-1. New feature:
+1. New features:
     1. Sort ascending by key
     2. Add file name in the title for visibility
 
