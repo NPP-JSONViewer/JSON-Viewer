@@ -1,10 +1,14 @@
-name: Build and test
+name: Build and Test
 
 on:
   push:
     branches: [ "master" ]
   pull_request:
     branches: [ "master" ]
+
+env:
+  BUILD_DIR: src\Build\Bin
+  MSBUILD_TOOLSET: v143
 
 jobs:
   build:
@@ -20,36 +24,36 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
         with:
-            submodules: recursive
+          submodules: recursive
 
       # Step 2: Prepare for build
-      - name: Pre Build
+      - name: Setup MSBuild
         uses: microsoft/setup-msbuild@v2
       
       # Step 3: Build projects and unit test
       - name: Build code
         working-directory: src
-        run: msbuild NppJSONViewer.sln /m /p:configuration="${{ matrix.build_configuration }}" /p:platform="${{ matrix.build_platform }}" /p:PlatformToolset="v143"
+        run: msbuild NppJSONViewer.sln /m /p:configuration="${{ matrix.build_configuration }}" /p:platform="${{ matrix.build_platform }}" /p:PlatformToolset=${{ env.MSBUILD_TOOLSET }}
 
       # Step 4: Upload build binary artifacts for deployment
       - name: Archive binaries artifacts
         uses: actions/upload-artifact@v4
         with:
-            name: NppJSONViewer_${{ matrix.build_platform}}_${{ matrix.build_configuration}}
-            path: src\Build\Bin\${{ matrix.build_configuration}}\${{ matrix.build_platform}}\NPPJSONViewer.dll
+          name: NppJSONViewer_${{ matrix.build_platform}}_${{ matrix.build_configuration}}
+          path: ${{ env.BUILD_DIR }}\${{ matrix.build_configuration}}\${{ matrix.build_platform}}\NPPJSONViewer.dll
 
       # Step 5: Upload build pdb artifacts
       - name: Archive symbols artifacts
         uses: actions/upload-artifact@v4
         with:
           name: NppJSONViewer_${{ matrix.build_platform}}_${{ matrix.build_configuration}}_pdb
-          path: src\Build\Bin\${{ matrix.build_configuration}}\${{ matrix.build_platform}}\NPPJSONViewer.pdb
+          path: ${{ env.BUILD_DIR }}\${{ matrix.build_configuration}}\${{ matrix.build_platform}}\NPPJSONViewer.pdb
 
       # Step 6: Run unit tests for x86 and x64
       - name: Run unit tests
         if: matrix.build_platform == 'Win32' || matrix.build_platform == 'x64'
         run: |
-          cd src\Build\Bin\${{ matrix.build_configuration }}\${{ matrix.build_platform }}
+          cd ${{ env.BUILD_DIR }}\${{ matrix.build_configuration }}\${{ matrix.build_platform }}
           ./UnitTest.exe
 
   upload-full-artifacts:
