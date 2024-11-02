@@ -45,18 +45,11 @@ jobs:
           name: NppJSONViewer_${{ matrix.build_platform}}_${{ matrix.build_configuration}}_pdb
           path: src\Build\Bin\${{ matrix.build_configuration}}\${{ matrix.build_platform}}\NPPJSONViewer.pdb
 
-      # Step 6: Run unit tests for x86 | Release
-      - name: Run unit tests x86 | Release
-        if: matrix.build_platform == 'Win32' && matrix.build_configuration == 'Release'
+      # Step 6: Run unit tests for x86 and x64
+      - name: Run unit tests
+        if: matrix.build_platform == 'Win32' || matrix.build_platform == 'x64'
         run: |
-          cd src\Build\Bin\Release\Win32
-          ./UnitTest.exe
-
-      # Step 7: Run unit tests for x64 | Release
-      - name: Run unit tests x64 | Release
-        if: matrix.build_platform == 'x64' && matrix.build_configuration == 'Release'
-        run: |
-          cd src\Build\Bin\Release\x64
+          cd src\Build\Bin\${{ matrix.build_configuration }}\${{ matrix.build_platform }}
           ./UnitTest.exe
 
   upload-full-artifacts:
