@@ -9,6 +9,7 @@ on:
 env:
   BUILD_DIR: src\Build\Bin
   MSBUILD_TOOLSET: v143
+  ARTIFACT_PREFIX: NppJSONViewer_
 
 jobs:
   build:
@@ -33,27 +34,27 @@ jobs:
       # Step 3: Build projects and unit test
       - name: Build code
         working-directory: src
-        run: msbuild NppJSONViewer.sln /m /p:configuration="${{ matrix.build_configuration }}" /p:platform="${{ matrix.build_platform }}" /p:PlatformToolset=${{ env.MSBUILD_TOOLSET }}
+        run: msbuild NppJSONViewer.sln /m /p:configuration="${{matrix.build_configuration}}" /p:platform="${{matrix.build_platform}}" /p:PlatformToolset=${{env.MSBUILD_TOOLSET}}
 
       # Step 4: Upload build binary artifacts for deployment
       - name: Archive binaries artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: NppJSONViewer_${{ matrix.build_platform}}_${{ matrix.build_configuration}}
-          path: ${{ env.BUILD_DIR }}\${{ matrix.build_configuration}}\${{ matrix.build_platform}}\NPPJSONViewer.dll
+          name: ${{env.ARTIFACT_PREFIX}}${{matrix.build_platform}}_${{matrix.build_configuration}}
+          path: ${{env.BUILD_DIR }}\${{matrix.build_configuration}}\${{matrix.build_platform}}\NPPJSONViewer.dll
 
       # Step 5: Upload build pdb artifacts
       - name: Archive symbols artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: NppJSONViewer_${{ matrix.build_platform}}_${{ matrix.build_configuration}}_pdb
-          path: ${{ env.BUILD_DIR }}\${{ matrix.build_configuration}}\${{ matrix.build_platform}}\NPPJSONViewer.pdb
+          name: ${{env.ARTIFACT_PREFIX}}${{matrix.build_platform}}_${{matrix.build_configuration}}_pdb
+          path: ${{env.BUILD_DIR }}\${{matrix.build_configuration}}\${{matrix.build_platform}}\NPPJSONViewer.pdb
 
       # Step 6: Run unit tests for x86 and x64
       - name: Run unit tests
         if: matrix.build_platform == 'Win32' || matrix.build_platform == 'x64'
         run: |
-          cd ${{ env.BUILD_DIR }}\${{ matrix.build_configuration }}\${{ matrix.build_platform }}
+          cd ${{env.BUILD_DIR}}\${{matrix.build_configuration}}\${{matrix.build_platform}}
           ./UnitTest.exe
 
   upload-full-artifacts:
@@ -64,52 +65,16 @@ jobs:
       fail-fast: true
 
     steps:
-      # Step 8: Download all artifacts from all build jobs
-      - name: Download Release Win32 binaries and PDBs
+      # Step 7: Download all artifacts from the build job
+      - name: Download all artifacts
         uses: actions/download-artifact@v4
         with:
-          path: all_artifacts/Release/win32
-          pattern: NppJSONViewer_Win32_Rel*
-          merge-multiple: true
+          pattern: ${{env.ARTIFACT_PREFIX}}*
+          path: all_artifacts\
 
-      - name: Download Debug Win32 binaries and PDBs
-        uses: actions/download-artifact@v4
-        with:
-          path: all_artifacts/Debug/win32
-          pattern: NppJSONViewer_Win32_Deb*
-          merge-multiple: true
-
-      - name: Download Release x64 binaries and PDBs
-        uses: actions/download-artifact@v4
-        with:
-          path: all_artifacts/Release/x64
-          pattern: NppJSONViewer_x64_Rel*
-          merge-multiple: true
-
-      - name: Download Debug x64 binaries and PDBs
-        uses: actions/download-artifact@v4
-        with:
-          path: all_artifacts/Debug/x64
-          pattern: NppJSONViewer_x64_Deb*
-          merge-multiple: true
-
-      - name: Download Release ARM64 binaries and PDBs
-        uses: actions/download-artifact@v4
-        with:
-          path: all_artifacts/Release/ARM64
-          pattern: NppJSONViewer_ARM64_Rel*
-          merge-multiple: true
-
-      - name: Download Debug ARM64 binaries and PDBs
-        uses: actions/download-artifact@v4
-        with:
-          path: all_artifacts/Debug/ARM64
-          pattern: NppJSONViewer_ARM64_Deb*
-          merge-multiple: true
-
-      # Step 9: Upload full artifact
-      - name: Upload full artifacts
+      # Step 8: Upload consolidated artifacts as a single artifact
+      - name: Upload full artifact
         uses: actions/upload-artifact@v4
         with:
-          name: NppJSONViewer_ALL
+          name: ${{env.ARTIFACT_PREFIX}}ALL
           path: all_artifacts\**
