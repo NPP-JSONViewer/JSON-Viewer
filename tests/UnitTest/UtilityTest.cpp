@@ -137,4 +137,4 @@ namespace UtilityTest
         auto     number = util.GetNumber(L"123a45");
         EXPECT_FALSE(number.has_value());
     }
-}    // namespace Utility
+}    // namespace UtilityTest

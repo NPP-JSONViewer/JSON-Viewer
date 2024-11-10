@@ -16,7 +16,7 @@ namespace JsonCompress
         void SetUp() override {}
         void TearDown() override {}
 
-        void setParseOptions(const ParseOptions &opt)
+        void setParseOptions(const ParseOptions& opt)
         {
             m_jsonHandler = JsonHandler(opt);
         }
@@ -143,7 +143,7 @@ namespace JsonCompress
             {"{\n  \"Inf\": [\n    -Infinity,\n    Infinity,\n    -Inf,\n    Inf\n  ]\n}", R"({"Inf":[-Infinity,Infinity,-Infinity,Infinity]})"},
         };
 
-        for (const auto &[input, output] : testData)
+        for (const auto& [input, output] : testData)
         {
             auto result = m_jsonHandler.GetCompressedJson(input);
 
@@ -189,7 +189,7 @@ namespace JsonCompress
             {R"({"num": 0.0000001000})", "1e-7"},                                 // Don't know how to fix.
         };
 
-        for (const auto &[input, output] : testData)
+        for (const auto& [input, output] : testData)
         {
             auto result      = m_jsonHandler.GetCompressedJson(input);
             bool foundNumber = result.response.find(output) != std::string::npos;

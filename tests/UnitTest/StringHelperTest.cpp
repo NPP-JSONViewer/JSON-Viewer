@@ -163,4 +163,4 @@ namespace UtilityTest
         StringHelper::ToLower(input);
         EXPECT_EQ(input, L"hello world");
     }
-}    // namespace Utility
+}    // namespace UtilityTest

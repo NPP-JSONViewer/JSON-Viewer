@@ -10,7 +10,7 @@ namespace ProfileSettingTests
     class ProfileSettingEx : public ProfileSetting
     {
     public:
-        ProfileSettingEx(const std::wstring &path)
+        ProfileSettingEx(const std::wstring& path)
             : ProfileSetting(path)
         {
             // any left over from previous run
@@ -22,22 +22,22 @@ namespace ProfileSettingTests
             RemoveProfileFile();
         }
 
-        bool ReadValue(const std::wstring &section, const std::wstring &key, int &retVal, int defaultVal = 0) const
+        bool ReadValue(const std::wstring& section, const std::wstring& key, int& retVal, int defaultVal = 0) const
         {
             return Profile::ReadValue(section, key, retVal, defaultVal);
         }
 
-        bool ReadValue(const std::wstring &section, const std::wstring &key, std::wstring &retVal, const std::wstring &defaultVal = {}) const
+        bool ReadValue(const std::wstring& section, const std::wstring& key, std::wstring& retVal, const std::wstring& defaultVal = {}) const
         {
             return Profile::ReadValue(section, key, retVal, defaultVal);
         }
 
-        bool WriteValue(const std::wstring &section, const std::wstring &key, int value) const
+        bool WriteValue(const std::wstring& section, const std::wstring& key, int value) const
         {
             return Profile::WriteValue(section, key, value);
         }
 
-        bool WriteValue(const std::wstring &section, const std::wstring &key, const std::wstring &value) const
+        bool WriteValue(const std::wstring& section, const std::wstring& key, const std::wstring& value) const
         {
             return Profile::WriteValue(section, key, value);
         }
