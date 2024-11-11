@@ -12,6 +12,13 @@
 
 constexpr int FILENAME_LEN_IN_TITLE = 16;
 
+namespace SliderPercent
+{
+    constexpr const int nDefault = 100;
+    constexpr const int nMinZoom = 80;
+    constexpr const int nMaxZoom = 250;
+};    // namespace SliderPercent
+
 JsonViewDlg::JsonViewDlg(HINSTANCE hInstance, const NppData& nppData, const bool& isReady, int nCmdId, std::shared_ptr<Setting>& pSetting)
     : DockingDlgInterface(IDD_TREEDLG)
     , m_NppData(nppData)
@@ -895,6 +902,27 @@ void JsonViewDlg::EnableControls(const std::vector<DWORD>& ids, bool enable)
         EnableWindow(GetDlgItem(getHSelf(), id), enable ? TRUE : FALSE);
 }
 
+auto JsonViewDlg::GetSliderPosition() const -> int
+{
+    HWND hSlider = GetDlgItem(getHSelf(), IDC_ZOOM_SLIDER);
+    int  pos     = static_cast<int>(SendMessage(hSlider, TBM_GETPOS, 0, 0));
+
+    return pos;
+}
+
+void JsonViewDlg::SetSliderPosition(int pos) const
+{
+    // Set slider position
+    HWND hSlider = GetDlgItem(getHSelf(), IDC_ZOOM_SLIDER);
+    SendMessage(hSlider, TBM_SETPOS, TRUE, pos);
+
+    // Set slider position in text value
+    HWND    hZoomPercent = GetDlgItem(getHSelf(), IDC_ZOOM_PERCENT);
+    wchar_t zoomText[16] {};
+    wsprintf(zoomText, L"%d%%", pos);
+    SetWindowText(hZoomPercent, zoomText);
+}
+
 void JsonViewDlg::SetTreeViewZoom(double dwZoomFactor)
 {
     HWND         hTreeView    = GetDlgItem(getHSelf(), IDC_TREE);
@@ -915,20 +943,32 @@ void JsonViewDlg::SetTreeViewZoom(double dwZoomFactor)
     InvalidateRect(hTreeView, nullptr, TRUE);
 }
 
-void JsonViewDlg::HandleZoom(bool zoomIn)
+void JsonViewDlg::UpdateUIOnZoom(int zoomPercentage)
 {
-    static double zoomLevel = 1.0;    // Start at 100% zoom (Max 300% and min 80%)
+    // Update slider
+    SetSliderPosition(zoomPercentage);
 
-    if (zoomIn && zoomLevel < 3.0)
+    // Update the Tree view
+    double zoomFactor = zoomPercentage / 100.0;
+    SetTreeViewZoom(zoomFactor);
+}
+
+void JsonViewDlg::HandleZoomOnScroll(WPARAM wParam)
+{
+    int pos   = GetSliderPosition();    // Current slider position
+    int delta = GET_WHEEL_DELTA_WPARAM(wParam);
+
+    // Adjust zoom based on scroll direction
+    if (delta > 0 && pos < SliderPercent::nMaxZoom)
     {
-        zoomLevel += 0.1;    // Zoom in (max 300%)
+        pos += 10;    // Zoom in
     }
-    else if (!zoomIn && zoomLevel > 0.8)
+    else if (delta < 0 && pos > SliderPercent::nMinZoom)
     {
-        zoomLevel -= 0.1;    // Zoom out (min 80%)
+        pos -= 10;    // Zoom out
     }
 
-    SetTreeViewZoom(zoomLevel);
+    UpdateUIOnZoom(pos);
 }
 
 void JsonViewDlg::HandleTreeEvents(LPARAM lParam) const
@@ -1072,6 +1112,12 @@ INT_PTR JsonViewDlg::run_dlgProc(UINT message, WPARAM wParam, LPARAM lParam)
         // Set default node path as JSON
         SetDlgItemText(_hSelf, IDC_EDT_NODEPATH, JSON_ROOT);
 
+        // Set slider range from 80% to 200%
+        // Set initial position to 100% (no zoom)
+        HWND hSlider = GetDlgItem(getHSelf(), IDC_ZOOM_SLIDER);
+        SendMessage(hSlider, TBM_SETRANGE, TRUE, MAKELPARAM(SliderPercent::nMinZoom, SliderPercent::nMaxZoom));
+        SendMessage(hSlider, TBM_SETPOS, TRUE, SliderPercent::nDefault);
+
         return TRUE;
     }
 
@@ -1147,11 +1193,26 @@ INT_PTR JsonViewDlg::run_dlgProc(UINT message, WPARAM wParam, LPARAM lParam)
     {
         if (GetKeyState(VK_CONTROL) & 0x8000)
         {
-            HandleZoom(GET_WHEEL_DELTA_WPARAM(wParam) > 0);
+            HandleZoomOnScroll(wParam);
             return TRUE;
         }
         return FALSE;
     }
+
+    case WM_HSCROLL:
+    {
+        HWND hSlider = GetDlgItem(getHSelf(), IDC_ZOOM_SLIDER);
+
+        if (reinterpret_cast<HWND>(lParam) == hSlider)
+        {
+            int pos = GetSliderPosition();
+            UpdateUIOnZoom(pos);
+
+            return TRUE;
+        }
+        return FALSE;
+    }
+
 
     default:
         return DockingDlgInterface::run_dlgProc(message, wParam, lParam);
