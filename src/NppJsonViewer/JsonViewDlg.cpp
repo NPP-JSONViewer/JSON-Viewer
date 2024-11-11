@@ -12,13 +12,6 @@
 
 constexpr int FILENAME_LEN_IN_TITLE = 16;
 
-namespace SliderPercent
-{
-    constexpr const int nDefault = 100;
-    constexpr const int nMinZoom = 80;
-    constexpr const int nMaxZoom = 250;
-};    // namespace SliderPercent
-
 JsonViewDlg::JsonViewDlg(HINSTANCE hInstance, const NppData& nppData, const bool& isReady, int nCmdId, std::shared_ptr<Setting>& pSetting)
     : DockingDlgInterface(IDD_TREEDLG)
     , m_NppData(nppData)
@@ -26,6 +19,7 @@ JsonViewDlg::JsonViewDlg(HINSTANCE hInstance, const NppData& nppData, const bool
     , m_nDlgId(nCmdId)
     , m_pEditor(std::make_unique<ScintillaEditor>(nppData))
     , m_pTreeView(std::make_unique<TreeViewCtrl>())
+    , m_pTreeViewZoom(std::make_unique<SliderCtrl>())
     , m_pSetting(pSetting)
     , m_pCurrFileName(std::make_unique<wchar_t[]>(FILENAME_LEN_IN_TITLE))
 {
@@ -902,25 +896,14 @@ void JsonViewDlg::EnableControls(const std::vector<DWORD>& ids, bool enable)
         EnableWindow(GetDlgItem(getHSelf(), id), enable ? TRUE : FALSE);
 }
 
-auto JsonViewDlg::GetSliderPosition() const -> int
+auto JsonViewDlg::GetZoomLevel() const -> int
 {
-    HWND hSlider = GetDlgItem(getHSelf(), IDC_ZOOM_SLIDER);
-    int  pos     = static_cast<int>(SendMessage(hSlider, TBM_GETPOS, 0, 0));
-
-    return pos;
+    return m_pTreeViewZoom->GetPosition();
 }
 
-void JsonViewDlg::SetSliderPosition(int pos) const
+void JsonViewDlg::SetZoomLevel(int pos) const
 {
-    // Set slider position
-    HWND hSlider = GetDlgItem(getHSelf(), IDC_ZOOM_SLIDER);
-    SendMessage(hSlider, TBM_SETPOS, TRUE, pos);
-
-    // Set slider position in text value
-    HWND    hZoomPercent = GetDlgItem(getHSelf(), IDC_ZOOM_PERCENT);
-    wchar_t zoomText[16] {};
-    wsprintf(zoomText, L"%d%%", pos);
-    SetWindowText(hZoomPercent, zoomText);
+    m_pTreeViewZoom->SetPosition(pos);
 }
 
 void JsonViewDlg::SetTreeViewZoom(double dwZoomFactor) const
@@ -945,8 +928,8 @@ void JsonViewDlg::SetTreeViewZoom(double dwZoomFactor) const
 
 void JsonViewDlg::UpdateUIOnZoom(int zoomPercentage) const
 {
-    // Update slider
-    SetSliderPosition(zoomPercentage);
+    // Update zoom level on slider
+    SetZoomLevel(zoomPercentage);
 
     // Update the Tree view
     double zoomFactor = zoomPercentage / 100.0;
@@ -955,15 +938,17 @@ void JsonViewDlg::UpdateUIOnZoom(int zoomPercentage) const
 
 void JsonViewDlg::HandleZoomOnScroll(WPARAM wParam) const
 {
-    int pos   = GetSliderPosition();    // Current slider position
+    int pos   = GetZoomLevel();    // Current zoom level
     int delta = GET_WHEEL_DELTA_WPARAM(wParam);
 
-    // Adjust zoom based on scroll direction
-    if (delta > 0 && pos < SliderPercent::nMaxZoom)
+    const auto& zoomRange = m_pTreeViewZoom->GetRange();
+    const bool  isZoom    = delta > 0;
+
+    if (isZoom && pos < zoomRange.m_nMaxZoom)
     {
         pos += 10;    // Zoom in
     }
-    else if (delta < 0 && pos > SliderPercent::nMinZoom)
+    else if (!isZoom && pos > zoomRange.m_nMinZoom)
     {
         pos -= 10;    // Zoom out
     }
@@ -1106,17 +1091,12 @@ INT_PTR JsonViewDlg::run_dlgProc(UINT message, WPARAM wParam, LPARAM lParam)
         ::SetWindowLongPtr(getHSelf(), GWLP_USERDATA, reinterpret_cast<LONG_PTR>(this));
 
         m_pTreeView->OnInit(getHSelf(), IDC_TREE);
+        m_pTreeViewZoom->OnInit(getHSelf(), IDC_ZOOM_SLIDER, IDC_ZOOM_PERCENT);
 
         PrepareButtons();
 
         // Set default node path as JSON
         SetDlgItemText(_hSelf, IDC_EDT_NODEPATH, JSON_ROOT);
-
-        // Set slider range from 80% to 200%
-        // Set initial position to 100% (no zoom)
-        HWND hSlider = GetDlgItem(getHSelf(), IDC_ZOOM_SLIDER);
-        SendMessage(hSlider, TBM_SETRANGE, TRUE, MAKELPARAM(SliderPercent::nMinZoom, SliderPercent::nMaxZoom));
-        SendMessage(hSlider, TBM_SETPOS, TRUE, SliderPercent::nDefault);
 
         return TRUE;
     }
@@ -1205,7 +1185,7 @@ INT_PTR JsonViewDlg::run_dlgProc(UINT message, WPARAM wParam, LPARAM lParam)
 
         if (reinterpret_cast<HWND>(lParam) == hSlider)
         {
-            int pos = GetSliderPosition();
+            int pos = m_pTreeViewZoom->GetPosition();
             UpdateUIOnZoom(pos);
 
             return TRUE;

@@ -9,6 +9,7 @@
 #include "PluginInterface.h"
 #include "resource.h"
 #include "TreeViewCtrl.h"
+#include "SliderCtrl.h"
 #include "ScintillaEditor.h"
 #include "JsonHandler.h"
 #include "JsonNode.h"
@@ -89,8 +90,8 @@ private:
     void ShowControls(const std::vector<DWORD>& ids, bool show);
     void EnableControls(const std::vector<DWORD>& ids, bool enable);
 
-    auto GetSliderPosition() const -> int;
-    void SetSliderPosition(int pos) const;
+    auto GetZoomLevel() const -> int;
+    void SetZoomLevel(int pos) const;
     void SetTreeViewZoom(double dwZoomFactor) const;
     void UpdateUIOnZoom(int zoomPercentage) const;
     void HandleZoomOnScroll(WPARAM wParam) const;
@@ -124,5 +125,6 @@ private:
     std::unique_ptr<wchar_t[]>       m_pCurrFileName;
     std::unique_ptr<ScintillaEditor> m_pEditor   = nullptr;
     std::unique_ptr<TreeViewCtrl>    m_pTreeView = nullptr;
+    std::unique_ptr<SliderCtrl>      m_pTreeViewZoom = nullptr;
     std::shared_ptr<Setting>         m_pSetting  = nullptr;
 };
