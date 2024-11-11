@@ -59,9 +59,9 @@ private:
 
     void ValidateJson();
 
-    void UpdateNodePath(HTREEITEM htiNode);
-    void GoToLine(size_t nLineToGo);
-    void GoToPosition(size_t nLineToGo, size_t nPos, size_t nLen);
+    void UpdateNodePath(HTREEITEM htiNode) const;
+    void GoToLine(size_t nLineToGo) const;
+    void GoToPosition(size_t nLineToGo, size_t nPos, size_t nLen) const;
 
     void SearchInTree();
 
@@ -89,7 +89,7 @@ private:
     void ShowControls(const std::vector<DWORD>& ids, bool show);
     void EnableControls(const std::vector<DWORD>& ids, bool enable);
 
-    void HandleTreeEvents(LPARAM lParam);
+    void HandleTreeEvents(LPARAM lParam) const;
 
     auto GetFormatSetting() const -> std::tuple<LE, LF, char, unsigned>;
 

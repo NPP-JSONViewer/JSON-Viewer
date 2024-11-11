@@ -466,18 +466,18 @@ void JsonViewDlg::AppendNodeCount(HTREEITEM node, unsigned elementCount, bool bA
     m_pTreeView->UpdateNodeText(node, txt);
 }
 
-void JsonViewDlg::UpdateNodePath(HTREEITEM htiNode)
+void JsonViewDlg::UpdateNodePath(HTREEITEM htiNode) const
 {
     std::wstring nodePath = m_pTreeView->GetNodePath(htiNode);
     CUtility::SetEditCtrlText(::GetDlgItem(_hSelf, IDC_EDT_NODEPATH), nodePath);
 }
 
-void JsonViewDlg::GoToLine(size_t nLineToGo)
+void JsonViewDlg::GoToLine(size_t nLineToGo) const
 {
     m_pEditor->GoToLine(nLineToGo);
 }
 
-void JsonViewDlg::GoToPosition(size_t nLineToGo, size_t nPos, size_t nLen)
+void JsonViewDlg::GoToPosition(size_t nLineToGo, size_t nPos, size_t nLen) const
 {
     m_pEditor->GoToPosition(nLineToGo, nPos, nLen);
 }
@@ -673,7 +673,7 @@ void JsonViewDlg::AdjustDocPanelSize(int nWidth, int nHeight)
     const auto moveWindowIDs = {IDC_BTN_SEARCH};
 
     // elements which requires both resizing and move
-    const auto resizeAndmoveWindowIDs = {IDC_EDT_NODEPATH};
+    const auto resizeAndMoveWindowIDs = {IDC_EDT_NODEPATH};
 
     const UINT flags = SWP_NOZORDER | SWP_NOOWNERZORDER | SWP_NOACTIVATE | SWP_NOCOPYBITS | SWP_SHOWWINDOW;
 
@@ -700,7 +700,7 @@ void JsonViewDlg::AdjustDocPanelSize(int nWidth, int nHeight)
         ::SetWindowPos(hWnd, NULL, rc.left + addWidth, rc.top, 0, 0, SWP_NOSIZE | flags);
     }
 
-    for (int id : resizeAndmoveWindowIDs)
+    for (int id : resizeAndMoveWindowIDs)
     {
         HWND hWnd = GetDlgItem(_hSelf, id);
 
@@ -895,7 +895,7 @@ void JsonViewDlg::EnableControls(const std::vector<DWORD>& ids, bool enable)
         EnableWindow(GetDlgItem(getHSelf(), id), enable ? TRUE : FALSE);
 }
 
-void JsonViewDlg::HandleTreeEvents(LPARAM lParam)
+void JsonViewDlg::HandleTreeEvents(LPARAM lParam) const
 {
     LPNMHDR lpnmh = reinterpret_cast<LPNMHDR>(lParam);
     if (!lpnmh || lpnmh->idFrom != IDC_TREE)
@@ -1029,7 +1029,7 @@ INT_PTR JsonViewDlg::run_dlgProc(UINT message, WPARAM wParam, LPARAM lParam)
         // Save ourselves in GWLP_USERDATA.
         ::SetWindowLongPtr(getHSelf(), GWLP_USERDATA, reinterpret_cast<LONG_PTR>(this));
 
-        m_pTreeView->OnInit(getHSelf());
+        m_pTreeView->OnInit(getHSelf(), IDC_TREE);
 
         PrepareButtons();
 

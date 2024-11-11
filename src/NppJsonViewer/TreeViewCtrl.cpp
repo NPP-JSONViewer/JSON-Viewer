@@ -2,13 +2,13 @@
 
 #include "TreeViewCtrl.h"
 #include "Define.h"
-#include "resource.h"
 
 
-void TreeViewCtrl::OnInit(HWND hParent)
+void TreeViewCtrl::OnInit(HWND hParent, int ctrlID)
 {
+    m_nCtrlID = ctrlID;
     m_hParent = hParent;
-    m_hTree   = GetDlgItem(m_hParent, IDC_TREE);
+    m_hTree   = GetDlgItem(m_hParent, m_nCtrlID);
 }
 
 auto TreeViewCtrl::InitTree() -> HTREEITEM
@@ -43,7 +43,7 @@ auto TreeViewCtrl::InsertNode(const std::wstring& text, LPARAM lparam, HTREEITEM
     tvInsert.item.pszText = const_cast<LPTSTR>(text.c_str());
     tvInsert.item.lParam  = lparam;
 
-    HTREEITEM item = reinterpret_cast<HTREEITEM>(SendDlgItemMessage(m_hParent, IDC_TREE, TVM_INSERTITEM, 0, reinterpret_cast<LPARAM>(&tvInsert)));
+    HTREEITEM item = reinterpret_cast<HTREEITEM>(SendDlgItemMessage(m_hParent, m_nCtrlID, TVM_INSERTITEM, 0, reinterpret_cast<LPARAM>(&tvInsert)));
 
     return item;
 }

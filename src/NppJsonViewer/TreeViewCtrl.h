@@ -11,13 +11,14 @@ class TreeViewCtrl
 {
     HWND   m_hTree              = nullptr;
     HWND   m_hParent            = nullptr;
+    int    m_nCtrlID            = 0;
     size_t m_nMaxNodeTextLength = 0;
 
 public:
     TreeViewCtrl()  = default;
     ~TreeViewCtrl() = default;
 
-    void OnInit(HWND hParent);
+    void OnInit(HWND hParent, int ctrlID);
 
     HWND GetTreeViewHandle() const
     {
