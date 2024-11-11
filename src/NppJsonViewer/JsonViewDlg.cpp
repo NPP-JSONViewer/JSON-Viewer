@@ -942,13 +942,13 @@ void JsonViewDlg::HandleZoomOnScroll(WPARAM wParam) const
     int delta = GET_WHEEL_DELTA_WPARAM(wParam);
 
     const auto& zoomRange = m_pTreeViewZoom->GetRange();
-    const bool  isZoom    = delta > 0;
+    const bool  isZoomIn    = delta > 0;
 
-    if (isZoom && pos < zoomRange.m_nMaxZoom)
+    if (isZoomIn && pos < zoomRange.m_nMaxZoom)
     {
         pos += 10;    // Zoom in
     }
-    else if (!isZoom && pos > zoomRange.m_nMinZoom)
+    else if (!isZoomIn && pos > zoomRange.m_nMinZoom)
     {
         pos -= 10;    // Zoom out
     }
