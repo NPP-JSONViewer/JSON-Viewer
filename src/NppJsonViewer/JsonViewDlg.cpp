@@ -18,7 +18,7 @@ JsonViewDlg::JsonViewDlg(HINSTANCE hInstance, const NppData& nppData, const bool
     , m_IsNppReady(isReady)
     , m_nDlgId(nCmdId)
     , m_pEditor(std::make_unique<ScintillaEditor>(nppData))
-    , m_hTreeView(std::make_unique<TreeViewCtrl>())
+    , m_pTreeView(std::make_unique<TreeViewCtrl>())
     , m_pSetting(pSetting)
     , m_pCurrFileName(std::make_unique<wchar_t[]>(FILENAME_LEN_IN_TITLE))
 {
@@ -341,7 +341,7 @@ void JsonViewDlg::DrawJsonTree()
     EnableControls(ctrls, false);
 
     HTREEITEM rootNode = nullptr;
-    rootNode           = m_hTreeView->InitTree();
+    rootNode           = m_pTreeView->InitTree();
 
     // Refresh the view
     m_pEditor->RefreshViewHandle();
@@ -350,7 +350,7 @@ void JsonViewDlg::DrawJsonTree()
 
     if (!selectedText.has_value() || selectedText.value().empty())
     {
-        m_hTreeView->InsertNode(JSON_ERR_PARSE, NULL, rootNode);
+        m_pTreeView->InsertNode(JSON_ERR_PARSE, NULL, rootNode);
 
         if (IsMultiSelection(selectedData))
         {
@@ -366,9 +366,9 @@ void JsonViewDlg::DrawJsonTree()
             // Later on second launch, don't show the error message as this could be some text file
             // If it is real json file but has some error, then there must be more than 1 node exist.
 
-            if (!m_IsNppReady && m_hTreeView->GetNodeCount() <= 1)
+            if (!m_IsNppReady && m_pTreeView->GetNodeCount() <= 1)
             {
-                m_hTreeView->InsertNode(JSON_ERR_VALIDATE, NULL, rootNode);
+                m_pTreeView->InsertNode(JSON_ERR_VALIDATE, NULL, rootNode);
             }
             else
             {
@@ -377,7 +377,7 @@ void JsonViewDlg::DrawJsonTree()
         }
     }
 
-    m_hTreeView->Expand(rootNode);
+    m_pTreeView->Expand(rootNode);
 
     // Enable all buttons and treeView
     EnableControls(ctrls, true);
@@ -441,14 +441,14 @@ auto JsonViewDlg::PopulateTreeUsingSax(HTREEITEM tree_root, const std::string& j
 HTREEITEM JsonViewDlg::InsertToTree(HTREEITEM parent, const std::string& text)
 {
     auto wText = StringHelper::ToWstring(text, CP_UTF8);
-    return m_hTreeView->InsertNode(wText, NULL, parent);
+    return m_pTreeView->InsertNode(wText, NULL, parent);
 }
 
 HTREEITEM JsonViewDlg::InsertToTree(HTREEITEM parent, const std::string& text, const Position& pos)
 {
     auto wText  = StringHelper::ToWstring(text, CP_UTF8);
     auto lparam = new Position(pos);
-    return m_hTreeView->InsertNode(wText, reinterpret_cast<LPARAM>(lparam), parent);
+    return m_pTreeView->InsertNode(wText, reinterpret_cast<LPARAM>(lparam), parent);
 }
 
 void JsonViewDlg::AppendNodeCount(HTREEITEM node, unsigned elementCount, bool bArray)
@@ -456,19 +456,19 @@ void JsonViewDlg::AppendNodeCount(HTREEITEM node, unsigned elementCount, bool bA
     if (!node)
         return;
 
-    auto txt = m_hTreeView->GetNodeName(node, false);
+    auto txt = m_pTreeView->GetNodeName(node, false);
 
     txt += L" ";
     txt += bArray ? L"[" : L"{";
     txt += std::to_wstring(elementCount);
     txt += bArray ? L"]" : L"}";
 
-    m_hTreeView->UpdateNodeText(node, txt);
+    m_pTreeView->UpdateNodeText(node, txt);
 }
 
 void JsonViewDlg::UpdateNodePath(HTREEITEM htiNode)
 {
-    std::wstring nodePath = m_hTreeView->GetNodePath(htiNode);
+    std::wstring nodePath = m_pTreeView->GetNodePath(htiNode);
     CUtility::SetEditCtrlText(::GetDlgItem(_hSelf, IDC_EDT_NODEPATH), nodePath);
 }
 
@@ -486,31 +486,31 @@ void JsonViewDlg::SearchInTree()
 {
     std::wstring itemToSearch = CUtility::GetEditCtrlText(::GetDlgItem(_hSelf, IDC_EDT_SEARCH));
     CUtility::SetEditCtrlText(::GetDlgItem(_hSelf, IDC_EDT_NODEPATH), STR_SRCH_SEARCHING + itemToSearch);
-    m_hTreeView->SetSelection(nullptr);
+    m_pTreeView->SetSelection(nullptr);
 
     static int          foundCount = 0;
     static std::wstring previousSearch;
-    static HTREEITEM    nextNode = m_hTreeView->NextItem(m_hTreeView->GetRoot());
+    static HTREEITEM    nextNode = m_pTreeView->NextItem(m_pTreeView->GetRoot());
 
     // New search, hence search from beginning
     if (previousSearch != itemToSearch)
     {
         previousSearch = itemToSearch;
-        nextNode       = m_hTreeView->NextItem(m_hTreeView->GetRoot());
+        nextNode       = m_pTreeView->NextItem(m_pTreeView->GetRoot());
         foundCount     = 0;
     }
     else
     {
-        nextNode = m_hTreeView->NextItem(nextNode);
-        if (nextNode == m_hTreeView->GetRoot())
+        nextNode = m_pTreeView->NextItem(nextNode);
+        if (nextNode == m_pTreeView->GetRoot())
         {
-            nextNode   = m_hTreeView->NextItem(nextNode);
+            nextNode   = m_pTreeView->NextItem(nextNode);
             foundCount = 0;
         }
     }
 
     // Check if this is an empty json
-    std::wstring nodeText = m_hTreeView->GetNodeName(nextNode, true);
+    std::wstring nodeText = m_pTreeView->GetNodeName(nextNode, true);
     if (nodeText.empty() || wcscmp(nodeText.c_str(), JSON_ERR_PARSE) == 0)
     {
         CUtility::SetEditCtrlText(::GetDlgItem(_hSelf, IDC_EDT_NODEPATH), STR_SRCH_NOTFOUND + itemToSearch);
@@ -520,9 +520,9 @@ void JsonViewDlg::SearchInTree()
         bool bFound = false;
         while (!bFound && nextNode)
         {
-            nodeText     = m_hTreeView->GetNodeName(nextNode, true);
-            auto nodeKey = m_hTreeView->GetNodeKey(nextNode);
-            auto nodeVal = m_hTreeView->GetNodeValue(nextNode);
+            nodeText     = m_pTreeView->GetNodeName(nextNode, true);
+            auto nodeKey = m_pTreeView->GetNodeKey(nextNode);
+            auto nodeVal = m_pTreeView->GetNodeValue(nextNode);
 
             // Search in node value
             //  1. If both key and value are not equal
@@ -545,13 +545,13 @@ void JsonViewDlg::SearchInTree()
             if (bFound)
                 break;
 
-            nextNode = m_hTreeView->NextItem(nextNode);
+            nextNode = m_pTreeView->NextItem(nextNode);
         }
 
         if (bFound)
         {
             UpdateNodePath(nextNode);
-            m_hTreeView->SetSelection(nextNode);
+            m_pTreeView->SetSelection(nextNode);
             ++foundCount;
         }
         else
@@ -719,15 +719,15 @@ void JsonViewDlg::ShowContextMenu(int x, int y)
 
     TVHITTESTINFO tvHitInfo {.pt = p, .flags = 0, .hItem = nullptr};
 
-    m_hTreeView->ScreenToTreeView(&(tvHitInfo.pt));
+    m_pTreeView->ScreenToTreeView(&(tvHitInfo.pt));
 
     // Detect if the given position is on the element TVITEM
-    HTREEITEM hTreeItem = m_hTreeView->HitTest(&tvHitInfo);
+    HTREEITEM hTreeItem = m_pTreeView->HitTest(&tvHitInfo);
 
     if (hTreeItem != nullptr)
     {
         // Make item selected
-        m_hTreeView->SelectItem(hTreeItem);
+        m_pTreeView->SelectItem(hTreeItem);
 
         if (tvHitInfo.flags & (TVHT_ONITEM | TVHT_ONITEMBUTTON))
         {
@@ -741,7 +741,7 @@ void JsonViewDlg::ShowContextMenu(int x, int y)
 void JsonViewDlg::ShowContextMenu(HTREEITEM htiNode, LPPOINT lppScreen)
 {
     // Select it
-    m_hTreeView->SelectItem(htiNode);
+    m_pTreeView->SelectItem(htiNode);
 
     // Show menu
     if (lppScreen != NULL)
@@ -753,19 +753,19 @@ void JsonViewDlg::ShowContextMenu(HTREEITEM htiNode, LPPOINT lppScreen)
         bool bEnableExpand   = false;
         bool bEnableCollapse = false;
 
-        if (m_hTreeView->GetRoot() == htiNode)
+        if (m_pTreeView->GetRoot() == htiNode)
         {
             bEnableCopyName  = false;
             bEnableCopyValue = false;
             bEnableCopyPath  = false;
         }
 
-        if (m_hTreeView->HasChild(htiNode))
+        if (m_pTreeView->HasChild(htiNode))
         {
             bEnableCopyName  = false;
             bEnableCopyValue = false;
-            bEnableCollapse  = m_hTreeView->IsThisOrAnyChildExpanded(htiNode);
-            bEnableExpand    = m_hTreeView->IsThisOrAnyChildCollapsed(htiNode);
+            bEnableCollapse  = m_pTreeView->IsThisOrAnyChildExpanded(htiNode);
+            bEnableExpand    = m_pTreeView->IsThisOrAnyChildCollapsed(htiNode);
         }
 
         // Create menu
@@ -806,56 +806,56 @@ void JsonViewDlg::ShowContextMenu(HTREEITEM htiNode, LPPOINT lppScreen)
 
 void JsonViewDlg::ContextMenuExpand(bool bExpand)
 {
-    HTREEITEM htiSelected = m_hTreeView->GetSelection();
+    HTREEITEM htiSelected = m_pTreeView->GetSelection();
     if (htiSelected == NULL)
         return;
 
-    HTREEITEM htiRoot = m_hTreeView->GetRoot();
+    HTREEITEM htiRoot = m_pTreeView->GetRoot();
     HTREEITEM htiNext = htiSelected;
     while (htiNext != NULL)
     {
         if (!(htiNext == htiRoot && !bExpand))
-            bExpand ? m_hTreeView->Expand(htiNext) : m_hTreeView->Collapse(htiNext);
-        htiNext = m_hTreeView->NextItem(htiNext, htiSelected);
+            bExpand ? m_pTreeView->Expand(htiNext) : m_pTreeView->Collapse(htiNext);
+        htiNext = m_pTreeView->NextItem(htiNext, htiSelected);
     }
 }
 
 auto JsonViewDlg::CopyName() const -> std::wstring
 {
-    HTREEITEM selectedNode = m_hTreeView->GetSelection();
+    HTREEITEM selectedNode = m_pTreeView->GetSelection();
     if (selectedNode)
     {
-        return m_hTreeView->GetNodeName(selectedNode, true);
+        return m_pTreeView->GetNodeName(selectedNode, true);
     }
     return std::wstring();
 }
 
 auto JsonViewDlg::CopyKey() const -> std::wstring
 {
-    HTREEITEM selectedNode = m_hTreeView->GetSelection();
+    HTREEITEM selectedNode = m_pTreeView->GetSelection();
     if (selectedNode)
     {
-        return m_hTreeView->GetNodeKey(selectedNode);
+        return m_pTreeView->GetNodeKey(selectedNode);
     }
     return std::wstring();
 }
 
 auto JsonViewDlg::CopyValue() const -> std::wstring
 {
-    HTREEITEM selectedNode = m_hTreeView->GetSelection();
+    HTREEITEM selectedNode = m_pTreeView->GetSelection();
     if (selectedNode)
     {
-        return m_hTreeView->GetNodeValue(selectedNode);
+        return m_pTreeView->GetNodeValue(selectedNode);
     }
     return std::wstring();
 }
 
 auto JsonViewDlg::CopyPath() const -> std::wstring
 {
-    HTREEITEM selectedNode = m_hTreeView->GetSelection();
+    HTREEITEM selectedNode = m_pTreeView->GetSelection();
     if (selectedNode)
     {
-        return m_hTreeView->GetNodePath(selectedNode);
+        return m_pTreeView->GetNodePath(selectedNode);
     }
     return std::wstring();
 }
@@ -911,7 +911,7 @@ void JsonViewDlg::HandleTreeEvents(LPARAM lParam)
         {
             UpdateNodePath(hItem);
 
-            auto pPosition = m_hTreeView->GetNodePosition(hItem);
+            auto pPosition = m_pTreeView->GetNodePosition(hItem);
             if (pPosition != nullptr)
             {
                 GoToLine(pPosition->nLine);
@@ -922,9 +922,9 @@ void JsonViewDlg::HandleTreeEvents(LPARAM lParam)
 
     case NM_DBLCLK:
     {
-        HTREEITEM hItem = m_hTreeView->GetSelection();
+        HTREEITEM hItem = m_pTreeView->GetSelection();
 
-        auto pPosition = m_hTreeView->GetNodePosition(hItem);
+        auto pPosition = m_pTreeView->GetNodePosition(hItem);
         if (pPosition != nullptr)
         {
             GoToPosition(pPosition->nLine, pPosition->nColumn, pPosition->nKeyLength);
@@ -1029,7 +1029,7 @@ INT_PTR JsonViewDlg::run_dlgProc(UINT message, WPARAM wParam, LPARAM lParam)
         // Save ourselves in GWLP_USERDATA.
         ::SetWindowLongPtr(getHSelf(), GWLP_USERDATA, reinterpret_cast<LONG_PTR>(this));
 
-        m_hTreeView->OnInit(getHSelf());
+        m_pTreeView->OnInit(getHSelf());
 
         PrepareButtons();
 

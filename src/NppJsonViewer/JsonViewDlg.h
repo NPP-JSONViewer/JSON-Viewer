@@ -117,6 +117,6 @@ private:
 
     std::unique_ptr<wchar_t[]>       m_pCurrFileName;
     std::unique_ptr<ScintillaEditor> m_pEditor   = nullptr;
-    std::unique_ptr<TreeViewCtrl>    m_hTreeView = nullptr;
+    std::unique_ptr<TreeViewCtrl>    m_pTreeView = nullptr;
     std::shared_ptr<Setting>         m_pSetting  = nullptr;
 };
