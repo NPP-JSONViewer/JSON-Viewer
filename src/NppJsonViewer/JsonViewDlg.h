@@ -89,8 +89,8 @@ private:
     void ShowControls(const std::vector<DWORD>& ids, bool show);
     void EnableControls(const std::vector<DWORD>& ids, bool enable);
 
-    auto GetZoomLevel() const -> int;
-    void SetZoomLevel(int pos) const;
+    auto GetSliderPosition() const -> int;
+    void SetSliderPosition(int pos) const;
     void SetTreeViewZoom(double dwZoomFactor) const;
     void UpdateUIOnZoom(int zoomPercentage) const;
     void HandleZoomOnScroll(WPARAM wParam) const;

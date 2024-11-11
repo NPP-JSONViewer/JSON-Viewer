@@ -923,7 +923,7 @@ void JsonViewDlg::SetSliderPosition(int pos) const
     SetWindowText(hZoomPercent, zoomText);
 }
 
-void JsonViewDlg::SetTreeViewZoom(double dwZoomFactor)
+void JsonViewDlg::SetTreeViewZoom(double dwZoomFactor) const
 {
     HWND         hTreeView    = GetDlgItem(getHSelf(), IDC_TREE);
     static HFONT hCurrentFont = reinterpret_cast<HFONT>(SendMessage(hTreeView, WM_GETFONT, 0, 0));
@@ -943,7 +943,7 @@ void JsonViewDlg::SetTreeViewZoom(double dwZoomFactor)
     InvalidateRect(hTreeView, nullptr, TRUE);
 }
 
-void JsonViewDlg::UpdateUIOnZoom(int zoomPercentage)
+void JsonViewDlg::UpdateUIOnZoom(int zoomPercentage) const
 {
     // Update slider
     SetSliderPosition(zoomPercentage);
@@ -953,7 +953,7 @@ void JsonViewDlg::UpdateUIOnZoom(int zoomPercentage)
     SetTreeViewZoom(zoomFactor);
 }
 
-void JsonViewDlg::HandleZoomOnScroll(WPARAM wParam)
+void JsonViewDlg::HandleZoomOnScroll(WPARAM wParam) const
 {
     int pos   = GetSliderPosition();    // Current slider position
     int delta = GET_WHEEL_DELTA_WPARAM(wParam);
