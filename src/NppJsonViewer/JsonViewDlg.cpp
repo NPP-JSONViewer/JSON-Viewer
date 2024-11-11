@@ -895,6 +895,42 @@ void JsonViewDlg::EnableControls(const std::vector<DWORD>& ids, bool enable)
         EnableWindow(GetDlgItem(getHSelf(), id), enable ? TRUE : FALSE);
 }
 
+void JsonViewDlg::SetTreeViewZoom(double dwZoomFactor)
+{
+    HWND         hTreeView    = GetDlgItem(getHSelf(), IDC_TREE);
+    static HFONT hCurrentFont = reinterpret_cast<HFONT>(SendMessage(hTreeView, WM_GETFONT, 0, 0));
+
+    LOGFONT logFont {};
+    GetObject(hCurrentFont, sizeof(LOGFONT), &logFont);
+    logFont.lfHeight = static_cast<LONG>(logFont.lfHeight * dwZoomFactor);
+
+    static HFONT hTreeFont = nullptr;
+    if (hTreeFont)
+    {
+        DeleteObject(hTreeFont);
+    }
+    hTreeFont = CreateFontIndirect(&logFont);
+
+    SendMessage(hTreeView, WM_SETFONT, reinterpret_cast<WPARAM>(hTreeFont), TRUE);
+    InvalidateRect(hTreeView, nullptr, TRUE);
+}
+
+void JsonViewDlg::HandleZoom(bool zoomIn)
+{
+    static double zoomLevel = 1.0;    // Start at 100% zoom (Max 300% and min 80%)
+
+    if (zoomIn && zoomLevel < 3.0)
+    {
+        zoomLevel += 0.1;    // Zoom in (max 300%)
+    }
+    else if (!zoomIn && zoomLevel > 0.8)
+    {
+        zoomLevel -= 0.1;    // Zoom out (min 80%)
+    }
+
+    SetTreeViewZoom(zoomLevel);
+}
+
 void JsonViewDlg::HandleTreeEvents(LPARAM lParam) const
 {
     LPNMHDR lpnmh = reinterpret_cast<LPNMHDR>(lParam);
@@ -1105,6 +1141,16 @@ INT_PTR JsonViewDlg::run_dlgProc(UINT message, WPARAM wParam, LPARAM lParam)
     {
         HandleTreeEvents(lParam);
         return TRUE;
+    }
+
+    case WM_MOUSEWHEEL:
+    {
+        if (GetKeyState(VK_CONTROL) & 0x8000)
+        {
+            HandleZoom(GET_WHEEL_DELTA_WPARAM(wParam) > 0);
+            return TRUE;
+        }
+        return FALSE;
     }
 
     default:
