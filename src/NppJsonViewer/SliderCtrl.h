@@ -9,6 +9,7 @@ struct SliderRange
     int m_nDefault = 100;
     int m_nMinZoom = 80;
     int m_nMaxZoom = 250;
+    int m_nSteps   = 10;
 };    // namespace SliderRange
 
 class SliderCtrl

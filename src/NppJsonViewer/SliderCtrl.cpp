@@ -22,6 +22,7 @@ void SliderCtrl::OnInit(HWND hParent, int sliderID, int sliderInfoID)
     // Set slider range and initial position
     SendMessage(m_hSelf, TBM_SETRANGE, TRUE, MAKELPARAM(m_sliderRange.m_nMinZoom, m_sliderRange.m_nMaxZoom));
     SendMessage(m_hSelf, TBM_SETPOS, TRUE, m_sliderRange.m_nDefault);
+    SendMessage(m_hSelf, TBM_SETPAGESIZE, 0, m_sliderRange.m_nSteps);
 
     UpdateInfo(m_sliderRange.m_nDefault);
 

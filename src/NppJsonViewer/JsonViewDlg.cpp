@@ -941,8 +941,9 @@ void JsonViewDlg::HandleZoomOnScroll(WPARAM wParam) const
     int pos   = GetZoomLevel();    // Current zoom level
     int delta = GET_WHEEL_DELTA_WPARAM(wParam);
 
-    const auto& zoomRange = m_pTreeViewZoom->GetRange();
-    const bool  isZoomIn    = delta > 0;
+    const auto& zoomRange  = m_pTreeViewZoom->GetRange();
+    const bool  isZoomIn   = delta > 0;
+    bool        bRefreshUI = true;
 
     if (isZoomIn && pos < zoomRange.m_nMaxZoom)
     {
@@ -952,8 +953,15 @@ void JsonViewDlg::HandleZoomOnScroll(WPARAM wParam) const
     {
         pos -= 10;    // Zoom out
     }
+    else
+    {
+        bRefreshUI = false;
+    }
 
-    UpdateUIOnZoom(pos);
+    if (bRefreshUI)
+    {
+        UpdateUIOnZoom(pos);
+    }
 }
 
 void JsonViewDlg::HandleTreeEvents(LPARAM lParam) const
