@@ -48,5 +48,5 @@ public:
 
 private:
     // Static window procedure for the slider
-    static INT_PTR CALLBACK runWinProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam);
+    static LRESULT CALLBACK runWinProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam);
 };

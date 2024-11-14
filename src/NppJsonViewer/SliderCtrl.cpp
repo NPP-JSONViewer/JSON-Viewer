@@ -10,7 +10,7 @@ SliderCtrl::SliderCtrl(const SliderRange& sliderRange)
 SliderCtrl::~SliderCtrl()
 {
     // Restore the original window procedure on cleanup
-    SetWindowLongPtr(m_hSelf, GWLP_WNDPROC, (LONG_PTR)m_oldSliderProc);
+    SetWindowLongPtr(m_hSelf, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(m_oldSliderProc));
 }
 
 void SliderCtrl::OnInit(HWND hParent, int sliderID, int sliderInfoID)
