@@ -60,6 +60,9 @@
     <ClCompile Include="TreeHandler.h">
       <Filter>Header Files</Filter>
     </ClCompile>
+    <ClCompile Include="SliderCtrl.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h">
@@ -132,6 +135,9 @@
       <Filter>ThirdParty\npp</Filter>
     </ClInclude>
     <ClInclude Include="TrackingStream.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SliderCtrl.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

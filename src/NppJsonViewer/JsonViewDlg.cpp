@@ -19,6 +19,7 @@ JsonViewDlg::JsonViewDlg(HINSTANCE hInstance, const NppData& nppData, const bool
     , m_nDlgId(nCmdId)
     , m_pEditor(std::make_unique<ScintillaEditor>(nppData))
     , m_pTreeView(std::make_unique<TreeViewCtrl>())
+    , m_pTreeViewZoom(std::make_unique<SliderCtrl>())
     , m_pSetting(pSetting)
     , m_pCurrFileName(std::make_unique<wchar_t[]>(FILENAME_LEN_IN_TITLE))
 {
@@ -895,6 +896,74 @@ void JsonViewDlg::EnableControls(const std::vector<DWORD>& ids, bool enable)
         EnableWindow(GetDlgItem(getHSelf(), id), enable ? TRUE : FALSE);
 }
 
+auto JsonViewDlg::GetZoomLevel() const -> int
+{
+    return m_pTreeViewZoom->GetPosition();
+}
+
+void JsonViewDlg::SetZoomLevel(int pos) const
+{
+    m_pTreeViewZoom->SetPosition(pos);
+}
+
+void JsonViewDlg::SetTreeViewZoom(double dwZoomFactor) const
+{
+    HWND         hTreeView    = GetDlgItem(getHSelf(), IDC_TREE);
+    static HFONT hCurrentFont = reinterpret_cast<HFONT>(SendMessage(hTreeView, WM_GETFONT, 0, 0));
+
+    LOGFONT logFont {};
+    GetObject(hCurrentFont, sizeof(LOGFONT), &logFont);
+    logFont.lfHeight = static_cast<LONG>(logFont.lfHeight * dwZoomFactor);
+
+    static HFONT hTreeFont = nullptr;
+    if (hTreeFont)
+    {
+        DeleteObject(hTreeFont);
+    }
+    hTreeFont = CreateFontIndirect(&logFont);
+
+    SendMessage(hTreeView, WM_SETFONT, reinterpret_cast<WPARAM>(hTreeFont), TRUE);
+    InvalidateRect(hTreeView, nullptr, TRUE);
+}
+
+void JsonViewDlg::UpdateUIOnZoom(int zoomPercentage) const
+{
+    // Update zoom level on slider
+    SetZoomLevel(zoomPercentage);
+
+    // Update the Tree view
+    double zoomFactor = zoomPercentage / 100.0;
+    SetTreeViewZoom(zoomFactor);
+}
+
+void JsonViewDlg::HandleZoomOnScroll(WPARAM wParam) const
+{
+    int pos   = GetZoomLevel();    // Current zoom level
+    int delta = GET_WHEEL_DELTA_WPARAM(wParam);
+
+    const auto& zoomRange  = m_pTreeViewZoom->GetRange();
+    const bool  isZoomIn   = delta > 0;
+    bool        bRefreshUI = true;
+
+    if (isZoomIn && pos < zoomRange.m_nMaxZoom)
+    {
+        pos += 10;    // Zoom in
+    }
+    else if (!isZoomIn && pos > zoomRange.m_nMinZoom)
+    {
+        pos -= 10;    // Zoom out
+    }
+    else
+    {
+        bRefreshUI = false;
+    }
+
+    if (bRefreshUI)
+    {
+        UpdateUIOnZoom(pos);
+    }
+}
+
 void JsonViewDlg::HandleTreeEvents(LPARAM lParam) const
 {
     LPNMHDR lpnmh = reinterpret_cast<LPNMHDR>(lParam);
@@ -1030,6 +1099,7 @@ INT_PTR JsonViewDlg::run_dlgProc(UINT message, WPARAM wParam, LPARAM lParam)
         ::SetWindowLongPtr(getHSelf(), GWLP_USERDATA, reinterpret_cast<LONG_PTR>(this));
 
         m_pTreeView->OnInit(getHSelf(), IDC_TREE);
+        m_pTreeViewZoom->OnInit(getHSelf(), IDC_ZOOM_SLIDER, IDC_ZOOM_PERCENT);
 
         PrepareButtons();
 
@@ -1106,6 +1176,31 @@ INT_PTR JsonViewDlg::run_dlgProc(UINT message, WPARAM wParam, LPARAM lParam)
         HandleTreeEvents(lParam);
         return TRUE;
     }
+
+    case WM_MOUSEWHEEL:
+    {
+        if (GetKeyState(VK_CONTROL) & 0x8000)
+        {
+            HandleZoomOnScroll(wParam);
+            return TRUE;
+        }
+        return FALSE;
+    }
+
+    case WM_HSCROLL:
+    {
+        HWND hSlider = GetDlgItem(getHSelf(), IDC_ZOOM_SLIDER);
+
+        if (reinterpret_cast<HWND>(lParam) == hSlider)
+        {
+            int pos = m_pTreeViewZoom->GetPosition();
+            UpdateUIOnZoom(pos);
+
+            return TRUE;
+        }
+        return FALSE;
+    }
+
 
     default:
         return DockingDlgInterface::run_dlgProc(message, wParam, lParam);
