@@ -16,6 +16,18 @@ This plugin is designed to display JSON strings in a Treeview format and highlig
 
 ## Latest Updates:
 
+### 2.1.1.0
+
+1. New features:
+    1. Zoom tree view with <kbd>ctrl</kbd> + `mouse wheel` or slider.
+
+
+2. Bug/regression fixes:
+    1. Updated to the latest RapidJSON parser.
+    2. Minor code enhancements for improved performance.
+    3. Added unit tests
+
+
 ### 2.1.0.0
 
 1. New features:
@@ -38,7 +50,7 @@ This plugin is designed to display JSON strings in a Treeview format and highlig
 
 2. Bug/regression fixes:
     1. Updated license text on UI as per GitHub link
-    2. Excplicit callout for no support on multi selection
+    2. Explicit callout for no support on multi selection
     3. Some other minor code and UI enhancements
 
 
@@ -119,7 +131,7 @@ Bug/regression fixes:
 5. issue-72 tab setting from notepad++ settings are not honored
 6. issue-73 Display tree for Array of Object 
 7. issue-80 use line ending setting from editor
-8. Relaxed parsing. Supports trailling commas, comments(only parsing), NaN and infinity JS literals.
+8. Relaxed parsing. Supports trailing commas, comments(only parsing), NaN and infinity JS literals.
   
 ### 1.34
 1. Fix Access Violation issue #51
@@ -160,11 +172,11 @@ Bug/regression fixes:
 1. Now displays a message box when JSON string is not selected.
 
 ### 1.17
-1. Fixed dialog display issue, that occured in 1.16 release.
+1. Fixed dialog display issue, that occurred in 1.16 release.
 
 ### 1.16
 1. Fixed bug - 3305433 do not find error on second try and do not build tree
-2. Fixed a memory leak..was not deallocating memory allocated to json strings
+2. Fixed a memory leak..was not de-allocating memory allocated to json strings
 
 ### 1.15
 1. Fixed bug 3203739 "Unable to parse JSON Arrays"
