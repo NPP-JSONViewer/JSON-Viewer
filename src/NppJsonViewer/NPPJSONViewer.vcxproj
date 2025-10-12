@@ -188,7 +188,7 @@
   <ItemGroup>
     <ClCompile Include="..\..\external\npp\StaticDialog.cpp" />
     <ClCompile Include="AboutDlg.cpp" />
-    <ClCompile Include="DllMain.cpp" />
+    <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="JsonHandler.cpp" />
     <ClCompile Include="JsonViewDlg.cpp" />
     <ClCompile Include="NppJsonPlugin.cpp" />
