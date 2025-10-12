@@ -57,6 +57,9 @@
     <ClCompile Include="SliderCtrl.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="TreeHandler.h">
+      <Filter>Header Files</Filter>
+    </ClCompile>
     <ClCompile Include="TreeViewCtrl.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -108,9 +111,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="TrackingStream.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="TreeHandler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="TreeViewCtrl.h">

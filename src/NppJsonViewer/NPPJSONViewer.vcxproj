@@ -186,9 +186,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="plugintemplate\DockingFeature\StaticDialog.cpp" />
     <ClCompile Include="AboutDlg.cpp" />
-    <ClCompile Include="DllMain.cpp" />
+    <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="JsonHandler.cpp" />
     <ClCompile Include="JsonViewDlg.cpp" />
     <ClCompile Include="NppJsonPlugin.cpp" />
@@ -198,7 +197,9 @@
     <ClCompile Include="SettingsDlg.cpp" />
     <ClCompile Include="ShortcutCommand.cpp" />
     <ClCompile Include="SliderCtrl.cpp" />
+    <ClCompile Include="TreeHandler.h" />
     <ClCompile Include="TreeViewCtrl.cpp" />
+    <ClCompile Include="plugintemplate\DockingFeature\StaticDialog.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AboutDlg.h" />
@@ -206,15 +207,6 @@
     <ClInclude Include="JsonHandler.h" />
     <ClInclude Include="JsonNode.h" />
     <ClInclude Include="JsonViewDlg.h" />
-    <ClInclude Include="plugintemplate\DockingFeature\Docking.h" />
-    <ClInclude Include="plugintemplate\DockingFeature\DockingDlgInterface.h" />
-    <ClInclude Include="plugintemplate\DockingFeature\dockingResource.h" />
-    <ClInclude Include="plugintemplate\DockingFeature\StaticDialog.h" />
-    <ClInclude Include="plugintemplate\DockingFeature\Window.h" />
-    <ClInclude Include="plugintemplate\menuCmdID.h" />
-    <ClInclude Include="plugintemplate\Notepad_plus_msgs.h" />
-    <ClInclude Include="plugintemplate\PluginInterface.h" />
-    <ClInclude Include="plugintemplate\Scintilla.h" />
     <ClInclude Include="NppJsonPlugin.h" />
     <ClInclude Include="Profile.h" />
     <ClInclude Include="RapidJsonHandler.h" />
@@ -225,8 +217,16 @@
     <ClInclude Include="SliderCtrl.h" />
     <ClInclude Include="StopWatch.h" />
     <ClInclude Include="TrackingStream.h" />
-    <ClInclude Include="TreeHandler.h" />
     <ClInclude Include="TreeViewCtrl.h" />
+    <ClInclude Include="plugintemplate\DockingFeature\Docking.h" />
+    <ClInclude Include="plugintemplate\DockingFeature\DockingDlgInterface.h" />
+    <ClInclude Include="plugintemplate\DockingFeature\dockingResource.h" />
+    <ClInclude Include="plugintemplate\DockingFeature\StaticDialog.h" />
+    <ClInclude Include="plugintemplate\DockingFeature\Window.h" />
+    <ClInclude Include="plugintemplate\menuCmdID.h" />
+    <ClInclude Include="plugintemplate\Notepad_plus_msgs.h" />
+    <ClInclude Include="plugintemplate\PluginInterface.h" />
+    <ClInclude Include="plugintemplate\Scintilla.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc" />
