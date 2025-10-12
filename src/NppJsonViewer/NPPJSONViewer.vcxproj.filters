@@ -57,6 +57,9 @@
     <ClCompile Include="..\..\external\npp\StaticDialog.cpp">
       <Filter>ThirdParty\npp</Filter>
     </ClCompile>
+    <ClCompile Include="TreeHandler.h">
+      <Filter>Header Files</Filter>
+    </ClCompile>
     <ClCompile Include="SliderCtrl.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -78,9 +81,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ScintillaEditor.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="TreeHandler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="TreeViewCtrl.h">

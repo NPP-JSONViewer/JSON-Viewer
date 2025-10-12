@@ -225,7 +225,7 @@
     <ClInclude Include="ShortcutCommand.h" />
     <ClInclude Include="SliderCtrl.h" />
     <ClInclude Include="StopWatch.h" />
-    <ClInclude Include="TreeHandler.h" />
+    <ClCompile Include="TreeHandler.h" />
     <ClInclude Include="TrackingStream.h" />
     <ClInclude Include="TreeViewCtrl.h" />
   </ItemGroup>
