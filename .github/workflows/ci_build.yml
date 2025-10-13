@@ -23,7 +23,7 @@ jobs:
     steps:
       # Step 1: Check out the code from the repo
       - name: Checkout repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           submodules: recursive
 
