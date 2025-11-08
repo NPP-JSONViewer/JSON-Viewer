@@ -103,11 +103,12 @@ void NppJsonPlugin::SetMenuIcon()
 {
     if (m_hMenuIcon.hToolbarIcon || m_hMenuIcon.hToolbarBmp)
     {
-        toolbarIcons tbIcon {};
+        toolbarIconsWithDarkMode tbIcon {};
         tbIcon.hToolbarBmp  = m_hMenuIcon.hToolbarBmp;
         tbIcon.hToolbarIcon = m_hMenuIcon.hToolbarIcon;
+        tbIcon.hToolbarIconDarkMode = m_hMenuIcon.hToolbarIcon;
         auto nCommandId     = m_shortcutCommands.GetCommandID(CallBackID::SHOW_DOC_PANEL);
-        ::SendMessage(m_NppData._nppHandle, NPPM_ADDTOOLBARICON, reinterpret_cast<WPARAM&>(nCommandId), reinterpret_cast<LPARAM>(&tbIcon));
+        ::SendMessage(m_NppData._nppHandle, NPPM_ADDTOOLBARICON_FORDARKMODE, reinterpret_cast<WPARAM&>(nCommandId), reinterpret_cast<LPARAM>(&tbIcon));
     }
 }
 

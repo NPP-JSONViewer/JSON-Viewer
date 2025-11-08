@@ -5,7 +5,7 @@
 #include <vector>
 #include <optional>
 
-#include "DockingDlgInterface.h"
+#include "DockingFeature/DockingDlgInterface.h"
 #include "PluginInterface.h"
 #include "resource.h"
 #include "TreeViewCtrl.h"

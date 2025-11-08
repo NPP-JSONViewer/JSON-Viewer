@@ -1,5 +1,5 @@
 #pragma once
-#include "StaticDialog.h"
+#include "DockingFeature/StaticDialog.h"
 
 class AboutDlg : public StaticDialog
 {
