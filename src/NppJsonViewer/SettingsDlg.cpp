@@ -42,9 +42,7 @@ INT_PTR SettingsDlg::run_dlgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
     {
         ::SetWindowLongPtr(_hSelf, DWLP_USER, lParam);
 
-        auto enable_dlg_theme = reinterpret_cast<ETDTProc>(::SendMessage(_hParent, NPPM_GETENABLETHEMETEXTUREFUNC, 0, 0));
-        if (enable_dlg_theme != nullptr)
-            enable_dlg_theme(_hSelf, ETDT_ENABLETAB);
+        EnableThemeDialogTexture(_hSelf, ETDT_ENABLETAB);
 
         InitDlg();
 
