@@ -8,7 +8,7 @@ on:
 
 env:
   BUILD_DIR: src\Build\Bin
-  MSBUILD_TOOLSET: v145
+  MSBUILD_TOOLSET: v143
   ARTIFACT_PREFIX: NppJSONViewer_
 
 jobs:
