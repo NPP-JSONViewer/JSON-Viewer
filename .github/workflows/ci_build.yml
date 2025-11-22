@@ -34,7 +34,7 @@ jobs:
       # Step 3: Build projects and unit test
       - name: Build code
         working-directory: src
-        run: msbuild NppJSONViewer.sln /m /p:configuration="${{matrix.build_configuration}}" /p:platform="${{matrix.build_platform}}" /p:PlatformToolset=${{env.MSBUILD_TOOLSET}}
+        run: msbuild NppJSONViewer.slnx /m /p:configuration="${{matrix.build_configuration}}" /p:platform="${{matrix.build_platform}}" /p:PlatformToolset=${{env.MSBUILD_TOOLSET}}
 
       # Step 4: Upload build binary artifacts for deployment
       - name: Archive binaries artifacts
