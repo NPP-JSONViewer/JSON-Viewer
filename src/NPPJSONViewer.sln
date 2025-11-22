@@ -1,13 +1,24 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.3.32804.467
+# Visual Studio Version 18
+VisualStudioVersion = 18.0.11217.181 d18.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NPPJSONViewer", "NppJsonViewer\NPPJSONViewer.vcxproj", "{1590D7CD-7D3A-4AB7-A355-EE02F7FB987D}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UtilityLib", "UtilityLib\UtilityLib.vcxproj", "{171CAFC6-E679-4B81-BF5B-049AC0FAB4F8}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UnitTest", "..\tests\UnitTest\UnitTest.vcxproj", "{5A15FD53-E7C1-4F10-85FA-B7C3BB5D4D64}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{12D1D661-97C4-40DE-AEE7-35A20FBB5F78}"
+	ProjectSection(SolutionItems) = preProject
+		..\.github\dependabot.yml = ..\.github\dependabot.yml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{C781F92F-F279-4B9D-85A5-A08639829C5A}"
+	ProjectSection(SolutionItems) = preProject
+		..\.github\workflows\ci_build.yml = ..\.github\workflows\ci_build.yml
+		..\.github\workflows\codeql.yml = ..\.github\workflows\codeql.yml
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -58,6 +69,9 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{C781F92F-F279-4B9D-85A5-A08639829C5A} = {12D1D661-97C4-40DE-AEE7-35A20FBB5F78}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {66FFEF3A-7122-49C7-8CE4-4704DFB30594}
