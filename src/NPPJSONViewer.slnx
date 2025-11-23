@@ -1,0 +1,15 @@
+<Solution>
+  <Configurations>
+    <Platform Name="ARM64" />
+    <Platform Name="Win32" />
+    <Platform Name="x64" />
+  </Configurations>
+  <Folder Name="/.github/" />
+  <Folder Name="/.github/workflows/">
+    <File Path="../.github/workflows/ci_build.yml" />
+    <File Path="../.github/workflows/codeql.yml" />
+  </Folder>
+  <Project Path="../tests/UnitTest/UnitTest.vcxproj" />
+  <Project Path="NppJsonViewer/NPPJSONViewer.vcxproj" />
+  <Project Path="UtilityLib/UtilityLib.vcxproj" />
+</Solution>
