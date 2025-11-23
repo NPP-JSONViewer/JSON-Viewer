@@ -9,7 +9,7 @@
     <File Path="../.github/workflows/ci_build.yml" />
     <File Path="../.github/workflows/codeql.yml" />
   </Folder>
-  <Project Path="../tests/UnitTest/UnitTest.vcxproj" />
-  <Project Path="NppJsonViewer/NPPJSONViewer.vcxproj" />
-  <Project Path="UtilityLib/UtilityLib.vcxproj" />
+  <Project Path="../tests/UnitTest/UnitTest.vcxproj" Id="5a15fd53-e7c1-4f10-85fa-b7c3bb5d4d64" />
+  <Project Path="NppJsonViewer/NPPJSONViewer.vcxproj" Id="1590d7cd-7d3a-4ab7-a355-ee02f7fb987d" />
+  <Project Path="UtilityLib/UtilityLib.vcxproj" Id="171cafc6-e679-4b81-bf5b-049ac0fab4f8" />
 </Solution>
