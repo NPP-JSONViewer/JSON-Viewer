@@ -5,7 +5,7 @@
   <PropertyGroup>
     <OutDir>$(SolutionDir)Build\Bin\$(Configuration)\$(Platform)\</OutDir>
     <IntDir>$(SolutionDir)Build\Intermediate\$(ProjectName)\$(Configuration)\$(Platform)\</IntDir>
-    <ExternalIncludePath>$(SolutionDir)..\external\npp;$(SolutionDir)..\external\rapidjson\include;$(ExternalIncludePath)</ExternalIncludePath>
+    <ExternalIncludePath>$(SolutionDir)NppJsonViewer\plugintemplate;$(SolutionDir)..\external\rapidjson\include;$(ExternalIncludePath)</ExternalIncludePath>
     <IncludePath>$(SolutionDir)UtilityLib;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup>

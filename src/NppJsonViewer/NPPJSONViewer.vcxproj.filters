@@ -16,76 +16,55 @@
     <Filter Include="ThirdParty">
       <UniqueIdentifier>{3a31aa3c-9f15-4a33-bf5c-b9153d1e757a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ThirdParty\npp">
+    <Filter Include="ThirdParty\plugintemplate">
       <UniqueIdentifier>{5b794f9e-baf6-4faf-98a6-741b4918d410}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ThirdParty\plugintemplate\DockingFeature">
+      <UniqueIdentifier>{072ab05e-efec-4d68-9a86-dbdf2bdaec4d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="DllMain.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="NppJsonPlugin.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ShortcutCommand.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="JsonViewDlg.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ScintillaEditor.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="TreeViewCtrl.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="AboutDlg.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="dllmain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="JsonHandler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="RapidJsonHandler.cpp">
+    <ClCompile Include="JsonViewDlg.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="SettingsDlg.cpp">
+    <ClCompile Include="NppJsonPlugin.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Profile.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\external\npp\StaticDialog.cpp">
-      <Filter>ThirdParty\npp</Filter>
+    <ClCompile Include="RapidJsonHandler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ScintillaEditor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SettingsDlg.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ShortcutCommand.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="SliderCtrl.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="TreeViewCtrl.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="plugintemplate\DockingFeature\StaticDialog.cpp">
+      <Filter>ThirdParty\plugintemplate\DockingFeature</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="resource.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="StopWatch.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="NppJsonPlugin.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ShortcutCommand.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="JsonViewDlg.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ScintillaEditor.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="TreeHandler.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="TreeViewCtrl.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="AboutDlg.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -98,47 +77,74 @@
     <ClInclude Include="JsonNode.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="RapidJsonHandler.h">
+    <ClInclude Include="JsonViewDlg.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="SettingsDlg.h">
+    <ClInclude Include="NppJsonPlugin.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Profile.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\external\npp\Docking.h">
-      <Filter>ThirdParty\npp</Filter>
+    <ClInclude Include="RapidJsonHandler.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\external\npp\DockingDlgInterface.h">
-      <Filter>ThirdParty\npp</Filter>
+    <ClInclude Include="resource.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\external\npp\dockingResource.h">
-      <Filter>ThirdParty\npp</Filter>
+    <ClInclude Include="ScintillaEditor.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\external\npp\menuCmdID.h">
-      <Filter>ThirdParty\npp</Filter>
+    <ClInclude Include="SettingsDlg.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\external\npp\Notepad_plus_msgs.h">
-      <Filter>ThirdParty\npp</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\external\npp\PluginInterface.h">
-      <Filter>ThirdParty\npp</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\external\npp\Scintilla.h">
-      <Filter>ThirdParty\npp</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\external\npp\StaticDialog.h">
-      <Filter>ThirdParty\npp</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\external\npp\Window.h">
-      <Filter>ThirdParty\npp</Filter>
-    </ClInclude>
-    <ClInclude Include="TrackingStream.h">
+    <ClInclude Include="ShortcutCommand.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="SliderCtrl.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="StopWatch.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TrackingStream.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TreeHandler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TreeViewCtrl.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="plugintemplate\DockingFeature\Docking.h">
+      <Filter>ThirdParty\plugintemplate\DockingFeature</Filter>
+    </ClInclude>
+    <ClInclude Include="plugintemplate\DockingFeature\DockingDlgInterface.h">
+      <Filter>ThirdParty\plugintemplate\DockingFeature</Filter>
+    </ClInclude>
+    <ClInclude Include="plugintemplate\DockingFeature\dockingResource.h">
+      <Filter>ThirdParty\plugintemplate\DockingFeature</Filter>
+    </ClInclude>
+    <ClInclude Include="plugintemplate\DockingFeature\StaticDialog.h">
+      <Filter>ThirdParty\plugintemplate\DockingFeature</Filter>
+    </ClInclude>
+    <ClInclude Include="plugintemplate\DockingFeature\Window.h">
+      <Filter>ThirdParty\plugintemplate\DockingFeature</Filter>
+    </ClInclude>
+    <ClInclude Include="plugintemplate\menuCmdID.h">
+      <Filter>ThirdParty\plugintemplate</Filter>
+    </ClInclude>
+    <ClInclude Include="plugintemplate\Notepad_plus_msgs.h">
+      <Filter>ThirdParty\plugintemplate</Filter>
+    </ClInclude>
+    <ClInclude Include="plugintemplate\PluginInterface.h">
+      <Filter>ThirdParty\plugintemplate</Filter>
+    </ClInclude>
+    <ClInclude Include="plugintemplate\Sci_Position.h">
+      <Filter>ThirdParty\plugintemplate</Filter>
+    </ClInclude>
+    <ClInclude Include="plugintemplate\Scintilla.h">
+      <Filter>ThirdParty\plugintemplate</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
