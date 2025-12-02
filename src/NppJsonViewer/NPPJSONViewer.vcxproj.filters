@@ -21,7 +21,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="DllMain.cpp">
+    <ClCompile Include="dllmain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="NppJsonPlugin.cpp">
@@ -126,6 +126,9 @@
       <Filter>ThirdParty\npp</Filter>
     </ClInclude>
     <ClInclude Include="..\..\external\npp\Scintilla.h">
+      <Filter>ThirdParty\npp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\external\npp\Sci_Position.h">
       <Filter>ThirdParty\npp</Filter>
     </ClInclude>
     <ClInclude Include="..\..\external\npp\StaticDialog.h">
