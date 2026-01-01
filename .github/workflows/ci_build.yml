@@ -67,7 +67,7 @@ jobs:
     steps:
       # Step 7: Download all artifacts from the build job
       - name: Download all artifacts
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           pattern: ${{env.ARTIFACT_PREFIX}}*
           path: all_artifacts\
