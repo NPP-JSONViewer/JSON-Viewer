@@ -38,14 +38,14 @@ jobs:
 
       # Step 4: Upload build binary artifacts for deployment
       - name: Archive binaries artifacts
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: ${{env.ARTIFACT_PREFIX}}${{matrix.build_platform}}_${{matrix.build_configuration}}
           path: ${{env.BUILD_DIR }}\${{matrix.build_configuration}}\${{matrix.build_platform}}\NPPJSONViewer.dll
 
       # Step 5: Upload build pdb artifacts
       - name: Archive symbols artifacts
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: ${{env.ARTIFACT_PREFIX}}${{matrix.build_platform}}_${{matrix.build_configuration}}_pdb
           path: ${{env.BUILD_DIR }}\${{matrix.build_configuration}}\${{matrix.build_platform}}\NPPJSONViewer.pdb
@@ -74,7 +74,7 @@ jobs:
 
       # Step 8: Upload consolidated artifacts as a single artifact
       - name: Upload full artifact
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: ${{env.ARTIFACT_PREFIX}}ALL
           path: all_artifacts\**
