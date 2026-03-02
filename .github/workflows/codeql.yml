@@ -23,7 +23,7 @@ permissions:
   contents: read
 
 env:
-  MSBUILD_TOOLSET: v143
+  MSBUILD_TOOLSET: v145
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref || github.run_id }}
@@ -32,7 +32,7 @@ concurrency:
 jobs:
   analyze:
     name: Analyze
-    runs-on: windows-latest
+    runs-on: windows-2025-vs2026
     timeout-minutes: 20
     permissions:
       actions: read
