@@ -60,6 +60,9 @@
     <ClCompile Include="..\..\src\NppJsonViewer\RapidJsonHandler.cpp">
       <Filter>Source Files\NppJsonViewer</Filter>
     </ClCompile>
+    <ClCompile Include="JsonSortByKeyTest.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\NppJsonViewer\Profile.h">

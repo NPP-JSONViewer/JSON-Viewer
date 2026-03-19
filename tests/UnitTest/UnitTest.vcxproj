@@ -158,6 +158,7 @@
     <ClCompile Include="JsonCompressTest.cpp" />
     <ClCompile Include="JsonFormatTest.cpp" />
     <ClCompile Include="JsonHandlerTest.cpp" />
+    <ClCompile Include="JsonSortByKeyTest.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="NavigationTest.cpp" />
     <ClCompile Include="ProfileTest.cpp" />
