@@ -163,4 +163,358 @@ namespace UtilityTest
         StringHelper::ToLower(input);
         EXPECT_EQ(input, L"hello world");
     }
+
+    // ==================== ReplaceAll Tests ====================
+    class StringHelperReplaceAllTest : public ::testing::Test
+    {
+    };
+
+    TEST_F(StringHelperReplaceAllTest, ReplaceAll_SimpleString)
+    {
+        std::string input  = "Hello World Hello";
+        std::string result = StringHelper::ReplaceAll(input, "Hello", "Hi");
+        EXPECT_EQ(result, "Hi World Hi");
+    }
+
+    TEST_F(StringHelperReplaceAllTest, ReplaceAll_EmptySearch)
+    {
+        std::string input  = "Hello World";
+        std::string result = StringHelper::ReplaceAll(input, "", "X");
+        EXPECT_EQ(result, "Hello World");
+    }
+
+    TEST_F(StringHelperReplaceAllTest, ReplaceAll_EmptyInput)
+    {
+        std::string input  = "";
+        std::string result = StringHelper::ReplaceAll(input, "test", "X");
+        EXPECT_EQ(result, "");
+    }
+
+    TEST_F(StringHelperReplaceAllTest, ReplaceAll_NoMatch)
+    {
+        std::string input  = "Hello World";
+        std::string result = StringHelper::ReplaceAll(input, "xyz", "abc");
+        EXPECT_EQ(result, "Hello World");
+    }
+
+    TEST_F(StringHelperReplaceAllTest, ReplaceAll_RegexPattern)
+    {
+        std::string input  = "test123abc456def";
+        std::string result = StringHelper::ReplaceAll(input, "[0-9]+", "X");
+        EXPECT_EQ(result, "testXabcXdef");
+    }
+
+    TEST_F(StringHelperReplaceAllTest, ReplaceAll_InvalidRegex_FallbackToLiteral)
+    {
+        // Invalid regex should fallback to literal replacement
+        std::string input  = "test[invalid";
+        std::string result = StringHelper::ReplaceAll(input, "[invalid", "fixed");
+        EXPECT_EQ(result, "testfixed");
+    }
+
+    TEST_F(StringHelperReplaceAllTest, ReplaceAll_Wide)
+    {
+        std::wstring input  = L"Hello World Hello";
+        std::wstring result = StringHelper::ReplaceAll(input, L"Hello", L"Hi");
+        EXPECT_EQ(result, L"Hi World Hi");
+    }
+
+    // ==================== ReplaceLiteral Tests ====================
+    class StringHelperReplaceLiteralTest : public ::testing::Test
+    {
+    };
+
+    TEST_F(StringHelperReplaceLiteralTest, ReplaceLiteral_SimpleString)
+    {
+        std::string input  = "Hello World Hello";
+        std::string result = StringHelper::ReplaceLiteral(input, "Hello", "Hi");
+        EXPECT_EQ(result, "Hi World Hi");
+    }
+
+    TEST_F(StringHelperReplaceLiteralTest, ReplaceLiteral_RegexCharacters)
+    {
+        // Test that regex special characters are treated literally
+        std::string input  = "test.+.*test";
+        std::string result = StringHelper::ReplaceLiteral(input, ".+.*", "X");
+        EXPECT_EQ(result, "testXtest");
+    }
+
+    TEST_F(StringHelperReplaceLiteralTest, ReplaceLiteral_OverlappingPatterns)
+    {
+        std::string input  = "aaaa";
+        std::string result = StringHelper::ReplaceLiteral(input, "aa", "b");
+        EXPECT_EQ(result, "bb");
+    }
+
+    TEST_F(StringHelperReplaceLiteralTest, ReplaceLiteral_EmptySearch)
+    {
+        std::string input  = "Hello";
+        std::string result = StringHelper::ReplaceLiteral(input, "", "X");
+        EXPECT_EQ(result, "Hello");
+    }
+
+    TEST_F(StringHelperReplaceLiteralTest, ReplaceLiteral_Wide)
+    {
+        std::wstring input  = L"test.+.* pattern";
+        std::wstring result = StringHelper::ReplaceLiteral(input, L".+.*", L"X");
+        EXPECT_EQ(result, L"testX pattern");
+    }
+
+    // ==================== ToWstring/ToString Tests ====================
+    class StringHelperConversionTest : public ::testing::Test
+    {
+    };
+
+    TEST_F(StringHelperConversionTest, ToWstring_ValidAscii)
+    {
+        std::string  input  = "Hello World";
+        std::wstring result = StringHelper::ToWstring(input);
+        EXPECT_EQ(result, L"Hello World");
+    }
+
+    TEST_F(StringHelperConversionTest, ToWstring_EmptyString)
+    {
+        std::string  input  = "";
+        std::wstring result = StringHelper::ToWstring(input);
+        EXPECT_EQ(result, L"");
+    }
+
+    TEST_F(StringHelperConversionTest, ToWstring_SpecialCharacters)
+    {
+        std::string  input  = "!@#$%^&*()";
+        std::wstring result = StringHelper::ToWstring(input);
+        EXPECT_EQ(result, L"!@#$%^&*()");
+    }
+
+    TEST_F(StringHelperConversionTest, ToString_ValidWide)
+    {
+        std::wstring input  = L"Hello World";
+        std::string  result = StringHelper::ToString(input);
+        EXPECT_EQ(result, "Hello World");
+    }
+
+    TEST_F(StringHelperConversionTest, ToString_EmptyString)
+    {
+        std::wstring input  = L"";
+        std::string  result = StringHelper::ToString(input);
+        EXPECT_EQ(result, "");
+    }
+
+    TEST_F(StringHelperConversionTest, RoundTrip_StringToWstringToString)
+    {
+        std::string  original = "Test String 123";
+        std::wstring wide     = StringHelper::ToWstring(original);
+        std::string  result   = StringHelper::ToString(wide);
+        EXPECT_EQ(result, original);
+    }
+
+    // ==================== Split Tests ====================
+    class StringHelperSplitTest : public ::testing::Test
+    {
+    };
+
+    TEST_F(StringHelperSplitTest, Split_SingleDelimiter)
+    {
+        std::string input  = "a,b,c,d";
+        auto        result = StringHelper::Split(input, ",");
+        EXPECT_EQ(result.size(), 4);
+        EXPECT_EQ(result[0], "a");
+        EXPECT_EQ(result[1], "b");
+        EXPECT_EQ(result[2], "c");
+        EXPECT_EQ(result[3], "d");
+    }
+
+    TEST_F(StringHelperSplitTest, Split_ConsecutiveDelimiters)
+    {
+        std::string input  = "a,,b,,c";
+        auto        result = StringHelper::Split(input, ",");
+        // Consecutive delimiters should be treated as one
+        EXPECT_EQ(result.size(), 3);
+        EXPECT_EQ(result[0], "a");
+        EXPECT_EQ(result[1], "b");
+        EXPECT_EQ(result[2], "c");
+    }
+
+    TEST_F(StringHelperSplitTest, Split_DelimiterAtStart)
+    {
+        std::string input  = ",a,b,c";
+        auto        result = StringHelper::Split(input, ",");
+        EXPECT_EQ(result.size(), 3);
+        EXPECT_EQ(result[0], "a");
+        EXPECT_EQ(result[1], "b");
+        EXPECT_EQ(result[2], "c");
+    }
+
+    TEST_F(StringHelperSplitTest, Split_DelimiterAtEnd)
+    {
+        std::string input  = "a,b,c,";
+        auto        result = StringHelper::Split(input, ",");
+        EXPECT_EQ(result.size(), 3);
+        EXPECT_EQ(result[0], "a");
+        EXPECT_EQ(result[1], "b");
+        EXPECT_EQ(result[2], "c");
+    }
+
+    TEST_F(StringHelperSplitTest, Split_EmptyInput)
+    {
+        std::string input  = "";
+        auto        result = StringHelper::Split(input, ",");
+        EXPECT_EQ(result.size(), 0);
+    }
+
+    TEST_F(StringHelperSplitTest, Split_EmptyDelimiter)
+    {
+        std::string input  = "abc";
+        auto        result = StringHelper::Split(input, "");
+        EXPECT_EQ(result.size(), 1);
+        EXPECT_EQ(result[0], "abc");
+    }
+
+    TEST_F(StringHelperSplitTest, Split_MultiCharDelimiter)
+    {
+        std::string input  = "a::b::c::d";
+        auto        result = StringHelper::Split(input, "::");
+        EXPECT_EQ(result.size(), 4);
+        EXPECT_EQ(result[0], "a");
+        EXPECT_EQ(result[3], "d");
+    }
+
+    TEST_F(StringHelperSplitTest, Split_NoDelimitersFound)
+    {
+        std::string input  = "abcdef";
+        auto        result = StringHelper::Split(input, ",");
+        EXPECT_EQ(result.size(), 1);
+        EXPECT_EQ(result[0], "abcdef");
+    }
+
+    TEST_F(StringHelperSplitTest, Split_Wide)
+    {
+        std::wstring input  = L"a;b;c;d";
+        auto         result = StringHelper::Split(input, L";");
+        EXPECT_EQ(result.size(), 4);
+        EXPECT_EQ(result[0], L"a");
+        EXPECT_EQ(result[3], L"d");
+    }
+
+    // ==================== Contains Tests ====================
+    class StringHelperContainsTest : public ::testing::Test
+    {
+    };
+
+    TEST_F(StringHelperContainsTest, Contains_StringFound)
+    {
+        std::string input  = "Hello World";
+        bool        result = StringHelper::Contains(input, "World");
+        EXPECT_TRUE(result);
+    }
+
+    TEST_F(StringHelperContainsTest, Contains_StringNotFound)
+    {
+        std::string input  = "Hello World";
+        bool        result = StringHelper::Contains(input, "xyz");
+        EXPECT_FALSE(result);
+    }
+
+    TEST_F(StringHelperContainsTest, Contains_CaseInsensitive)
+    {
+        std::string input  = "Hello World";
+        bool        result = StringHelper::Contains(input, "hello", true);
+        EXPECT_TRUE(result);
+    }
+
+    TEST_F(StringHelperContainsTest, Contains_CaseSensitive)
+    {
+        std::string input  = "Hello World";
+        bool        result = StringHelper::Contains(input, "hello", false);
+        EXPECT_FALSE(result);
+    }
+
+    TEST_F(StringHelperContainsTest, Contains_EmptySearch)
+    {
+        std::string input  = "Hello World";
+        bool        result = StringHelper::Contains(input, "");
+        EXPECT_TRUE(result);    // Empty string is found in any string
+    }
+
+    TEST_F(StringHelperContainsTest, Contains_EmptyInput)
+    {
+        std::string input  = "";
+        bool        result = StringHelper::Contains(input, "test");
+        EXPECT_FALSE(result);
+    }
+
+    TEST_F(StringHelperContainsTest, Contains_Wide)
+    {
+        std::wstring input  = L"Hello World";
+        bool         result = StringHelper::Contains(input, L"World");
+        EXPECT_TRUE(result);
+    }
+
+    TEST_F(StringHelperContainsTest, Contains_SpecialCharacters)
+    {
+        std::string input  = "test@example.com";
+        bool        result = StringHelper::Contains(input, "@example");
+        EXPECT_TRUE(result);
+    }
+
+    // ==================== ToLower Tests ====================
+    class StringHelperToLowerTest : public ::testing::Test
+    {
+    };
+
+    TEST_F(StringHelperToLowerTest, ToLower_UppercaseString)
+    {
+        std::string input = "HELLO WORLD";
+        StringHelper::ToLower(input);
+        EXPECT_EQ(input, "hello world");
+    }
+
+    TEST_F(StringHelperToLowerTest, ToLower_MixedCase)
+    {
+        std::string input = "HeLLo WoRLD";
+        StringHelper::ToLower(input);
+        EXPECT_EQ(input, "hello world");
+    }
+
+    TEST_F(StringHelperToLowerTest, ToLower_LowercaseString)
+    {
+        std::string input = "hello world";
+        StringHelper::ToLower(input);
+        EXPECT_EQ(input, "hello world");
+    }
+
+    TEST_F(StringHelperToLowerTest, ToLower_WithNumbers)
+    {
+        std::string input = "Test123ABC";
+        StringHelper::ToLower(input);
+        EXPECT_EQ(input, "test123abc");
+    }
+
+    TEST_F(StringHelperToLowerTest, ToLower_WithSpecialCharacters)
+    {
+        std::string input = "TEST!@#$%^&*()";
+        StringHelper::ToLower(input);
+        EXPECT_EQ(input, "test!@#$%^&*()");
+    }
+
+    TEST_F(StringHelperToLowerTest, ToLower_EmptyString)
+    {
+        std::string input = "";
+        StringHelper::ToLower(input);
+        EXPECT_EQ(input, "");
+    }
+
+    TEST_F(StringHelperToLowerTest, ToLower_Wide)
+    {
+        std::wstring input = L"HELLO WORLD";
+        StringHelper::ToLower(input);
+        EXPECT_EQ(input, L"hello world");
+    }
+
+    TEST_F(StringHelperToLowerTest, ToLower_WideWithNumbers)
+    {
+        std::wstring input = L"Test123ABC";
+        StringHelper::ToLower(input);
+        EXPECT_EQ(input, L"test123abc");
+    }
 }    // namespace UtilityTest

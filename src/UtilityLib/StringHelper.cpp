@@ -1,15 +1,128 @@
 #include <regex>
+#include <algorithm>
+#include <cctype>
 
 #include "StringHelper.h"
 
+// Private helper function to escape regex special characters
+std::string StringHelper::EscapeRegex(const std::string& str)
+{
+    static constexpr std::string_view regex_chars = R"(\.+*?[]{}()|^$)";
+    std::string result;
+    result.reserve(str.size() * 2);  // Reserve space to avoid reallocations
+
+    for (char c : str)
+    {
+        if (regex_chars.find(c) != std::string::npos)
+        {
+            result += '\\';
+        }
+        result += c;
+    }
+
+    return result;
+}
+
+std::wstring StringHelper::EscapeRegex(const std::wstring& wstr)
+{
+    static constexpr std::wstring_view regex_chars = LR"(\.+*?[]{}()|^$)";
+    std::wstring result;
+    result.reserve(wstr.size() * 2);
+
+    for (wchar_t c : wstr)
+    {
+        if (regex_chars.find(c) != std::wstring::npos)
+        {
+            result += L'\\';
+        }
+        result += c;
+    }
+
+    return result;
+}
+
 std::string StringHelper::ReplaceAll(const std::string& str, const std::string& search, const std::string& replace)
 {
-    return std::regex_replace(str, std::regex(search), replace);
+    if (search.empty())
+    {
+        return str;
+    }
+
+    try
+    {
+        return std::regex_replace(str, std::regex(search), replace);
+    }
+    catch (const std::regex_error&)
+    {
+        // If regex is invalid, fall back to literal replacement
+        return ReplaceLiteral(str, search, replace);
+    }
 }
 
 std::wstring StringHelper::ReplaceAll(const std::wstring& wstr, const std::wstring& search, const std::wstring& replace)
 {
-    return std::regex_replace(wstr, std::wregex(search), replace);
+    if (search.empty())
+    {
+        return wstr;
+    }
+
+    try
+    {
+        return std::regex_replace(wstr, std::wregex(search), replace);
+    }
+    catch (const std::regex_error&)
+    {
+        // If regex is invalid, fall back to literal replacement
+        return ReplaceLiteral(wstr, search, replace);
+    }
+}
+
+std::string StringHelper::ReplaceLiteral(const std::string& str, const std::string& search, const std::string& replace)
+{
+    if (search.empty())
+    {
+        return str;
+    }
+
+    std::string result;
+    result.reserve(str.size());
+    size_t lastPos = 0;
+    size_t pos = str.find(search);
+
+    while (pos != std::string::npos)
+    {
+        result.append(str, lastPos, pos - lastPos);
+        result.append(replace);
+        lastPos = pos + search.length();
+        pos = str.find(search, lastPos);
+    }
+
+    result.append(str, lastPos);
+    return result;
+}
+
+std::wstring StringHelper::ReplaceLiteral(const std::wstring& wstr, const std::wstring& search, const std::wstring& replace)
+{
+    if (search.empty())
+    {
+        return wstr;
+    }
+
+    std::wstring result;
+    result.reserve(wstr.size());
+    size_t lastPos = 0;
+    size_t pos = wstr.find(search);
+
+    while (pos != std::wstring::npos)
+    {
+        result.append(wstr, lastPos, pos - lastPos);
+        result.append(replace);
+        lastPos = pos + search.length();
+        pos = wstr.find(search, lastPos);
+    }
+
+    result.append(wstr, lastPos);
+    return result;
 }
 
 std::wstring StringHelper::ToWstring(const std::string& str, UINT codePage)
@@ -57,8 +170,16 @@ std::string StringHelper::ToString(const std::wstring& wstr, UINT codePage)
 
 std::vector<std::string> StringHelper::Split(const std::string& input, const std::string& delim)
 {
-    // Vector is created on stack and copied on return
     std::vector<std::string> tokens;
+
+    if (input.empty() || delim.empty())
+    {
+        if (!input.empty())
+        {
+            tokens.push_back(input);
+        }
+        return tokens;
+    }
 
     // Skip delimiters at beginning.
     auto lastPos = input.find_first_not_of(delim, 0);
@@ -74,13 +195,22 @@ std::vector<std::string> StringHelper::Split(const std::string& input, const std
         // Find next "non-delimiter"
         pos = input.find_first_of(delim, lastPos);
     }
+
     return tokens;
 }
 
 std::vector<std::wstring> StringHelper::Split(const std::wstring& input, const std::wstring& delim)
 {
-    // Vector is created on stack and copied on return
     std::vector<std::wstring> tokens;
+
+    if (input.empty() || delim.empty())
+    {
+        if (!input.empty())
+        {
+            tokens.push_back(input);
+        }
+        return tokens;
+    }
 
     // Skip delimiters at beginning.
     auto lastPos = input.find_first_not_of(delim, 0);
@@ -96,6 +226,7 @@ std::vector<std::wstring> StringHelper::Split(const std::wstring& input, const s
         // Find next "non-delimiter"
         pos = input.find_first_of(delim, lastPos);
     }
+
     return tokens;
 }
 
