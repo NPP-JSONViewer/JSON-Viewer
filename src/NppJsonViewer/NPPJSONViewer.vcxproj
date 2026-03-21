@@ -120,6 +120,12 @@
       <SubSystem>Windows</SubSystem>
       <TargetMachine>MachineX64</TargetMachine>
     </Link>
+    <PostBuildEvent>
+      <Command>if not exist "E:\Code\OpenSource\repos\npp\PowerEditor\visual.net\x64\Debug\plugins\NPPJSONViewer" (
+        mkdir "E:\Code\OpenSource\repos\npp\PowerEditor\visual.net\x64\Debug\plugins\NPPJSONViewer"
+    )
+    copy /Y "$(TargetPath)" "E:\Code\OpenSource\repos\npp\PowerEditor\visual.net\x64\Debug\plugins\NPPJSONViewer\"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">
     <ClCompile>

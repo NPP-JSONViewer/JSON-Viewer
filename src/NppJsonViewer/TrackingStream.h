@@ -1,86 +1,79 @@
 #pragma once
 
-#include <string>
-#include <memory>
+#include "StringStream.h"
 
-#include <rapidjson/stream.h>
-
-
-class TrackingStream : public std::enable_shared_from_this<TrackingStream>
+/// <summary>
+/// Stream wrapper for tracking position during JSON parsing
+/// Provides stream interface while maintaining position tracking
+/// </summary>
+template <typename Encoding = rapidjson::UTF8<>>
+class TrackingStream
 {
-private:
-    char                    m_chPrevChar {};    // Store previous character for handling column postion
-    size_t                  m_nLine {};
-    size_t                  m_nColumn {};
-    rapidjson::StringStream m_ss;
+    using Ch = typename Encoding::Ch;
+    
+    StringStream m_ss;
+    size_t       m_position = 0;
 
 public:
-    using Ch = char;    // Define Ch to conform to RapidJSON's expectations
+    /// <summary>
+    /// Initialize tracking stream with JSON string
+    /// </summary>
+    /// <param name="jsonString">JSON content to wrap</param>
+    explicit TrackingStream(const std::string& jsonString) : m_ss(jsonString.c_str()) {}
 
-    TrackingStream(const std::string& jsonText)
-        : m_ss(jsonText.c_str())
-        , m_nLine(0)
-        , m_nColumn(0)
-        , m_chPrevChar('\0')
-    {
-    }
-
-    std::shared_ptr<TrackingStream> GetShared()
-    {
-        return shared_from_this();
-    }
-
-    inline size_t getLine() const
-    {
-        return m_nLine;
-    }
-
-    inline size_t getColumn() const
-    {
-        return m_nColumn;
-    }
-
-    // Read the next character and update line/column numbers
-    Ch Take()
-    {
-        Ch ch = m_ss.Take();
-        if (ch == '\n')
-        {
-            ++m_nLine;
-            m_nColumn = 0;
-        }
-        else
-        {
-            ++m_nColumn;
-        }
-        m_chPrevChar = ch;
-        return ch;
-    }
-
+    /// <summary>
+    /// Get next character and advance position
+    /// </summary>
+    /// <returns>Next character in stream</returns>
     Ch Peek() const
     {
         return m_ss.Peek();
     }
 
-    size_t Tell() const
+    /// <summary>
+    /// Take character at current position and advance
+    /// </summary>
+    /// <returns>Current character</returns>
+    Ch Take()
     {
-        return m_ss.Tell();
+        m_position++;
+        return m_ss.Take();
     }
 
+    /// <summary>
+    /// Get current position in stream
+    /// </summary>
+    /// <returns>Current byte offset</returns>
+    size_t Tell() const
+    {
+        return m_position;
+    }
+
+    /// <summary>
+    /// Put begin marker (for output stream)
+    /// </summary>
+    /// <returns>Pointer to put buffer</returns>
     Ch* PutBegin()
     {
         return m_ss.PutBegin();
     }
 
+    /// <summary>
+    /// Mark put end position (for output stream)
+    /// </summary>
+    /// <param name="pCh">Pointer to put buffer end</param>
+    /// <returns>Number of characters put</returns>
     size_t PutEnd(Ch* pCh)
     {
         return m_ss.PutEnd(pCh);
     }
 
+    /// <summary>
+    /// Put single character (for output stream)
+    /// </summary>
+    /// <param name="ch">Character to put</param>
     void Put(Ch ch)
     {
         m_ss.Put(ch);
     }
 };
-
-using TrackingStreamSharedPtr = std::shared_ptr<TrackingStream>;

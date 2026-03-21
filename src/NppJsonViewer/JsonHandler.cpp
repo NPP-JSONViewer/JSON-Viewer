@@ -109,41 +109,13 @@ auto JsonHandler::SortJsonText(const std::string& jsonString) const -> std::stri
 {
     rj::Document document;
 
-    // TODO: Find some better way
-    constexpr auto flgBase_comment = flgBaseReader | rj::kParseCommentsFlag;
-    constexpr auto flgBase_comma   = flgBaseReader | rj::kParseTrailingCommasFlag;
-    constexpr auto flgBase_Both    = flgBase_comma | flgBase_comment;
-
-    if (m_parseOptions.bIgnoreComment && m_parseOptions.bIgnoreTrailingComma)
+    // ENHANCEMENT: Use helper function to select appropriate parse flags
+    // based on ParseOptions instead of nested if-else structure
+    auto parseFlags = GetParseFlags(m_parseOptions);
+    
+    if (document.Parse<parseFlags>(jsonString.c_str()).HasParseError())
     {
-        if (document.Parse<flgBase_Both>(jsonString.c_str()).HasParseError())
-        {
-            return "";
-        }
-    }
-
-    else if (!m_parseOptions.bIgnoreComment && m_parseOptions.bIgnoreTrailingComma)
-    {
-        if (document.Parse<flgBase_comma>(jsonString.c_str()).HasParseError())
-        {
-            return "";
-        }
-    }
-
-    else if (m_parseOptions.bIgnoreComment && !m_parseOptions.bIgnoreTrailingComma)
-    {
-        if (document.Parse<flgBase_comment>(jsonString.c_str()).HasParseError())
-        {
-            return "";
-        }
-    }
-
-    else if (!m_parseOptions.bIgnoreComment && !m_parseOptions.bIgnoreTrailingComma)
-    {
-        if (document.Parse<flgBaseReader>(jsonString.c_str()).HasParseError())
-        {
-            return "";
-        }
+        return "";
     }
 
     SortJsonRecursively(document, document.GetAllocator());
@@ -153,4 +125,17 @@ auto JsonHandler::SortJsonText(const std::string& jsonString) const -> std::stri
     document.Accept(writer);
 
     return buffer.GetString();
+}
+
+unsigned JsonHandler::GetParseFlags(const ParseOptions& options) noexcept
+{
+    unsigned flags = flgBaseReader;
+    
+    if (options.bIgnoreComment)
+        flags |= rj::kParseCommentsFlag;
+    
+    if (options.bIgnoreTrailingComma)
+        flags |= rj::kParseTrailingCommasFlag;
+    
+    return flags;
 }

@@ -2,7 +2,6 @@
 
 #include <optional>
 #include <string>
-#include <vector>
 #include <Windows.h>
 
 class CUtility
@@ -35,16 +34,10 @@ public:
 
     static bool Copy(const std::wstring& srcFile, const std::wstring& dstFile);
 
-    static auto GetFileName(const std::wstring& fullPath, bool withExtension = true) -> std::wstring;
-    static auto GetFileExtension(const std::wstring& fileName) -> std::wstring;
-
-    static auto GetTempFilePath() -> std::wstring;
-    static auto GetSpecialFolderLocation(int folderKind) -> std::wstring;
-
-    static bool OpenFileDlg(std::wstring& filePath, const std::wstring& dlgTitle, const std::vector<wchar_t>& dlgFilter, DWORD flags = 0);
-
-    static bool CopyToClipboard(const std::wstring& str2cpy, HWND hWnd);
-
-    static bool IsNumber(const std::wstring& str);
-    static auto GetNumber(const std::wstring& str) -> std::optional<int>;
+    /// <summary>
+    /// Parse string to number safely
+    /// </summary>
+    /// <param name="str">String to parse</param>
+    /// <returns>Optional containing the number, or empty if parsing fails</returns>
+    static std::optional<long> GetNumber(const std::wstring& str);
 };

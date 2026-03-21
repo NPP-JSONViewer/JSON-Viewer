@@ -53,23 +53,84 @@ public:
     void      AppendNodeCount(HTREEITEM node, unsigned elementCount, bool bArray) override;
 
 private:
+    /// <summary>
+    /// Draw the JSON tree structure in the tree view
+    /// </summary>
     void DrawJsonTree();
+
+    /// <summary>
+    /// Redraw tree with optional force refresh
+    /// </summary>
+    /// <param name="bForce">Force redraw even if data hasn't changed</param>
     void ReDrawJsonTree(bool bForce = false);
+
+    /// <summary>
+    /// Apply JSON syntax highlighting to editor
+    /// </summary>
+    /// <param name="bForcefully">Force highlighting even if already highlighted</param>
     void HighlightAsJson(bool bForcefully = false) const;
+
+    /// <summary>
+    /// Populate tree using SAX parser for streaming large files
+    /// </summary>
+    /// <param name="tree_root">Root item in tree view</param>
+    /// <param name="jsonText">JSON text to parse</param>
+    /// <returns>Error message if parsing fails, empty optional if successful</returns>
     auto PopulateTreeUsingSax(HTREEITEM tree_root, const std::string& jsonText) -> std::optional<std::wstring>;
 
+    /// <summary>
+    /// Validate current JSON and display any errors
+    /// </summary>
     void ValidateJson();
 
+    /// <summary>
+    /// Update the node path display for current selection
+    /// </summary>
+    /// <param name="htiNode">Tree node item</param>
     void UpdateNodePath(HTREEITEM htiNode) const;
+
+    /// <summary>
+    /// Navigate to specific line in editor
+    /// </summary>
+    /// <param name="nLineToGo">Line number to go to</param>
     void GoToLine(size_t nLineToGo) const;
+
+    /// <summary>
+    /// Navigate to specific position in editor
+    /// </summary>
+    /// <param name="nLineToGo">Line number</param>
+    /// <param name="nPos">Column position</param>
+    /// <param name="nLen">Length of selection</param>
     void GoToPosition(size_t nLineToGo, size_t nPos, size_t nLen) const;
 
+    /// <summary>
+    /// Perform search operation in JSON tree
+    /// </summary>
     void SearchInTree();
 
+    /// <summary>
+    /// Get formatted title for this dialog
+    /// </summary>
+    /// <returns>Title string with file information</returns>
     auto GetTitleFileName() const -> std::wstring;
+
+    /// <summary>
+    /// Initialize toolbar buttons
+    /// </summary>
     void PrepareButtons();
+
+    /// <summary>
+    /// Set icon and tooltip for toolbar button
+    /// </summary>
+    /// <param name="ctrlType">Button type identifier</param>
+    /// <param name="toolTip">Tooltip text to display</param>
     void SetIconAndTooltip(eButton ctrlType, const std::wstring& toolTip);
 
+    /// <summary>
+    /// Adjust document panel size based on window dimensions
+    /// </summary>
+    /// <param name="nWidth">New panel width</param>
+    /// <param name="nHeight">New panel height</param>
     void AdjustDocPanelSize(int nWidth, int nHeight);
 
     // Context menu related functions

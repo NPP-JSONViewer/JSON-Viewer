@@ -5,7 +5,7 @@
 #include "Define.h"
 #include "Utility.h"
 #include "StringHelper.h"
-#include "RapidJsonHandler.h"
+#include "RapidJsonHandler"
 #include "ScintillaEditor.h"
 #include "Profile.h"
 
@@ -177,55 +177,62 @@ bool JsonViewDlg::CheckForTokenUndefined(eMethod method, std::string selectedTex
 {
     auto [le, lf, indentChar, indentLen] = GetFormatSetting();
 
+    // ENHANCEMENT: Add null check and error handling
+    if (m_pSetting == nullptr)
+    {
+        return res;  // Return empty result
+    }
+
     if (m_pSetting->parseOptions.bReplaceUndefined)
     {
-        auto text = selectedText.substr(res.error_pos, 9);
-        StringHelper::ToLower(text);
-
-        if (text == "undefined")
+        // Validate error position is within bounds
+        if (res.error_pos >= 0 && res.error_pos + 9 <= static_cast<int>(selectedText.size()))
         {
-            try
+            auto text = selectedText.substr(res.error_pos, 9);
+            StringHelper::ToLower(text);
+
+            if (text == "undefined")
             {
-                std::regex regex("([:\\[,])([\\s]*?)undefined([\\s,}]*?)", std::regex_constants::icase);
-                text = std::regex_replace(selectedText, regex, "$1$2null");
-                switch (method)
+                try
                 {
-                case eMethod::FormatJson:
-                    res = JsonHandler(m_pSetting->parseOptions).FormatJson(text, le, lf, indentChar, indentLen);
-                    break;
-                case eMethod::GetCompressedJson:
-                    res = JsonHandler(m_pSetting->parseOptions).GetCompressedJson(text);
-                    break;
-                case eMethod::ParseJson:
+                    // ENHANCEMENT: Use ReplaceLiteral for safer replacement
+                    std::string processedText = StringHelper::ReplaceLiteral(
+                        selectedText, 
+                        "undefined", 
+                        "null"
+                    );
+
+                    switch (method)
+                    {
+                    case eMethod::FormatJson:
+                        res = JsonHandler(m_pSetting->parseOptions).FormatJson(
+                            processedText, le, lf, indentChar, indentLen
+                        );
+                        break;
+                    case eMethod::GetCompressedJson:
+                        res = JsonHandler(m_pSetting->parseOptions).GetCompressedJson(processedText);
+                        break;
+                    case eMethod::ParseJson:
+                    {
+                        RapidJsonHandler        handler(this, tree_root);
+                        rapidjson::StringBuffer sb;
+                        res = JsonHandler(m_pSetting->parseOptions).ParseJson<flgBaseReader>(text, sb, handler);
+                        break;
+                    }
+                    case eMethod::ValidateJson:
+                        res = JsonHandler(m_pSetting->parseOptions).ValidateJson(text);
+                        break;
+                    case eMethod::SortJsonByKey:
+                        res = JsonHandler(m_pSetting->parseOptions).SortJsonByKey(text, le, lf, indentChar, indentLen);
+                        break;
+                    }
+                }
+                catch (const std::exception& ex)
                 {
-                    RapidJsonHandler        handler(this, tree_root);
-                    rapidjson::StringBuffer sb;
-                    res = JsonHandler(m_pSetting->parseOptions).ParseJson<flgBaseReader>(text, sb, handler);
-                    break;
+                    // Log exception and return error result
+                    res.success = false;
+                    res.error_str = "Exception processing undefined replacement: " + std::string(ex.what());
                 }
-                case eMethod::ValidateJson:
-                    res = JsonHandler(m_pSetting->parseOptions).ValidateJson(text);
-                    break;
-                case eMethod::SortJsonByKey:
-                    res = JsonHandler(m_pSetting->parseOptions).SortJsonByKey(text, le, lf, indentChar, indentLen);
-                    break;
-                }
-                if (res.success)
-                {
-                    bool bShouldReplace = method == eMethod::ParseJson || method == eMethod::ValidateJson || method == eMethod::SortJsonByKey;
-                    m_pEditor->ReplaceSelection(bShouldReplace ? text : res.response);
-                    HighlightAsJson();
-                    return true;
-                }
-                else
-                {
-                    m_pEditor->ReplaceSelection(text);
-                    m_pEditor->MakeSelection(m_pEditor->GetSelectionStart(), text.length());
-                    m_pEditor->RefreshSelectionPos();
-                }
-            }
-            catch (const std::exception&)
-            {
             }
         }
     }
@@ -261,6 +268,14 @@ void JsonViewDlg::ProcessScintillaData(const ScintillaData& scintillaData, std::
     text.clear();
     code = ScintillaCode::Unknown;
 
+    // ENHANCEMENT: Add null pointer guard
+    if (!std::holds_alternative<std::string>(scintillaData) && 
+        !std::holds_alternative<ScintillaCode>(scintillaData))
+    {
+        return;
+    }
+
+    // Use visitor pattern safely with type checking
     std::visit(
         [&text, &code](auto&& arg)
         {

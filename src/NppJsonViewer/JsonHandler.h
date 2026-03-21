@@ -16,11 +16,31 @@ namespace rj = rapidjson;
 
 struct Result
 {
-    bool        success    = false;
-    int         error_pos  = -1;
-    int         error_code = -1;
-    std::string error_str;
-    std::string response;
+    bool        success    = false;       // Operation succeeded
+    int         error_pos  = -1;          // Position of error in JSON (-1 if no error)
+    int         error_code = -1;          // Error code (-1 if no error)
+    std::string error_str;                // Human-readable error message
+    std::string response;                 // Result data or error details
+
+    /// <summary>
+    /// Check if result indicates success
+    /// </summary>
+    /// <returns>true if operation was successful</returns>
+    bool IsValid() const noexcept
+    {
+        return success && error_code == -1;
+    }
+
+    /// <summary>
+    /// Get error message or empty string if successful
+    /// </summary>
+    /// <returns>Error message string</returns>
+    std::string GetErrorMessage() const noexcept
+    {
+        if (success)
+            return "";
+        return !error_str.empty() ? error_str : "Unknown error at position " + std::to_string(error_pos);
+    }
 };
 
 using LE = rj::LineEndingOption;
