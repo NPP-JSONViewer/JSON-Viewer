@@ -165,30 +165,29 @@ namespace JsonSortByKey
             R"( "tiny_exp": 1e-308,)"
             R"( "tiny_frac": 0.000000000000000001,)"
             R"( "leading_zero_frac": 0.123})";
-        auto        result    = m_jsonHandler.SortJsonByKey(inputJson, {}, {}, ' ', 2);
+        auto result = m_jsonHandler.SortJsonByKey(inputJson, {}, {}, ' ', 2);
 
         ASSERT_TRUE(result.success);
 
-        // All numbers must be unquoted and preserve exact original text
-        ASSERT_NE(result.response.find(": 42,"), std::string::npos);
-        ASSERT_NE(result.response.find(": -17,"), std::string::npos);
-        ASSERT_NE(result.response.find("\"zero\": 0\n"), std::string::npos);
-        ASSERT_NE(result.response.find(": 3.14,"), std::string::npos);
-        ASSERT_NE(result.response.find(": -0.5,"), std::string::npos);
-        ASSERT_NE(result.response.find(": 1e10,"), std::string::npos);
-        ASSERT_NE(result.response.find(": 1E10,"), std::string::npos);
-        ASSERT_NE(result.response.find(": 1e+10,"), std::string::npos);
-        ASSERT_NE(result.response.find(": 1e-10,"), std::string::npos);
-        ASSERT_NE(result.response.find(": 1.5e3,"), std::string::npos);
-        ASSERT_NE(result.response.find(": 99999999999999999999,"), std::string::npos);
-        ASSERT_NE(result.response.find(": -99999999999999999999,"), std::string::npos);
-        ASSERT_NE(result.response.find(": 1e-308,"), std::string::npos);
-        ASSERT_NE(result.response.find(": 0.000000000000000001,"), std::string::npos);
-        ASSERT_NE(result.response.find(": 0.123"), std::string::npos);
-
-        // None should be quoted
-        ASSERT_EQ(result.response.find(": \"42\""), std::string::npos);
-        ASSERT_EQ(result.response.find(": \"1e10\""), std::string::npos);
-        ASSERT_EQ(result.response.find(": \"99999999999999999999\""), std::string::npos);
+        // Verify exact output with alphabetically sorted keys and preserved number text
+        std::string expected =
+            "{\n"
+            "  \"exp_frac\": 1.5e3,\n"
+            "  \"exp_lower\": 1e10,\n"
+            "  \"exp_neg\": 1e-10,\n"
+            "  \"exp_plus\": 1e+10,\n"
+            "  \"exp_upper\": 1E10,\n"
+            "  \"frac\": 3.14,\n"
+            "  \"huge_int\": 99999999999999999999,\n"
+            "  \"huge_neg\": -99999999999999999999,\n"
+            "  \"int\": 42,\n"
+            "  \"leading_zero_frac\": 0.123,\n"
+            "  \"neg\": -17,\n"
+            "  \"neg_frac\": -0.5,\n"
+            "  \"tiny_exp\": 1e-308,\n"
+            "  \"tiny_frac\": 0.000000000000000001,\n"
+            "  \"zero\": 0\n"
+            "}";
+        ASSERT_EQ(result.response, expected);
     }
 }    // namespace JsonSortByKey
