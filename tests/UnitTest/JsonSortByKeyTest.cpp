@@ -136,14 +136,58 @@ namespace JsonSortByKey
 
     TEST_F(JsonSortByKeyTest, TestSortJsonByKey_NumberPrecision_Success)
     {
-        // Verify numbers survive the sort-by-key roundtrip without gaining quotes.
-        // Note: SortJsonByKey re-parses via FormatJson (which uses kParseFullPrecisionFlag),
-        // so very high precision may be normalized (e.g. 0.00000000000001 -> 1e-14).
-        // But they must NOT become strings (e.g. "3.14" or "12345678901234567890").
-        std::string inputJson = R"({"z": "last", "pi": 3.141592653589793, "tiny": 1e-14, "tiny2": 0.00000000000001, "big": 12345678901234567890})";
+        // Verify numbers survive the sort-by-key roundtrip without gaining quotes
+        // and with full precision preserved (synced with RapidJSON's Document.RawNumberRoundtrip_Precision test).
+        std::string inputJson = R"({"z": "last", "pi": 3.141592653589793238, "tiny": 1e-14, "tiny2": 0.00000000000001, "big": 12345678901234567890})";
         auto        result    = m_jsonHandler.SortJsonByKey(inputJson, {}, {}, ' ', 2);
 
         ASSERT_TRUE(result.success);
-        ASSERT_EQ(result.response, "{\n  \"big\": 12345678901234567890,\n  \"pi\": 3.141592653589793,\n  \"tiny\": 1e-14,\n  \"tiny2\": 1e-14,\n  \"z\": \"last\"\n}");
+        ASSERT_EQ(result.response, "{\n  \"big\": 12345678901234567890,\n  \"pi\": 3.141592653589793238,\n  \"tiny\": 1e-14,\n  \"tiny2\": 0.00000000000001,\n  \"z\": \"last\"\n}");
+    }
+
+    TEST_F(JsonSortByKeyTest, TestSortJsonByKey_NumberFormats_Success)
+    {
+        // Verify all valid JSON number notations survive sort-by-key roundtrip exactly
+        // (synced with RapidJSON's Document.RawNumberRoundtrip_NumberFormats test).
+        std::string inputJson =
+            R"({"neg_frac": -0.5,)"
+            R"( "int": 42,)"
+            R"( "neg": -17,)"
+            R"( "zero": 0,)"
+            R"( "frac": 3.14,)"
+            R"( "exp_lower": 1e10,)"
+            R"( "exp_upper": 1E10,)"
+            R"( "exp_plus": 1e+10,)"
+            R"( "exp_neg": 1e-10,)"
+            R"( "exp_frac": 1.5e3,)"
+            R"( "huge_int": 99999999999999999999,)"
+            R"( "huge_neg": -99999999999999999999,)"
+            R"( "tiny_exp": 1e-308,)"
+            R"( "tiny_frac": 0.000000000000000001,)"
+            R"( "leading_zero_frac": 0.123})";
+        auto result = m_jsonHandler.SortJsonByKey(inputJson, {}, {}, ' ', 2);
+
+        ASSERT_TRUE(result.success);
+
+        // Verify exact output with alphabetically sorted keys and preserved number text
+        std::string expected =
+            "{\n"
+            "  \"exp_frac\": 1.5e3,\n"
+            "  \"exp_lower\": 1e10,\n"
+            "  \"exp_neg\": 1e-10,\n"
+            "  \"exp_plus\": 1e+10,\n"
+            "  \"exp_upper\": 1E10,\n"
+            "  \"frac\": 3.14,\n"
+            "  \"huge_int\": 99999999999999999999,\n"
+            "  \"huge_neg\": -99999999999999999999,\n"
+            "  \"int\": 42,\n"
+            "  \"leading_zero_frac\": 0.123,\n"
+            "  \"neg\": -17,\n"
+            "  \"neg_frac\": -0.5,\n"
+            "  \"tiny_exp\": 1e-308,\n"
+            "  \"tiny_frac\": 0.000000000000000001,\n"
+            "  \"zero\": 0\n"
+            "}";
+        ASSERT_EQ(result.response, expected);
     }
 }    // namespace JsonSortByKey

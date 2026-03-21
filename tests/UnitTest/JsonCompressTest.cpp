@@ -140,7 +140,7 @@ namespace JsonCompress
         std::unordered_map<std::string, std::string> testData {
             {"{\r\n    \"NaN\": NaN\r\n}", R"({"NaN":NaN})"},
             {"{\r\n    \"Mixed\": [\r\n        null,\r\n        null,\r\n        \"power\"\r\n    ]\r\n}", R"({"Mixed":[null,null,"power"]})"},
-            {"{\n  \"Inf\": [\n    -Infinity,\n    Infinity,\n    -Inf,\n    Inf\n  ]\n}", R"({"Inf":[-Infinity,Infinity,-Infinity,Infinity]})"},
+            {"{\n  \"Inf\": [\n    -Infinity,\n    Infinity,\n    -Inf,\n    Inf\n  ]\n}", R"({"Inf":[-Infinity,Infinity,-Inf,Inf]})"},
         };
 
         for (const auto& [input, output] : testData)
@@ -176,17 +176,17 @@ namespace JsonCompress
     TEST_F(JsonCompressTest, CompressJson_numbers)
     {
         std::unordered_map<std::string, std::string> testData {
-            {R"({"num": 12.148681171238422})", "12.148681171238422"},             // All good
-            {R"({"num": 42.835353759876654})", "42.835353759876654"},             // All good
-            {R"({"num": 5.107091491635510056019771245})", "5.10709149163551"},    // Fine: Rounded up
-            {R"({"num": 100000000302052988.0})", "100000000302052990.0"},         // Fine: Rounded up
-            {R"({"num": 12.148681171238427111})", "12.148681171238428"},          // Fine: Rounded down
-            {R"({"num": 42.8353537598766541666})", "42.835353759876654"},         // Fine: Rounded up
-            {R"({"num": -1722.1864265316147})", "-1722.1864265316146"},           // This is interesting. Why last digit changed.
-            {R"({"num": -1722.1864265316148})", "-1722.1864265316149"},           // This is interesting. Why last digit changed.
-            {R"({"num": -172345.18642653167979})", "-172345.18642653167"},        // This is interesting. Why not rounded up.
-            {R"({"num": 1.234e5})", "123400.0"},                                  // Don't know how to fix.
-            {R"({"num": 0.0000001000})", "1e-7"},                                 // Don't know how to fix.
+            {R"({"num": 12.148681171238422})", "12.148681171238422"},
+            {R"({"num": 42.835353759876654})", "42.835353759876654"},
+            {R"({"num": 5.107091491635510056019771245})", "5.107091491635510056019771245"},
+            {R"({"num": 100000000302052988.0})", "100000000302052988.0"},
+            {R"({"num": 12.148681171238427111})", "12.148681171238427111"},
+            {R"({"num": 42.8353537598766541666})", "42.8353537598766541666"},
+            {R"({"num": -1722.1864265316147})", "-1722.1864265316147"},
+            {R"({"num": -1722.1864265316148})", "-1722.1864265316148"},
+            {R"({"num": -172345.18642653167979})", "-172345.18642653167979"},
+            {R"({"num": 1.234e5})", "1.234e5"},
+            {R"({"num": 0.0000001000})", "0.0000001000"},
         };
 
         for (const auto& [input, output] : testData)
