@@ -202,12 +202,27 @@ void SettingsDlg::InitDlg()
     CUtility::SetEditCtrlText(::GetDlgItem(_hSelf, IDC_EDT_INDENT_SPACECOUNT), std::to_wstring(m_pSetting->indent.len));
     ShowSpaceCountCtrls(m_pSetting->indent.style == IndentStyle::SPACE);
 
-    CUtility::SetCheckboxStatus(::GetDlgItem(_hSelf, IDC_CHK_FOLLOW_CURRENT_DOC), m_pSetting->bFollowCurrentTab);
-    CUtility::SetCheckboxStatus(::GetDlgItem(_hSelf, IDC_CHK_FORMAT_ON_OPEN), m_pSetting->bAutoFormat);
-    CUtility::SetCheckboxStatus(::GetDlgItem(_hSelf, IDC_CHK_JSON_HIGHLIGHT), m_pSetting->bUseJsonHighlight);
-    CUtility::SetCheckboxStatus(::GetDlgItem(_hSelf, IDC_CHK_IGNORE_COMMA), m_pSetting->parseOptions.bIgnoreTrailingComma);
-    CUtility::SetCheckboxStatus(::GetDlgItem(_hSelf, IDC_CHK_IGNORE_COMMENT), m_pSetting->parseOptions.bIgnoreComment);
-    CUtility::SetCheckboxStatus(::GetDlgItem(_hSelf, IDC_CHK_REPLACE_UNDEFINED), m_pSetting->parseOptions.bReplaceUndefined);
+    SyncUIControlsWithSettings();
+}
+
+void SettingsDlg::SyncUIControlsWithSettings()
+{
+    auto setCheckboxIfValid = [this](int controlId, bool checked)
+    {
+        HWND hCtrl = ::GetDlgItem(_hSelf, controlId);
+        if (hCtrl != nullptr)
+        {
+            CUtility::SetCheckboxStatus(hCtrl, checked);
+        }
+    };
+
+    // Set all checkbox controls
+    setCheckboxIfValid(IDC_CHK_FOLLOW_CURRENT_DOC, m_pSetting->bFollowCurrentTab);
+    setCheckboxIfValid(IDC_CHK_FORMAT_ON_OPEN, m_pSetting->bAutoFormat);
+    setCheckboxIfValid(IDC_CHK_JSON_HIGHLIGHT, m_pSetting->bUseJsonHighlight);
+    setCheckboxIfValid(IDC_CHK_IGNORE_COMMA, m_pSetting->parseOptions.bIgnoreTrailingComma);
+    setCheckboxIfValid(IDC_CHK_IGNORE_COMMENT, m_pSetting->parseOptions.bIgnoreComment);
+    setCheckboxIfValid(IDC_CHK_REPLACE_UNDEFINED, m_pSetting->parseOptions.bReplaceUndefined);
 }
 
 void SettingsDlg::ShowSpaceCountCtrls(bool bShow)

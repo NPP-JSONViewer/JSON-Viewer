@@ -3,6 +3,7 @@
 #include <windows.h>
 #include <optional>
 #include <filesystem>
+#include <fstream>
 
 #include "Utility.h"
 
@@ -24,6 +25,65 @@ namespace UtilityTest
         LPARAM   lp = MAKELPARAM(50, 100);
         short    y  = util.GetYFromLPARAM(lp);
         EXPECT_EQ(y, 100);
+    }
+
+    // Test GetEditCtrlText with nullptr
+    TEST(CUtilityTest, GetEditCtrlText_NullHandle)
+    {
+        auto text = CUtility::GetEditCtrlText(nullptr);
+        EXPECT_EQ(text, L"");
+    }
+
+    // Test GetCheckboxStatus with nullptr
+    TEST(CUtilityTest, GetCheckboxStatus_NullHandle)
+    {
+        bool status = CUtility::GetCheckboxStatus(nullptr);
+        EXPECT_FALSE(status);
+    }
+
+    // Test CreateDir functionality
+    TEST(CUtilityTest, CreateDir_Success)
+    {
+        std::wstring testDir = std::filesystem::temp_directory_path().wstring() + L"\\TestDir_Utility";
+        bool         created = CUtility::CreateDir(testDir);
+        EXPECT_TRUE(created);
+
+        // Cleanup
+        if (std::filesystem::exists(testDir))
+        {
+            std::filesystem::remove(testDir);
+        }
+    }
+
+    // Test Copy functionality
+    TEST(CUtilityTest, Copy_Success)
+    {
+        std::filesystem::path srcFile = std::filesystem::temp_directory_path() / "test_utility.tmp";
+        auto                  dstFile = std::filesystem::temp_directory_path() / "test_copy.tmp";
+
+        std::ofstream testFile(srcFile);
+        testFile << "test content";
+        testFile.close();
+
+        if (!std::filesystem::exists(srcFile))
+        {
+            // Something bad, failed to create file, hence skip the test
+            GTEST_SKIP() << "Failed to create source file for copy test.";
+        }
+
+        bool copied = CUtility::Copy(srcFile.wstring(), dstFile.wstring());
+        EXPECT_TRUE(copied);
+        EXPECT_TRUE(std::filesystem::exists(dstFile));
+
+        // Cleanup
+        if (std::filesystem::exists(srcFile))
+        {
+            std::filesystem::remove(srcFile);
+        }
+        if (std::filesystem::exists(dstFile))
+        {
+            std::filesystem::remove(dstFile);
+        }
     }
 
     // Test DirExist with a valid directory
@@ -137,4 +197,5 @@ namespace UtilityTest
         auto     number = util.GetNumber(L"123a45");
         EXPECT_FALSE(number.has_value());
     }
+
 }    // namespace UtilityTest

@@ -22,6 +22,7 @@ private:
     bool WriteINI();
     void InitDlg();
     void ShowSpaceCountCtrls(bool bShow);
+    void SyncUIControlsWithSettings();
 
 private:
     int                      m_nCmdId = -1;
