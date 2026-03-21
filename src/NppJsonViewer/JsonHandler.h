@@ -26,8 +26,14 @@ struct Result
 using LE = rj::LineEndingOption;
 using LF = rj::PrettyFormatOptions;
 
+// Parse flags for all JSON operations. Historically flgBaseWriter used kParseFullPrecisionFlag
+// instead of kParseNumbersAsStringsFlag because upstream RapidJSON's RawNumber() would quote
+// numbers as strings. Our fork fixes that (RawNumber now writes via WriteRawValue without quotes),
+// so both flag sets are now identical. They are kept separate to allow independent tuning of the
+// DOM-based path (flgBaseReader: sort-by-key) vs the SAX streaming path (flgBaseWriter: format/compress)
+// if needed in the future.
 constexpr auto flgBaseReader = rj::kParseEscapedApostropheFlag | rj::kParseNanAndInfFlag | rj::kParseNumbersAsStringsFlag;
-constexpr auto flgBaseWriter = rj::kParseEscapedApostropheFlag | rj::kParseNanAndInfFlag | rj::kParseFullPrecisionFlag;
+constexpr auto flgBaseWriter = rj::kParseEscapedApostropheFlag | rj::kParseNanAndInfFlag | rj::kParseNumbersAsStringsFlag;
 
 class JsonHandler
 {
