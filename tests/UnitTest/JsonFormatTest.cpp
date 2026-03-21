@@ -169,8 +169,7 @@ namespace JsonFormat
         std::unordered_map<std::string, std::string> testData {
             {R"({"NaN":NaN})", "{\r\n    \"NaN\": NaN\r\n}"},
             {R"({"Mixed":[null,null,"power"]})", "{\r\n    \"Mixed\": [\r\n        null,\r\n        null,\r\n        \"power\"\r\n    ]\r\n}"},
-            {R"({"Inf":[-Infinity, Infinity, -Inf, Inf]})",
-             "{\r\n    \"Inf\": [\r\n        -Infinity,\r\n        Infinity,\r\n        -Inf,\r\n        Inf\r\n    ]\r\n}"},
+            {R"({"Inf":[-Infinity, Infinity, -Inf, Inf]})", "{\r\n    \"Inf\": [\r\n        -Infinity,\r\n        Infinity,\r\n        -Inf,\r\n        Inf\r\n    ]\r\n}"},
         };
 
         LE       lineEndingOption = rj::kCrLf;             // Windows line ending
