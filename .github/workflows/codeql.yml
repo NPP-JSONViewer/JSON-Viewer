@@ -57,7 +57,7 @@ jobs:
 
       # Ensure MSBuild is available
       - name: Setup MSBuild
-        uses: microsoft/setup-msbuild@v2
+        uses: microsoft/setup-msbuild@v3
 
       # Build explicitly as Autobuild is not working with .slnx
       # This makes sure include paths from submodules (external/*) are found.
