@@ -16,6 +16,25 @@ This plugin is designed to display JSON strings in a Treeview format and highlig
 
 ## Latest Updates:
 
+### 2.2.0.0
+
+1. Bug/regression fixes:
+    1. Fixed handling of JSON raw number values during formatting and serialization.
+    2. Fixed parser behavior to preserve numeric values as strings when required by using RapidJSON's kParseNumbersAsStringsFlag.
+    3. Added unit tests
+        3.1 Added extensive unit tests for JSON sorting functionality.
+        3.2 Added additional parser and regression test coverage.
+        3.3 Expanded overall automated test coverage to improve reliability.
+
+2. Other enhancements:
+    1. Upgraded project and build infrastructure to Visual Studio 2026.
+    2. Migrated solution management to .slnx format.
+    3. Migrated shared components from external copies to Git submodules for improved maintainability.
+    4. Updated project dependencies and submodules, including Google Test.
+    5. Improved code quality through refactoring, formatting, and minor performance optimizations.
+    6. Modernized GitHub Actions workflows and CI/CD dependencies.
+
+
 ### 2.1.1.0
 
 1. New features:
