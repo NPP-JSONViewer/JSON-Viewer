@@ -51,6 +51,41 @@
 #define IDM_EXPANDALL                   40005
 #define IDM_COLLAPSEALL                 40006
 
+
+// String table IDs for localization
+#define IDS_PLUGIN_NAME                 1000
+#define IDS_TITLE_JSON_PANEL            1001
+#define IDS_MENU_SHOW_JSON_PANEL        1002
+#define IDS_MENU_FORMAT_JSON            1003
+#define IDS_MENU_COMPRESS_JSON          1004
+#define IDS_MENU_SORT_BY_KEY            1005
+#define IDS_MENU_SEPARATOR              1006
+#define IDS_MENU_SETTING                1007
+#define IDS_MENU_ABOUT                  1008
+#define IDS_TOOLTIP_REFRESH             1009
+#define IDS_TOOLTIP_VALIDATE            1010
+#define IDS_TOOLTIP_FORMAT              1011
+#define IDS_TOOLTIP_SEARCH              1012
+#define IDS_JSON_ROOT                   1013
+#define IDS_JSON_ERROR_TITLE            1014
+#define IDS_JSON_WARNING_TITLE          1015
+#define IDS_JSON_INFO_TITLE             1016
+#define IDS_JSON_ERR_PARSE              1017
+#define IDS_JSON_ERR_VALIDATE           1018
+#define IDS_JSON_ERR_VALIDATE_SUCCESS   1019
+#define IDS_JSON_ERR_SAVE_SETTING       1020
+#define IDS_JSON_ERR_MULTI_SELECTION    1021
+#define IDS_STR_VERSION                 1022
+#define IDS_STR_COPY                    1023
+#define IDS_STR_COPYNAME                1024
+#define IDS_STR_COPYVALUE               1025
+#define IDS_STR_COPYPATH                1026
+#define IDS_STR_EXPANDALL               1027
+#define IDS_STR_COLLAPSEALL             1028
+#define IDS_SRCH_SEARCHING              1029
+#define IDS_SRCH_NOTFOUND               1030
+#define IDS_SRCH_NOMOREFOUND            1031
+
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
@@ -58,6 +93,6 @@
 #define _APS_NEXT_RESOURCE_VALUE        110
 #define _APS_NEXT_COMMAND_VALUE         40007
 #define _APS_NEXT_CONTROL_VALUE         1036
-#define _APS_NEXT_SYMED_VALUE           101
+#define _APS_NEXT_SYMED_VALUE           1032
 #endif
 #endif
