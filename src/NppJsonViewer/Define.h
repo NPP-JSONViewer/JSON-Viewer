@@ -1,5 +1,6 @@
 #pragma once
 #include "PluginInterface.h"
+#include <windows.h>
 
 // Define the number of plugin commands here
 enum class CallBackID : int
@@ -14,48 +15,62 @@ enum class CallBackID : int
 };
 constexpr const int nTotalCommandCount = static_cast<int>(CallBackID::ABOUT) + 1;
 
-// Define plugin name here
-const TCHAR PLUGIN_NAME[]   = TEXT("JSON Viewer");
+// ---------------------------------------------------------------------------
+// Localizable UI strings.
+// These are loaded from the STRINGTABLE resource at init time, so they
+// automatically follow the system's UI language (English, Chinese, etc.)
+// ---------------------------------------------------------------------------
+void LoadLocalizedStrings(HMODULE hModule);
+
+// Plugin name and config filename (config filename must not be localized)
+extern const TCHAR* PLUGIN_NAME;
 const TCHAR PLUGIN_CONFIG[] = TEXT("JSONViewer.ini");
 
-// Text which can be considered for localization
-const TCHAR TITLE_JSON_PANEL[]     = TEXT("JSON Viewer");
-const TCHAR MENU_SHOW_JSON_PANEL[] = TEXT("Show &JSON Viewer");
-const TCHAR MENU_FORMAT_JSON[]     = TEXT("&Format JSON");
-const TCHAR MENU_COMPRESS_JSON[]   = TEXT("&Compress JSON");
-const TCHAR MENU_SORT_BY_KEY[]     = TEXT("Sort by &key (ascending)");
-const TCHAR MENU_SETTING[]         = TEXT("&Settings");
-const TCHAR MENU_ABOUT[]           = TEXT("&About");
-const TCHAR MENU_SEPERATOR[]       = TEXT("-SEPARATOR-");
+// Menu and panel
+extern const TCHAR* TITLE_JSON_PANEL;
+extern const TCHAR* MENU_SHOW_JSON_PANEL;
+extern const TCHAR* MENU_FORMAT_JSON;
+extern const TCHAR* MENU_COMPRESS_JSON;
+extern const TCHAR* MENU_SORT_BY_KEY;
+extern const TCHAR* MENU_SETTING;
+extern const TCHAR* MENU_ABOUT;
+extern const TCHAR* MENU_SEPERATOR;
 
-const TCHAR TOOLTIP_REFRESH[]  = TEXT("Refresh JSON tree");
-const TCHAR TOOLTIP_VALIDATE[] = TEXT("Validate JSON to detect any errors");
-const TCHAR TOOLTIP_FORMAT[]   = TEXT("Format JSON to beautify it");
-const TCHAR TOOLTIP_SEARCH[]   = TEXT("Search in JSON");
+// Tooltips
+extern const TCHAR* TOOLTIP_REFRESH;
+extern const TCHAR* TOOLTIP_VALIDATE;
+extern const TCHAR* TOOLTIP_FORMAT;
+extern const TCHAR* TOOLTIP_SEARCH;
 
+// URLs (not localized)
 const TCHAR URL_SOURCE_CODE[]  = TEXT("https://github.com/NPP-JSONViewer/JSON-Viewer");
 const TCHAR URL_REPORT_ISSUE[] = TEXT("https://github.com/NPP-JSONViewer/JSON-Viewer/issues/new");
 
-const TCHAR JSON_ROOT[] = TEXT("JSON");
+// Misc
+extern const TCHAR* JSON_ROOT;
 
-const TCHAR JSON_ERROR_TITLE[]   = TEXT("JSON Viewer: Error");
-const TCHAR JSON_WARNING_TITLE[] = TEXT("JSON Viewer: Warning");
-const TCHAR JSON_INFO_TITLE[]    = TEXT("JSON Viewer: Information");
+// Message titles
+extern const TCHAR* JSON_ERROR_TITLE;
+extern const TCHAR* JSON_WARNING_TITLE;
+extern const TCHAR* JSON_INFO_TITLE;
 
-const TCHAR JSON_ERR_PARSE[]            = TEXT("Unable to parse JSON. Please ensure a valid JSON string is selected.");
-const TCHAR JSON_ERR_VALIDATE[]         = TEXT("An error occurred while parsing the JSON. Check the current selection for the potential issue.");
-const TCHAR JSON_ERR_VALIDATE_SUCCESS[] = TEXT("The JSON appears valid. No errors were found during validation.");
-const TCHAR JSON_ERR_SAVE_SETTING[]     = TEXT("Could not save the settings. Please try again.");
-const TCHAR JSON_ERR_MULTI_SELECTION[]  = TEXT("JSON-Viewer does not currently support multiple selections.");
+// Message content
+extern const TCHAR* JSON_ERR_PARSE;
+extern const TCHAR* JSON_ERR_VALIDATE;
+extern const TCHAR* JSON_ERR_VALIDATE_SUCCESS;
+extern const TCHAR* JSON_ERR_SAVE_SETTING;
+extern const TCHAR* JSON_ERR_MULTI_SELECTION;
 
-const TCHAR STR_VERSION[]     = TEXT("Version: ");
-const TCHAR STR_COPY[]        = TEXT("Copy");
-const TCHAR STR_COPYNAME[]    = TEXT("Copy name");
-const TCHAR STR_COPYVALUE[]   = TEXT("Copy value");
-const TCHAR STR_COPYPATH[]    = TEXT("Copy path");
-const TCHAR STR_EXPANDALL[]   = TEXT("Expand all");
-const TCHAR STR_COLLAPSEALL[] = TEXT("Collapse all");
+// Context menu and misc
+extern const TCHAR* STR_VERSION;
+extern const TCHAR* STR_COPY;
+extern const TCHAR* STR_COPYNAME;
+extern const TCHAR* STR_COPYVALUE;
+extern const TCHAR* STR_COPYPATH;
+extern const TCHAR* STR_EXPANDALL;
+extern const TCHAR* STR_COLLAPSEALL;
 
+// INI section/key names (must NOT be localized - config compatibility)
 const TCHAR STR_INI_FORMATTING_SEC[]         = TEXT("Formatting");
 const TCHAR STR_INI_FORMATTING_EOL[]         = TEXT("EOL");
 const TCHAR STR_INI_FORMATTING_LINE[]        = TEXT("LINE_FORMATTING");
@@ -70,9 +85,10 @@ const TCHAR STR_INI_OTHER_IGNORE_COMMENT[]    = TEXT("IGNORE_COMMENT");
 const TCHAR STR_INI_OTHER_IGNORE_COMMA[]      = TEXT("IGNORE_TRAILLING_COMMA");
 const TCHAR STR_INI_OTHER_REPLACE_UNDEFINED[] = TEXT("REPLACE_VALUE_UNDEFINED");
 
-const TCHAR STR_SRCH_SEARCHING[]   = TEXT("Searching for: ");
-const TCHAR STR_SRCH_NOTFOUND[]    = TEXT("Not found: ");
-const TCHAR STR_SRCH_NOMOREFOUND[] = TEXT("No more found: ");
+// Search status
+extern const TCHAR* STR_SRCH_SEARCHING;
+extern const TCHAR* STR_SRCH_NOTFOUND;
+extern const TCHAR* STR_SRCH_NOMOREFOUND;
 
 enum class LineEnding
 {

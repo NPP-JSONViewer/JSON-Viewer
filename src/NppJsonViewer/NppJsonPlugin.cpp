@@ -1,6 +1,7 @@
 #include "NppJsonPlugin.h"
 #include "resource.h"
 #include "Profile.h"
+#include "Define.h"
 #include <tchar.h>
 
 NppJsonPlugin* NppJsonPlugin::Callback::m_pNppJsonPlugin = nullptr;
@@ -14,6 +15,7 @@ NppJsonPlugin::NppJsonPlugin()
 void NppJsonPlugin::PluginInit(HMODULE hModule)
 {
     m_hModule = hModule;
+    LoadLocalizedStrings(hModule);
 }
 
 void NppJsonPlugin::PluginCleanup() {}

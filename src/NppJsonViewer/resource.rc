@@ -12,6 +12,7 @@
 /////////////////////////////////////////////////////////////////////////////
 #undef APSTUDIO_READONLY_SYMBOLS
 
+
 /////////////////////////////////////////////////////////////////////////////
 // English (United States) resources
 
@@ -189,7 +190,7 @@ BEGIN
             VALUE "FileDescription", "Notepad++ plugin for JSON file"
             VALUE "FileVersion", "2.2.0.0"
             VALUE "InternalName", "JSONViewer"
-            VALUE "LegalCopyright", "Copyright � 2026"
+            VALUE "LegalCopyright", "Copyright � 2026"
             VALUE "OriginalFilename", "NPPJSONViewer.dll"
             VALUE "ProductName", "JSONViewer plugin for Notepad++"
             VALUE "ProductVersion", "2.2.0.0"
@@ -246,6 +247,48 @@ END
 
 /////////////////////////////////////////////////////////////////////////////
 //
+// String Table
+//
+
+STRINGTABLE
+BEGIN
+    IDS_PLUGIN_NAME                 "JSON Viewer"
+    IDS_TITLE_JSON_PANEL            "JSON Viewer"
+    IDS_MENU_SHOW_JSON_PANEL        "Show &JSON Viewer"
+    IDS_MENU_FORMAT_JSON            "&Format JSON"
+    IDS_MENU_COMPRESS_JSON          "&Compress JSON"
+    IDS_MENU_SORT_BY_KEY            "Sort by &key (ascending)"
+    IDS_MENU_SEPARATOR              "-SEPARATOR-"
+    IDS_MENU_SETTING                "&Settings"
+    IDS_MENU_ABOUT                  "&About"
+    IDS_TOOLTIP_REFRESH             "Refresh JSON tree"
+    IDS_TOOLTIP_VALIDATE            "Validate JSON to detect any errors"
+    IDS_TOOLTIP_FORMAT              "Format JSON to beautify it"
+    IDS_TOOLTIP_SEARCH              "Search in JSON"
+    IDS_JSON_ROOT                   "JSON"
+    IDS_JSON_ERROR_TITLE            "JSON Viewer: Error"
+    IDS_JSON_WARNING_TITLE          "JSON Viewer: Warning"
+    IDS_JSON_INFO_TITLE             "JSON Viewer: Information"
+    IDS_JSON_ERR_PARSE              "Unable to parse JSON. Please ensure a valid JSON string is selected."
+    IDS_JSON_ERR_VALIDATE           "An error occurred while parsing the JSON. Check the current selection for the potential issue."
+    IDS_JSON_ERR_VALIDATE_SUCCESS   "The JSON appears valid. No errors were found during validation."
+    IDS_JSON_ERR_SAVE_SETTING       "Could not save the settings. Please try again."
+    IDS_JSON_ERR_MULTI_SELECTION    "JSON-Viewer does not currently support multiple selections."
+    IDS_STR_VERSION                 "Version: "
+    IDS_STR_COPY                    "Copy"
+    IDS_STR_COPYNAME                "Copy name"
+    IDS_STR_COPYVALUE               "Copy value"
+    IDS_STR_COPYPATH                "Copy path"
+    IDS_STR_EXPANDALL               "Expand all"
+    IDS_STR_COLLAPSEALL             "Collapse all"
+    IDS_SRCH_SEARCHING              "Searching for: "
+    IDS_SRCH_NOTFOUND               "Not found: "
+    IDS_SRCH_NOMOREFOUND            "No more found: "
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
 // Icon
 //
 
@@ -262,6 +305,219 @@ IDI_ICON_VALIDATE       ICON                    "res\\validate.ico"
 IDI_ICON_TOOLBAR        ICON                    "res\\Icon.ico"
 
 #endif    // English (United States) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+/////////////////////////////////////////////////////////////////////////////
+// Chinese (Simplified) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_CHS)
+LANGUAGE LANG_CHINESE, SUBLANG_CHINESE_SIMPLIFIED
+#pragma code_page(65001)
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog (Chinese)
+//
+
+IDD_ABOUTDLG DIALOGEX 0, 0, 286, 155
+STYLE DS_ABSALIGN | DS_SETFONT | DS_MODALFRAME | DS_3DLOOK | DS_FIXEDSYS | DS_CENTER | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
+EXSTYLE WS_EX_WINDOWEDGE
+CAPTION "关于 JSON Viewer"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "确定",IDOK,118,136,50,14
+    GROUPBOX        "JSON Viewer",IDC_GB_TITLE,10,7,266,124,BS_CENTER
+    LTEXT           "一款实用的 Notepad++ JSON 插件，支持验证、格式化和压缩 JSON 文件。",IDC_STATIC,15,18,255,18
+    LTEXT           "开发者：",IDC_STATIC,15,45,70,8
+    LTEXT           "Kapil Ratnani",IDC_STATIC,85,45,185,8
+    LTEXT           "维护者：",IDC_STATIC,15,55,70,8
+    CONTROL         "Rajendra Singh    [<a href=""mailto:singh.rajen15@gmail.com"">singh.rajen15@gmail.com</a>]",IDC_SYSLINK_EMAIL,
+                    "SysLink",WS_TABSTOP,85,55,185,8
+    LTEXT           "源代码：",IDC_STATIC,15,75,70,8
+    CONTROL         "<a href=""https://github.com/NPP-JSONViewer/JSON-Viewer"">https://github.com/NPP-JSONViewer/JSON-Viewer</a>",IDC_WEB_SOURCE,
+                    "SysLink",WS_TABSTOP,85,75,185,8
+    LTEXT           "报告问题：",IDC_STATIC,15,85,70,8
+    CONTROL         "<a href=""https://github.com/NPP-JSONViewer/JSON-Viewer/issues/new"">https://github.com/NPP-JSONViewer/JSON-Viewer/issues</a>",IDC_WEB_ISSUE,
+                    "SysLink",WS_TABSTOP,85,85,185,8
+    LTEXT           "许可证：",IDC_STATIC,15,105,70,8
+    LTEXT           "MIT 许可证",IDC_STATIC,85,105,185,8
+    LTEXT           "特别感谢：",IDC_STATIC,15,115,70,8
+    LTEXT           "Don Ho 的 Notepad++",IDC_STATIC,85,115,185,8
+END
+
+IDD_TREEDLG DIALOGEX 0, 0, 187, 320
+STYLE DS_SETFONT | DS_3DLOOK | DS_FIXEDSYS | DS_CENTER | WS_CHILD | WS_VISIBLE | WS_CAPTION | WS_VSCROLL | WS_HSCROLL
+EXSTYLE WS_EX_TOPMOST | WS_EX_TOOLWINDOW
+CAPTION "JSON Viewer"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    PUSHBUTTON      "",IDC_BTN_REFRESH,2,2,16,12,BS_ICON
+    PUSHBUTTON      "",IDC_BTN_VALIDATE,20,2,16,12,BS_ICON
+    PUSHBUTTON      "",IDC_BTN_FORMAT,38,2,16,12,BS_ICON
+    CONTROL         "",IDC_DIVIDER,"Static",SS_ETCHEDVERT,56,1,2,16
+    EDITTEXT        IDC_EDT_SEARCH,60,2,99,12,ES_AUTOHSCROLL
+    PUSHBUTTON      "",IDC_BTN_SEARCH,160,2,16,12,BS_ICON
+    CONTROL         "",IDC_ZOOM_SLIDER,"msctls_trackbar32",TBS_AUTOTICKS | TBS_BOTH | TBS_NOTICKS | WS_TABSTOP,2,16,58,12
+    RTEXT           "100%",IDC_ZOOM_PERCENT,60,16,22,12,SS_NOTIFY | NOT WS_GROUP,WS_EX_RIGHT
+    CONTROL         "",IDC_TREE,"SysTreeView32",TVS_HASBUTTONS | TVS_HASLINES | TVS_DISABLEDRAGDROP | TVS_SHOWSELALWAYS | TVS_FULLROWSELECT | WS_HSCROLL | WS_TABSTOP,2,30,173,264,WS_EX_CLIENTEDGE
+    EDITTEXT        IDC_EDT_NODEPATH,2,296,173,12,ES_AUTOHSCROLL | ES_READONLY
+END
+
+IDD_SETTING DIALOGEX 0, 0, 300, 170
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "JSON Viewer 设置"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    PUSHBUTTON      "",IDC_HOR_BAR_TOP,0,1,300,1,WS_DISABLED,WS_EX_STATICEDGE
+    CONTROL         "打开 JSON 文件时跟随当前标签页",IDC_CHK_FOLLOW_CURRENT_DOC,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,5,7,140,10
+    CONTROL         "打开 JSON 文件时自动格式化",IDC_CHK_FORMAT_ON_OPEN,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,5,20,140,10
+    CONTROL         "忽略尾随逗号",IDC_CHK_IGNORE_COMMA,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,5,33,140,10
+    CONTROL         "忽略 JSON 中的注释",IDC_CHK_IGNORE_COMMENT,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,5,46,140,10
+    CONTROL         "启用 JSON 语法高亮",IDC_CHK_JSON_HIGHLIGHT,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,5,59,140,10
+    CONTROL         "将 'undefined' 值替换为 'null'",IDC_CHK_REPLACE_UNDEFINED,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,5,72,140,10
+    GROUPBOX        " 缩进：",IDC_STATIC,153,7,140,43
+    CONTROL         "自动检测",IDC_RADIO_INDENT_AUTO,"Button",BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,160,21,50,10
+    CONTROL         "使用制表符",IDC_RADIO_INDENT_TAB,"Button",BS_AUTORADIOBUTTON,240,21,50,10
+    CONTROL         "使用空格",IDC_RADIO_INDENT_SPACE,"Button",BS_AUTORADIOBUTTON,160,33,50,10
+    LTEXT           "数量：",IDC_STATIC_SPACECOUNT,240,33,24,8
+    EDITTEXT        IDC_EDT_INDENT_SPACECOUNT,266,32,20,11,ES_AUTOHSCROLL | ES_NUMBER
+    GROUPBOX        " 换行符：",IDC_STATIC,153,52,140,43
+    CONTROL         "自动检测",IDC_RADIO_LINE_AUTO,"Button",BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,160,66,50,10
+    CONTROL         "Windows (CR LF)",IDC_RADIO_LINE_WINDOW,"Button",BS_AUTORADIOBUTTON,218,66,65,10
+    CONTROL         "Unix (LF)",IDC_RADIO_LINE_UNIX,"Button",BS_AUTORADIOBUTTON,160,78,50,10
+    CONTROL         "Macintosh (CR)",IDC_RADIO_LINE_MAC,"Button",BS_AUTORADIOBUTTON,218,78,65,10
+    GROUPBOX        " 行格式化：",IDC_STATIC,153,97,140,43
+    CONTROL         "默认格式化",IDC_RADIO_LINEFORMAT_DEFAULT,"Button",BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,160,111,110,10
+    CONTROL         "将数组格式化为单行",IDC_RADIO_LINEFORMAT_SINGLE,
+                    "Button",BS_AUTORADIOBUTTON,160,123,110,10
+    PUSHBUTTON      "",IDC_HOR_BAR_BOTTOM,0,145,300,1,WS_DISABLED,WS_EX_STATICEDGE
+    DEFPUSHBUTTON   "确定",IDOK,185,151,50,14
+    PUSHBUTTON      "取消",IDCANCEL,243,151,50,14
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Version (Chinese)
+//
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION 2,2,0,0
+ PRODUCTVERSION 2,2,0,0
+ FILEFLAGSMASK 0x3fL
+#ifdef _DEBUG
+ FILEFLAGS 0x1L
+#else
+ FILEFLAGS 0x0L
+#endif
+ FILEOS 0x40004L
+ FILETYPE 0x2L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "080404b0"
+        BEGIN
+            VALUE "CompanyName", "NPP-JSONViewer"
+            VALUE "FileDescription", "Notepad++ JSON 查看插件"
+            VALUE "FileVersion", "2.2.0.0"
+            VALUE "InternalName", "JSONViewer"
+            VALUE "LegalCopyright", "版权所有 © 2026"
+            VALUE "OriginalFilename", "NPPJSONViewer.dll"
+            VALUE "ProductName", "JSONViewer plugin for Notepad++"
+            VALUE "ProductVersion", "2.2.0.0"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x804, 1200
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Menu (Chinese)
+//
+
+IDR_TREEITEM_MENU MENU
+BEGIN
+    POPUP ""
+    BEGIN
+        MENUITEM "复制",                        IDM_COPY_TREEITEM
+        MENUITEM SEPARATOR
+        MENUITEM "复制节点名称",              IDM_COPY_NODENAME
+        MENUITEM "复制节点值",             IDM_COPY_NODEVALUE
+        MENUITEM "复制节点路径",              IDM_COPY_NODEPATH
+        MENUITEM SEPARATOR
+        MENUITEM "全部展开",                  IDM_EXPANDALL
+        MENUITEM "全部折叠",                IDM_COLLAPSEALL
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table (Chinese)
+//
+
+STRINGTABLE
+BEGIN
+    IDS_PLUGIN_NAME                 "JSON Viewer"
+    IDS_TITLE_JSON_PANEL            "JSON Viewer"
+    IDS_MENU_SHOW_JSON_PANEL        "显示 JSON 查看器(&J)"
+    IDS_MENU_FORMAT_JSON            "格式化 JSON(&F)"
+    IDS_MENU_COMPRESS_JSON          "压缩 JSON(&C)"
+    IDS_MENU_SORT_BY_KEY            "按键排序（升序）(&K)"
+    IDS_MENU_SEPARATOR              "-SEPARATOR-"
+    IDS_MENU_SETTING                "设置(&S)"
+    IDS_MENU_ABOUT                  "关于(&A)"
+    IDS_TOOLTIP_REFRESH             "刷新 JSON 树"
+    IDS_TOOLTIP_VALIDATE            "验证 JSON 是否存在错误"
+    IDS_TOOLTIP_FORMAT              "格式化 JSON，美化显示"
+    IDS_TOOLTIP_SEARCH              "在 JSON 中搜索"
+    IDS_JSON_ROOT                   "JSON"
+    IDS_JSON_ERROR_TITLE            "JSON Viewer：错误"
+    IDS_JSON_WARNING_TITLE          "JSON Viewer：警告"
+    IDS_JSON_INFO_TITLE             "JSON Viewer：提示"
+    IDS_JSON_ERR_PARSE              "无法解析 JSON。请确保已选择有效的 JSON 字符串。"
+    IDS_JSON_ERR_VALIDATE           "解析 JSON 时出错。请检查当前选中内容是否存在问题。"
+    IDS_JSON_ERR_VALIDATE_SUCCESS   "JSON 验证通过。验证过程中未发现错误。"
+    IDS_JSON_ERR_SAVE_SETTING       "无法保存设置，请重试。"
+    IDS_JSON_ERR_MULTI_SELECTION    "JSON Viewer 目前不支持多选。"
+    IDS_STR_VERSION                 "版本："
+    IDS_STR_COPY                    "复制"
+    IDS_STR_COPYNAME                "复制名称"
+    IDS_STR_COPYVALUE               "复制值"
+    IDS_STR_COPYPATH                "复制路径"
+    IDS_STR_EXPANDALL               "全部展开"
+    IDS_STR_COLLAPSEALL             "全部折叠"
+    IDS_SRCH_SEARCHING              "正在搜索："
+    IDS_SRCH_NOTFOUND               "未找到："
+    IDS_SRCH_NOMOREFOUND            "无更多结果："
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon (shared - only one copy needed, referenced by same IDs)
+//
+
+IDI_ICON_REFRESH        ICON                    "res\\Refresh.ico"
+
+IDI_ICON_SEARCH         ICON                    "res\\search.ico"
+
+IDI_ICON_FORMAT         ICON                    "res\\format.ico"
+
+IDI_ICON_VALIDATE       ICON                    "res\\validate.ico"
+
+IDI_ICON_TOOLBAR        ICON                    "res\\Icon.ico"
+
+#endif    // Chinese (Simplified) resources
 /////////////////////////////////////////////////////////////////////////////
 
 
@@ -311,4 +567,3 @@ END
 
 /////////////////////////////////////////////////////////////////////////////
 #endif    // not APSTUDIO_INVOKED
-
