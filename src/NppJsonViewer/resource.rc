@@ -1,4 +1,4 @@
-// Microsoft Visual C++ generated resource script.
+﻿// Microsoft Visual C++ generated resource script.
 //
 #include "resource.h"
 
@@ -13,11 +13,11 @@
 #undef APSTUDIO_READONLY_SYMBOLS
 
 /////////////////////////////////////////////////////////////////////////////
-// English (United States) resources
+// Chinese (Simplified) resources
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
-LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
-#pragma code_page(1252)
+LANGUAGE LANG_CHINESE, SUBLANG_CHINESE_SIMPLIFIED
+#pragma code_page(65001)
 
 #ifdef APSTUDIO_INVOKED
 /////////////////////////////////////////////////////////////////////////////
@@ -53,27 +53,27 @@ END
 IDD_ABOUTDLG DIALOGEX 0, 0, 286, 155
 STYLE DS_ABSALIGN | DS_SETFONT | DS_MODALFRAME | DS_3DLOOK | DS_FIXEDSYS | DS_CENTER | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
 EXSTYLE WS_EX_WINDOWEDGE
-CAPTION "About JSON Viewer"
+CAPTION "关于 JSON 查看器"
 FONT 8, "MS Shell Dlg", 400, 0, 0x1
 BEGIN
-    DEFPUSHBUTTON   "OK",IDOK,118,136,50,14
-    GROUPBOX        "JSON Viewer",IDC_GB_TITLE,10,7,266,124,BS_CENTER
-    LTEXT           "Hopefully a decent JSON plugin for Notepad++ which can validate, format and compress any JSON file.",IDC_STATIC,15,18,255,18
-    LTEXT           "Developed by:",IDC_STATIC,15,45,70,8
+    DEFPUSHBUTTON   "确定",IDOK,118,136,50,14
+    GROUPBOX        "JSON 查看器",IDC_GB_TITLE,10,7,266,124,BS_CENTER
+    LTEXT           "一款不错的 Notepad++ JSON 插件，支持验证、格式化和压缩 JSON 文件。",IDC_STATIC,15,18,255,18
+    LTEXT           "开发者：",IDC_STATIC,15,45,70,8
     LTEXT           "Kapil Ratnani",IDC_STATIC,85,45,185,8
-    LTEXT           "Maintained by:",IDC_STATIC,15,55,70,8
+    LTEXT           "维护者：",IDC_STATIC,15,55,70,8
     CONTROL         "Rajendra Singh    [<a href=""mailto:singh.rajen15@gmail.com"">singh.rajen15@gmail.com</a>]",IDC_SYSLINK_EMAIL,
                     "SysLink",WS_TABSTOP,85,55,185,8
-    LTEXT           "Source code:",IDC_STATIC,15,75,70,8
+    LTEXT           "源代码：",IDC_STATIC,15,75,70,8
     CONTROL         "<a href=""https://github.com/NPP-JSONViewer/JSON-Viewer"">https://github.com/NPP-JSONViewer/JSON-Viewer</a>",IDC_WEB_SOURCE,
                     "SysLink",WS_TABSTOP,85,75,185,8
-    LTEXT           "Report an issue:",IDC_STATIC,15,85,70,8
+    LTEXT           "报告问题：",IDC_STATIC,15,85,70,8
     CONTROL         "<a href=""https://github.com/NPP-JSONViewer/JSON-Viewer/issues/new"">https://github.com/NPP-JSONViewer/JSON-Viewer/issues</a>",IDC_WEB_ISSUE,
                     "SysLink",WS_TABSTOP,85,85,185,8
-    LTEXT           "License:",IDC_STATIC,15,105,70,8
-    LTEXT           "MIT license",IDC_STATIC,85,105,185,8
-    LTEXT           "Special thanks to:",IDC_STATIC,15,115,70,8
-    LTEXT           "Don Ho for Notepad++",IDC_STATIC,85,115,185,8
+    LTEXT           "许可证：",IDC_STATIC,15,105,70,8
+    LTEXT           "MIT 许可证",IDC_STATIC,85,105,185,8
+    LTEXT           "特别感谢：",IDC_STATIC,15,115,70,8
+    LTEXT           "Don Ho 的 Notepad++",IDC_STATIC,85,115,185,8
 END
 
 IDD_TREEDLG DIALOGEX 0, 0, 187, 320
@@ -96,37 +96,37 @@ END
 
 IDD_SETTING DIALOGEX 0, 0, 300, 170
 STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "JSON Viewer Settings"
+CAPTION "JSON 查看器设置"
 FONT 8, "MS Shell Dlg", 400, 0, 0x1
 BEGIN
     PUSHBUTTON      "",IDC_HOR_BAR_TOP,0,1,300,1,WS_DISABLED,WS_EX_STATICEDGE
-    CONTROL         "Follow current tab if it is json file",IDC_CHK_FOLLOW_CURRENT_DOC,
+    CONTROL         "打开 JSON 文件时自动跟随当前标签页",IDC_CHK_FOLLOW_CURRENT_DOC,
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,5,7,140,10
-    CONTROL         "Auto format json file when opened",IDC_CHK_FORMAT_ON_OPEN,
+    CONTROL         "打开 JSON 文件时自动格式化",IDC_CHK_FORMAT_ON_OPEN,
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,5,20,140,10
-    CONTROL         "Ignore trailing comma",IDC_CHK_IGNORE_COMMA,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,5,33,140,10
-    CONTROL         "Ignore comments in json",IDC_CHK_IGNORE_COMMENT,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,5,46,140,10
-    CONTROL         "Use json highlighting",IDC_CHK_JSON_HIGHLIGHT,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,5,59,140,10
-    CONTROL         "Replace value 'undefined' with 'null'",IDC_CHK_REPLACE_UNDEFINED,
+    CONTROL         "忽略尾随逗号",IDC_CHK_IGNORE_COMMA,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,5,33,140,10
+    CONTROL         "忽略 JSON 中的注释",IDC_CHK_IGNORE_COMMENT,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,5,46,140,10
+    CONTROL         "启用 JSON 语法高亮",IDC_CHK_JSON_HIGHLIGHT,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,5,59,140,10
+    CONTROL         "将 'undefined' 值替换为 'null'",IDC_CHK_REPLACE_UNDEFINED,
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,5,72,140,10
-    GROUPBOX        " Indentation: ",IDC_STATIC,153,7,140,43
-    CONTROL         "Auto detect",IDC_RADIO_INDENT_AUTO,"Button",BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,160,21,50,10
-    CONTROL         "Use tab",IDC_RADIO_INDENT_TAB,"Button",BS_AUTORADIOBUTTON,240,21,50,10
-    CONTROL         "Use space",IDC_RADIO_INDENT_SPACE,"Button",BS_AUTORADIOBUTTON,160,33,50,10
-    LTEXT           "Count:",IDC_STATIC_SPACECOUNT,240,33,24,8
+    GROUPBOX        " 缩进：",IDC_STATIC,153,7,140,43
+    CONTROL         "自动检测",IDC_RADIO_INDENT_AUTO,"Button",BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,160,21,50,10
+    CONTROL         "使用制表符",IDC_RADIO_INDENT_TAB,"Button",BS_AUTORADIOBUTTON,240,21,50,10
+    CONTROL         "使用空格",IDC_RADIO_INDENT_SPACE,"Button",BS_AUTORADIOBUTTON,160,33,50,10
+    LTEXT           "数量：",IDC_STATIC_SPACECOUNT,240,33,24,8
     EDITTEXT        IDC_EDT_INDENT_SPACECOUNT,266,32,20,11,ES_AUTOHSCROLL | ES_NUMBER
-    GROUPBOX        " Line Ending: ",IDC_STATIC,153,52,140,43
-    CONTROL         "Auto detect",IDC_RADIO_LINE_AUTO,"Button",BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,160,66,50,10
-    CONTROL         "Window (CR LF)",IDC_RADIO_LINE_WINDOW,"Button",BS_AUTORADIOBUTTON,218,66,65,10
+    GROUPBOX        " 换行符：",IDC_STATIC,153,52,140,43
+    CONTROL         "自动检测",IDC_RADIO_LINE_AUTO,"Button",BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,160,66,50,10
+    CONTROL         "Windows (CR LF)",IDC_RADIO_LINE_WINDOW,"Button",BS_AUTORADIOBUTTON,218,66,65,10
     CONTROL         "Unix (LF)",IDC_RADIO_LINE_UNIX,"Button",BS_AUTORADIOBUTTON,160,78,50,10
-    CONTROL         "Macintosh (LF)",IDC_RADIO_LINE_MAC,"Button",BS_AUTORADIOBUTTON,218,78,65,10
-    GROUPBOX        " Line formatting: ",IDC_STATIC,153,97,140,43
-    CONTROL         "Default formatting",IDC_RADIO_LINEFORMAT_DEFAULT,"Button",BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,160,111,110,10
-    CONTROL         "Format arrays on a single line",IDC_RADIO_LINEFORMAT_SINGLE,
+    CONTROL         "Macintosh (CR)",IDC_RADIO_LINE_MAC,"Button",BS_AUTORADIOBUTTON,218,78,65,10
+    GROUPBOX        " 行格式化：",IDC_STATIC,153,97,140,43
+    CONTROL         "默认格式化",IDC_RADIO_LINEFORMAT_DEFAULT,"Button",BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,160,111,110,10
+    CONTROL         "将数组格式化为单行",IDC_RADIO_LINEFORMAT_SINGLE,
                     "Button",BS_AUTORADIOBUTTON,160,123,110,10
     PUSHBUTTON      "",IDC_HOR_BAR_BOTTOM,0,145,300,1,WS_DISABLED,WS_EX_STATICEDGE
-    DEFPUSHBUTTON   "OK",IDOK,185,151,50,14
-    PUSHBUTTON      "Cancel",IDCANCEL,243,151,50,14
+    DEFPUSHBUTTON   "确定",IDOK,185,151,50,14
+    PUSHBUTTON      "取消",IDCANCEL,243,151,50,14
 END
 
 
@@ -183,21 +183,21 @@ VS_VERSION_INFO VERSIONINFO
 BEGIN
     BLOCK "StringFileInfo"
     BEGIN
-        BLOCK "040904b0"
+        BLOCK "080404b0"
         BEGIN
             VALUE "CompanyName", "NPP-JSONViewer"
-            VALUE "FileDescription", "Notepad++ plugin for JSON file"
+            VALUE "FileDescription", "Notepad++ JSON 文件查看插件"
             VALUE "FileVersion", "2.2.0.0"
             VALUE "InternalName", "JSONViewer"
-            VALUE "LegalCopyright", "Copyright � 2026"
+            VALUE "LegalCopyright", "版权所有 © 2026"
             VALUE "OriginalFilename", "NPPJSONViewer.dll"
-            VALUE "ProductName", "JSONViewer plugin for Notepad++"
+            VALUE "ProductName", "Notepad++ JSON 查看器插件"
             VALUE "ProductVersion", "2.2.0.0"
         END
     END
     BLOCK "VarFileInfo"
     BEGIN
-        VALUE "Translation", 0x409, 1200
+        VALUE "Translation", 0x804, 1200
     END
 END
 
@@ -232,14 +232,14 @@ IDR_TREEITEM_MENU MENU
 BEGIN
     POPUP ""
     BEGIN
-        MENUITEM "Copy",                        IDM_COPY_TREEITEM
+        MENUITEM "复制",                        IDM_COPY_TREEITEM
         MENUITEM SEPARATOR
-        MENUITEM "Copy Node Name",              IDM_COPY_NODENAME
-        MENUITEM "Copy Node Value",             IDM_COPY_NODEVALUE
-        MENUITEM "Copy Node Path",              IDM_COPY_NODEPATH
+        MENUITEM "复制节点名称",              IDM_COPY_NODENAME
+        MENUITEM "复制节点值",             IDM_COPY_NODEVALUE
+        MENUITEM "复制节点路径",              IDM_COPY_NODEPATH
         MENUITEM SEPARATOR
-        MENUITEM "Expand All",                  IDM_EXPANDALL
-        MENUITEM "Collapse All",                IDM_COLLAPSEALL
+        MENUITEM "全部展开",                  IDM_EXPANDALL
+        MENUITEM "全部折叠",                IDM_COLLAPSEALL
     END
 END
 
@@ -261,7 +261,7 @@ IDI_ICON_VALIDATE       ICON                    "res\\validate.ico"
 
 IDI_ICON_TOOLBAR        ICON                    "res\\Icon.ico"
 
-#endif    // English (United States) resources
+#endif    // Chinese (Simplified) resources
 /////////////////////////////////////////////////////////////////////////////
 
 
@@ -270,7 +270,7 @@ IDI_ICON_TOOLBAR        ICON                    "res\\Icon.ico"
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENN)
 LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_INDIA
-#pragma code_page(1252)
+#pragma code_page(65001)
 
 #ifdef APSTUDIO_INVOKED
 /////////////////////////////////////////////////////////////////////////////
