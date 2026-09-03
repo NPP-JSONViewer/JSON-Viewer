@@ -53,6 +53,7 @@ public:
     void HandleFileClosed(uptr_t bufferId);
     void HandleFileOpened();
     void SyncBufferId();
+    void RestoreCurrentTabTree();
     void UpdateTitle();
 
     HTREEITEM InsertToTree(HTREEITEM parent, const std::string& text) override;
@@ -60,7 +61,11 @@ public:
     void      AppendNodeCount(HTREEITEM node, unsigned elementCount, bool bArray) override;
 
 private:
-    void DrawJsonTree(bool bPreserveExpansion = false);
+    // bSilent suppresses the modal error box reported for an unparsable
+    // document; the error is only shown as a node inside the tree. It is used
+    // when the tree is drawn on its own (opening a file), where a modal dialog
+    // would interrupt the user who never asked for it.
+    void DrawJsonTree(bool bPreserveExpansion = false, bool bSilent = false);
     void ReDrawJsonTree(bool bForce = false, bool bPreserveExpansion = false);
     void HighlightAsJson(bool bForcefully = false) const;
     auto PopulateTreeUsingSax(HTREEITEM tree_root, const std::string& jsonText) -> std::optional<std::wstring>;

@@ -368,6 +368,17 @@ void JsonViewDlg::SyncBufferId()
     m_nCurrentBufferId = GetCurrentBufferId();
 }
 
+void JsonViewDlg::RestoreCurrentTabTree()
+{
+    // A tab restored from a previous session never sees NPPN_BUFFERACTIVATED,
+    // so the "draw tree on open" path has to be reachable from NPPN_READY too.
+    if (m_nCurrentBufferId == 0)
+        return;
+
+    if (isCreated() && isVisible())
+        RestoreTabState(m_nCurrentBufferId);
+}
+
 void JsonViewDlg::ValidateJson()
 {
     UpdateTitle();
@@ -402,7 +413,7 @@ void JsonViewDlg::ValidateJson()
     DrawJsonTree();
 }
 
-void JsonViewDlg::DrawJsonTree(bool bPreserveExpansion)
+void JsonViewDlg::DrawJsonTree(bool bPreserveExpansion, bool bSilent)
 {
     UpdateTitle();
 
@@ -429,7 +440,7 @@ void JsonViewDlg::DrawJsonTree(bool bPreserveExpansion)
     {
         m_pTreeView->InsertNode(JSON_ERR_PARSE, NULL, rootNode);
 
-        if (IsMultiSelection(selectedData))
+        if (IsMultiSelection(selectedData) && !bSilent)
         {
             ShowMessage(JSON_INFO_TITLE, JSON_ERR_MULTI_SELECTION, MB_OK | MB_ICONINFORMATION);
         }
@@ -443,7 +454,7 @@ void JsonViewDlg::DrawJsonTree(bool bPreserveExpansion)
             // Later on second launch, don't show the error message as this could be some text file
             // If it is real json file but has some error, then there must be more than 1 node exist.
 
-            if (!m_IsNppReady && m_pTreeView->GetNodeCount() <= 1)
+            if (bSilent || (!m_IsNppReady && m_pTreeView->GetNodeCount() <= 1))
             {
                 m_pTreeView->InsertNode(JSON_ERR_VALIDATE, NULL, rootNode);
             }
@@ -829,6 +840,21 @@ void JsonViewDlg::RestoreTabState(uptr_t bufferId)
     auto find = m_tabSnapshots.find(bufferId);
     if (find == m_tabSnapshots.end() || find->second.roots.empty())
     {
+        // Nothing has ever been drawn for this tab. With "draw tree on open"
+        // the tree of a json document is drawn once, here and now; from then
+        // on the snapshot exists and switching back never parses again.
+        if (m_pSetting->bDrawOnOpen)
+        {
+            m_pEditor->RefreshViewHandle();
+            if (m_pEditor->IsJsonFile())
+            {
+                // Drawn on the plugin's own initiative: never interrupt the
+                // user with a modal dialog, report the error in the tree only.
+                DrawJsonTree(false, true);    // stores the snapshot on its way out
+                return;
+            }
+        }
+
         ShowEmptyTree();
         return;
     }

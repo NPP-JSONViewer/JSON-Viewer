@@ -101,6 +101,9 @@ void NppJsonPlugin::ProcessNotification(const SCNotification* notifyCode)
         if (m_pJsonViewDlg && !m_bAboutToClose)
         {
             m_pJsonViewDlg->SyncBufferId();
+
+            if (m_pJsonViewDlg->isVisible())
+                m_pJsonViewDlg->RestoreCurrentTabTree();
         }
         m_bNppReady = true;
         break;

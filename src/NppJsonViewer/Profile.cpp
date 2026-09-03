@@ -100,6 +100,9 @@ bool ProfileSetting::GetSettings(Setting& info) const
     bRetVal = bRetVal && ReadValue(STR_INI_OTHER_SEC, STR_INI_OTHER_TREE_ZOOM, nVal, info.nTreeZoom);
     if (bRetVal)
         info.nTreeZoom = nVal;
+    bRetVal = bRetVal && ReadValue(STR_INI_OTHER_SEC, STR_INI_OTHER_DRAW_ON_OPEN, nVal, info.bDrawOnOpen);
+    if (bRetVal)
+        info.bDrawOnOpen = static_cast<bool>(nVal);
 
     bRetVal = bRetVal && ReadValue(STR_INI_OTHER_SEC, STR_INI_OTHER_AUTO_FORMAT, nVal, info.bAutoFormat);
     if (bRetVal)
@@ -145,6 +148,7 @@ bool ProfileSetting::SetSettings(const Setting& info) const
     writeIfChanged(current.indent.len, info.indent.len, STR_INI_FORMATTING_SEC, STR_INI_FORMATTING_INDENTCOUNT);
     writeIfChanged(current.bFollowCurrentTab, info.bFollowCurrentTab, STR_INI_OTHER_SEC, STR_INI_OTHER_FOLLOW_TAB);
     writeIfChanged(current.nTreeZoom, info.nTreeZoom, STR_INI_OTHER_SEC, STR_INI_OTHER_TREE_ZOOM);
+    writeIfChanged(current.bDrawOnOpen, info.bDrawOnOpen, STR_INI_OTHER_SEC, STR_INI_OTHER_DRAW_ON_OPEN);
     writeIfChanged(current.bAutoFormat, info.bAutoFormat, STR_INI_OTHER_SEC, STR_INI_OTHER_AUTO_FORMAT);
     writeIfChanged(current.bUseJsonHighlight, info.bUseJsonHighlight, STR_INI_OTHER_SEC, STR_INI_OTHER_USE_HIGHLIGHT);
     writeIfChanged(current.parseOptions.bIgnoreComment, info.parseOptions.bIgnoreComment, STR_INI_OTHER_SEC, STR_INI_OTHER_IGNORE_COMMENT);
