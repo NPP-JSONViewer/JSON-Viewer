@@ -156,6 +156,7 @@
     <ClCompile Include="..\..\src\NppJsonViewer\Profile.cpp" />
     <ClCompile Include="..\..\src\NppJsonViewer\RapidJsonHandler.cpp" />
     <ClCompile Include="..\..\src\NppJsonViewer\TreeExpansion.cpp" />
+    <ClCompile Include="..\..\src\NppJsonViewer\TreeState.cpp" />
     <ClCompile Include="JsonCompressTest.cpp" />
     <ClCompile Include="JsonFormatTest.cpp" />
     <ClCompile Include="JsonHandlerTest.cpp" />
@@ -165,6 +166,7 @@
     <ClCompile Include="ProfileTest.cpp" />
     <ClCompile Include="StringHelperTest.cpp" />
     <ClCompile Include="TreeExpansionTest.cpp" />
+    <ClCompile Include="TreeStateTest.cpp" />
     <ClCompile Include="UtilityTest.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -177,6 +179,7 @@
     <ClInclude Include="..\..\src\NppJsonViewer\Profile.h" />
     <ClInclude Include="..\..\src\NppJsonViewer\RapidJsonHandler.h" />
     <ClInclude Include="..\..\src\NppJsonViewer\TreeExpansion.h" />
+    <ClInclude Include="..\..\src\NppJsonViewer\TreeState.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

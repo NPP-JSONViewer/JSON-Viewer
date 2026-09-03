@@ -198,6 +198,7 @@
     <ClCompile Include="ShortcutCommand.cpp" />
     <ClCompile Include="SliderCtrl.cpp" />
     <ClCompile Include="TreeExpansion.cpp" />
+    <ClCompile Include="TreeState.cpp" />
     <ClCompile Include="TreeViewCtrl.cpp" />
     <ClCompile Include="npp_include\DockingFeature\StaticDialog.cpp" />
   </ItemGroup>
@@ -219,6 +220,7 @@
     <ClInclude Include="StopWatch.h" />
     <ClInclude Include="TrackingStream.h" />
     <ClInclude Include="TreeExpansion.h" />
+    <ClInclude Include="TreeState.h" />
     <ClInclude Include="TreeHandler.h" />
     <ClInclude Include="TreeViewCtrl.h" />
     <ClInclude Include="npp_include\DockingFeature\Docking.h" />

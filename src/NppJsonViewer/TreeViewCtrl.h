@@ -26,6 +26,7 @@ public:
 
     auto InitTree() -> HTREEITEM;
     auto InsertNode(const std::wstring& text, LPARAM lparam, HTREEITEM parentNode) -> HTREEITEM;
+    auto InsertNodeAfter(HTREEITEM hAfter, const std::wstring& text, LPARAM lparam, HTREEITEM parentNode) -> HTREEITEM;
     void UpdateNodeText(HTREEITEM node, const std::wstring& text);
     auto GetNodeCount() const -> unsigned int;
 

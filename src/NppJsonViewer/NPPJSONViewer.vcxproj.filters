@@ -60,6 +60,9 @@
     <ClCompile Include="TreeExpansion.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="TreeState.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="TreeViewCtrl.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -114,6 +117,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="TreeExpansion.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TreeState.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="TreeHandler.h">

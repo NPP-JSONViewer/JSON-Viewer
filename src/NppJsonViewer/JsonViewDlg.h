@@ -2,6 +2,7 @@
 
 #include <string>
 #include <memory>
+#include <unordered_map>
 #include <vector>
 #include <optional>
 
@@ -15,6 +16,7 @@
 #include "JsonNode.h"
 #include "TreeHandler.h"
 #include "TreeExpansion.h"
+#include "TreeState.h"
 
 
 class JsonViewDlg
@@ -44,9 +46,13 @@ public:
 
     void ShowDlg(bool bShow);
     void FormatJson();
+    auto FormatJsonDocument() -> bool;    // true = document handled, caller may redraw the tree
     void CompressJson();
     void SortJsonByKey();
-    void HandleTabActivated();
+    void HandleTabActivated(uptr_t activatedBufferId);
+    void HandleFileClosed(uptr_t bufferId);
+    void HandleFileOpened();
+    void SyncBufferId();
     void UpdateTitle();
 
     HTREEITEM InsertToTree(HTREEITEM parent, const std::string& text) override;
@@ -55,7 +61,7 @@ public:
 
 private:
     void DrawJsonTree(bool bPreserveExpansion = false);
-    void ReDrawJsonTree(bool bForce = false);
+    void ReDrawJsonTree(bool bForce = false, bool bPreserveExpansion = false);
     void HighlightAsJson(bool bForcefully = false) const;
     auto PopulateTreeUsingSax(HTREEITEM tree_root, const std::string& jsonText) -> std::optional<std::wstring>;
 
@@ -84,6 +90,19 @@ private:
     // Resolve a key path (relative to the tree root) back to a node.
     // Returns nullptr when any level of the path cannot be found.
     auto FindNodeByPath(const std::vector<std::wstring>& path) const -> HTREEITEM;
+
+    // Per-tab snapshots. The tree control is a single shared window, so leaving
+    // a tab means capturing what it looked like; coming back replays the
+    // snapshot instead of parsing the document again.
+    void CaptureCurrentTabState();
+    void RestoreTabState(uptr_t bufferId);
+    void ShowEmptyTree();
+
+    auto CaptureTreeState() const -> TreeState;
+    void ApplyTreeState(const TreeState& state);
+    void SaveTreeSnapshot();
+
+    auto GetCurrentBufferId() const -> uptr_t;
 
     auto GetTitleFileName() const -> std::wstring;
     void PrepareButtons();
@@ -147,4 +166,8 @@ private:
     std::unique_ptr<TreeViewCtrl>    m_pTreeView = nullptr;
     std::unique_ptr<SliderCtrl>      m_pTreeViewZoom = nullptr;
     std::shared_ptr<Setting>         m_pSetting  = nullptr;
+
+    // Per-tab (buffer) tree snapshots: buffer id -> captured tree state
+    std::unordered_map<uptr_t, TreeState> m_tabSnapshots;
+    uptr_t                                m_nCurrentBufferId = 0;
 };
