@@ -696,12 +696,13 @@ void JsonViewDlg::AdjustDocPanelSize(int nWidth, int nHeight)
 
     // Pixels kept below the node path box. The dialog template reserves a small
     // margin; fall back to 2 px when the template is already tighter than that.
-    // (RECT members are LONG: cast so std::max deduces a single type.)
-    const int bottomMargin  = std::max(2, static_cast<int>(m_lfInitialClientHeight) - static_cast<int>(m_rcInitNodePath.bottom));
-    const int gapTreeToPath = std::max(1, static_cast<int>(m_rcInitNodePath.top) - static_cast<int>(m_rcInitTree.bottom));
+    // (RECT members are LONG: cast so (std::max) deduces a single type.
+    // The parens also defeat the windows.h min/max macros on MSVC.)
+    const int bottomMargin  = (std::max)(2, static_cast<int>(m_lfInitialClientHeight) - static_cast<int>(m_rcInitNodePath.bottom));
+    const int gapTreeToPath = (std::max)(1, static_cast<int>(m_rcInitNodePath.top) - static_cast<int>(m_rcInitTree.bottom));
 
     const int nodePathTop = nHeight - bottomMargin - height(m_rcInitNodePath);
-    const int treeHeight  = std::max(20, nodePathTop - gapTreeToPath - static_cast<int>(m_rcInitTree.top));
+    const int treeHeight  = (std::max)(20, nodePathTop - gapTreeToPath - static_cast<int>(m_rcInitTree.top));
 
     // search box stretches to the right, the search button slides along with it
     ::SetWindowPos(::GetDlgItem(_hSelf, IDC_EDT_SEARCH), NULL,
