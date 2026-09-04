@@ -686,8 +686,7 @@ void JsonViewDlg::AdjustDocPanelSize(int nWidth, int nHeight)
     // Every control is therefore positioned from the *current* client size
     // (template rect + unscaled delta), which also makes repeated resizes
     // idempotent instead of accumulated.
-    const int addWidth  = nWidth  - m_lfInitialClientWidth;
-    const int addHeight = nHeight - m_lfInitialClientHeight;
+    const int addWidth = nWidth - m_lfInitialClientWidth;
 
     const UINT flags = SWP_NOZORDER | SWP_NOOWNERZORDER | SWP_NOACTIVATE | SWP_NOCOPYBITS | SWP_SHOWWINDOW;
 
