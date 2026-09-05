@@ -1,8 +1,11 @@
 #pragma once
-#include "DockingFeature/StaticDialog.h"
-#include "Define.h"
+
 #include <string>
 #include <memory>
+
+#include "DockingFeature/StaticDialog.h"
+#include "Define.h"
+
 
 class SettingsDlg : public StaticDialog
 {

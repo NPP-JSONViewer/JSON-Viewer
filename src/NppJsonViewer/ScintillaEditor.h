@@ -1,8 +1,10 @@
 #pragma once
-#include "Define.h"
+
 #include <string>
 #include <tuple>
 #include <variant>
+
+#include "Define.h"
 
 enum class ScintillaCode : short
 {

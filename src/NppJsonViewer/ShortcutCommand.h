@@ -1,6 +1,9 @@
 #pragma once
-#include "Define.h"
+
 #include <memory>
+
+#include "Define.h"
+
 
 class ShortcutCommand
 {

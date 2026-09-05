@@ -1,9 +1,11 @@
+#include <shlobj.h>
+#include <memory>
+
 #include "Profile.h"
 #include "Utility.h"
 #include "Define.h"
 #include "StringHelper.h"
-#include <shlobj.h>
-#include <memory>
+
 
 Profile::Profile(const std::wstring& path)
     : m_ProfileFilePath(path)
@@ -123,20 +125,30 @@ bool ProfileSetting::GetSettings(Setting& info) const
 
 bool ProfileSetting::SetSettings(const Setting& info) const
 {
+    Setting current;
+
+    if (!GetSettings(current))
+        return false;
+
     bool bRetVal = true;
 
-    bRetVal = bRetVal && WriteValue(STR_INI_FORMATTING_SEC, STR_INI_FORMATTING_EOL, static_cast<int>(info.lineEnding));
-    bRetVal = bRetVal && WriteValue(STR_INI_FORMATTING_SEC, STR_INI_FORMATTING_LINE, static_cast<int>(info.lineFormat));
-    bRetVal = bRetVal && WriteValue(STR_INI_FORMATTING_SEC, STR_INI_FORMATTING_INDENT, static_cast<int>(info.indent.style));
-    bRetVal = bRetVal && WriteValue(STR_INI_FORMATTING_SEC, STR_INI_FORMATTING_INDENTCOUNT, info.indent.len);
+    auto writeIfChanged = [&](const auto& oldValue, const auto& newValue, const std::wstring& section, const std::wstring& key)
+    {
+        if (oldValue != newValue)
+            bRetVal = bRetVal && WriteValue(section, key, static_cast<int>(newValue));
+    };
 
-    bRetVal = bRetVal && WriteValue(STR_INI_OTHER_SEC, STR_INI_OTHER_FOLLOW_TAB, info.bFollowCurrentTab);
-    bRetVal = bRetVal && WriteValue(STR_INI_OTHER_SEC, STR_INI_OTHER_TREE_ZOOM, info.nTreeZoom);
-    bRetVal = bRetVal && WriteValue(STR_INI_OTHER_SEC, STR_INI_OTHER_AUTO_FORMAT, info.bAutoFormat);
-    bRetVal = bRetVal && WriteValue(STR_INI_OTHER_SEC, STR_INI_OTHER_USE_HIGHLIGHT, info.bUseJsonHighlight);
-    bRetVal = bRetVal && WriteValue(STR_INI_OTHER_SEC, STR_INI_OTHER_IGNORE_COMMENT, info.parseOptions.bIgnoreComment);
-    bRetVal = bRetVal && WriteValue(STR_INI_OTHER_SEC, STR_INI_OTHER_IGNORE_COMMA, info.parseOptions.bIgnoreTrailingComma);
-    bRetVal = bRetVal && WriteValue(STR_INI_OTHER_SEC, STR_INI_OTHER_REPLACE_UNDEFINED, info.parseOptions.bReplaceUndefined);
+    writeIfChanged(current.lineEnding, info.lineEnding, STR_INI_FORMATTING_SEC, STR_INI_FORMATTING_EOL);
+    writeIfChanged(current.lineFormat, info.lineFormat, STR_INI_FORMATTING_SEC, STR_INI_FORMATTING_LINE);
+    writeIfChanged(current.indent.style, info.indent.style, STR_INI_FORMATTING_SEC, STR_INI_FORMATTING_INDENT);
+    writeIfChanged(current.indent.len, info.indent.len, STR_INI_FORMATTING_SEC, STR_INI_FORMATTING_INDENTCOUNT);
+    writeIfChanged(current.bFollowCurrentTab, info.bFollowCurrentTab, STR_INI_OTHER_SEC, STR_INI_OTHER_FOLLOW_TAB);
+    writeIfChanged(current.nTreeZoom, info.nTreeZoom, STR_INI_OTHER_SEC, STR_INI_OTHER_TREE_ZOOM);
+    writeIfChanged(current.bAutoFormat, info.bAutoFormat, STR_INI_OTHER_SEC, STR_INI_OTHER_AUTO_FORMAT);
+    writeIfChanged(current.bUseJsonHighlight, info.bUseJsonHighlight, STR_INI_OTHER_SEC, STR_INI_OTHER_USE_HIGHLIGHT);
+    writeIfChanged(current.parseOptions.bIgnoreComment, info.parseOptions.bIgnoreComment, STR_INI_OTHER_SEC, STR_INI_OTHER_IGNORE_COMMENT);
+    writeIfChanged(current.parseOptions.bIgnoreTrailingComma, info.parseOptions.bIgnoreTrailingComma, STR_INI_OTHER_SEC, STR_INI_OTHER_IGNORE_COMMA);
+    writeIfChanged(current.parseOptions.bReplaceUndefined, info.parseOptions.bReplaceUndefined, STR_INI_OTHER_SEC, STR_INI_OTHER_REPLACE_UNDEFINED);
 
     return bRetVal;
 }

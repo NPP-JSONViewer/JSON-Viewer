@@ -942,11 +942,7 @@ void JsonViewDlg::PersistZoom(int zoomPercentage)
     if (zoomPercentage < zoomRange.m_nMinZoom || zoomPercentage > zoomRange.m_nMaxZoom)
         return;
 
-    if (m_pSetting->nTreeZoom != zoomPercentage)
-    {
-        m_pSetting->nTreeZoom = zoomPercentage;
-        ProfileSetting(m_pSetting->configPath).SetSettings(*m_pSetting);
-    }
+    m_pSetting->nTreeZoom = zoomPercentage;
 }
 
 void JsonViewDlg::HandleZoomOnScroll(WPARAM wParam) const

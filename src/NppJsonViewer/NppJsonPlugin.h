@@ -1,7 +1,8 @@
-#pragma
+#pragma once
 
 #include <string>
 #include <memory>
+
 #include "Define.h"
 #include "Notepad_plus_msgs.h"
 #include "ShortcutCommand.h"

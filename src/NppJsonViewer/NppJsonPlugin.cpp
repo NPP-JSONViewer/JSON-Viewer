@@ -1,7 +1,8 @@
+#include <tchar.h>
+
 #include "NppJsonPlugin.h"
 #include "resource.h"
 #include "Profile.h"
-#include <tchar.h>
 
 NppJsonPlugin* NppJsonPlugin::Callback::m_pNppJsonPlugin = nullptr;
 
@@ -16,7 +17,13 @@ void NppJsonPlugin::PluginInit(HMODULE hModule)
     m_hModule = hModule;
 }
 
-void NppJsonPlugin::PluginCleanup() {}
+void NppJsonPlugin::PluginCleanup()
+{
+    if (m_pSetting)
+    {
+        ProfileSetting(m_configPath).SetSettings(*m_pSetting);
+    }
+}
 
 void NppJsonPlugin::SetInfo(const NppData& nppData)
 {
@@ -169,8 +176,7 @@ void NppJsonPlugin::ConstructSetting()
 {
     if (!m_pSetting)
     {
-        m_pSetting             = std::make_shared<Setting>();
-        m_pSetting->configPath = m_configPath;
+        m_pSetting = std::make_shared<Setting>();
         ProfileSetting(m_configPath).GetSettings(*m_pSetting);
     }
 }
