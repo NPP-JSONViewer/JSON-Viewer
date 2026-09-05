@@ -1,4 +1,6 @@
 #pragma once
+#include <string>
+
 #include "PluginInterface.h"
 
 // Define the number of plugin commands here
@@ -64,6 +66,7 @@ const TCHAR STR_INI_FORMATTING_INDENTCOUNT[] = TEXT("INDENTATION_COUNT");
 
 const TCHAR STR_INI_OTHER_SEC[]               = TEXT("Others");
 const TCHAR STR_INI_OTHER_FOLLOW_TAB[]        = TEXT("FOLLOW_TAB");
+const TCHAR STR_INI_OTHER_TREE_ZOOM[]         = TEXT("TREE_ZOOM");
 const TCHAR STR_INI_OTHER_AUTO_FORMAT[]       = TEXT("AUTO_FORMAT");
 const TCHAR STR_INI_OTHER_USE_HIGHLIGHT[]     = TEXT("USE_JSON_HIGHLIGHT");
 const TCHAR STR_INI_OTHER_IGNORE_COMMENT[]    = TEXT("IGNORE_COMMENT");
@@ -117,4 +120,7 @@ struct Setting
     bool         bAutoFormat       = false;
     bool         bUseJsonHighlight = true;
     ParseOptions parseOptions {};
+    int          nTreeZoom         = 100;    // Tree view font zoom in percent (80..250)
+
+    std::wstring configPath;    // Full path of JSONViewer.ini (not persisted)
 };

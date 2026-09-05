@@ -95,6 +95,7 @@ private:
     void SetTreeViewZoom(double dwZoomFactor) const;
     void UpdateUIOnZoom(int zoomPercentage) const;
     void HandleZoomOnScroll(WPARAM wParam) const;
+    void PersistZoom(int zoomPercentage);
 
     void HandleTreeEvents(LPARAM lParam) const;
 

@@ -169,7 +169,8 @@ void NppJsonPlugin::ConstructSetting()
 {
     if (!m_pSetting)
     {
-        m_pSetting = std::make_shared<Setting>();
+        m_pSetting             = std::make_shared<Setting>();
+        m_pSetting->configPath = m_configPath;
         ProfileSetting(m_configPath).GetSettings(*m_pSetting);
     }
 }

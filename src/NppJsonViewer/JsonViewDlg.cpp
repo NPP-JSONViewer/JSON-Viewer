@@ -936,6 +936,19 @@ void JsonViewDlg::UpdateUIOnZoom(int zoomPercentage) const
     SetTreeViewZoom(zoomFactor);
 }
 
+void JsonViewDlg::PersistZoom(int zoomPercentage)
+{
+    const auto& zoomRange = m_pTreeViewZoom->GetRange();
+    if (zoomPercentage < zoomRange.m_nMinZoom || zoomPercentage > zoomRange.m_nMaxZoom)
+        return;
+
+    if (m_pSetting->nTreeZoom != zoomPercentage)
+    {
+        m_pSetting->nTreeZoom = zoomPercentage;
+        ProfileSetting(m_pSetting->configPath).SetSettings(*m_pSetting);
+    }
+}
+
 void JsonViewDlg::HandleZoomOnScroll(WPARAM wParam) const
 {
     int pos   = GetZoomLevel();    // Current zoom level
@@ -1101,6 +1114,10 @@ INT_PTR JsonViewDlg::run_dlgProc(UINT message, WPARAM wParam, LPARAM lParam)
         m_pTreeView->OnInit(getHSelf(), IDC_TREE);
         m_pTreeViewZoom->OnInit(getHSelf(), IDC_ZOOM_SLIDER, IDC_ZOOM_PERCENT);
 
+        // Apply the zoom level restored from JSONViewer.ini
+        const auto& zoomRange = m_pTreeViewZoom->GetRange();
+        UpdateUIOnZoom(std::clamp(m_pSetting->nTreeZoom, zoomRange.m_nMinZoom, zoomRange.m_nMaxZoom));
+
         PrepareButtons();
 
         // Set default node path as JSON
@@ -1182,6 +1199,7 @@ INT_PTR JsonViewDlg::run_dlgProc(UINT message, WPARAM wParam, LPARAM lParam)
         if (GetKeyState(VK_CONTROL) & 0x8000)
         {
             HandleZoomOnScroll(wParam);
+            PersistZoom(GetZoomLevel());
             return TRUE;
         }
         return FALSE;
@@ -1193,8 +1211,17 @@ INT_PTR JsonViewDlg::run_dlgProc(UINT message, WPARAM wParam, LPARAM lParam)
 
         if (reinterpret_cast<HWND>(lParam) == hSlider)
         {
+            // While the thumb is being dragged (TB_THUMBTRACK) the position
+            // changes continuously, so only persist once the gesture is over.
+            // WM_HSCROLL carries the notification code in LOWORD(wParam);
+            // HIWORD is the thumb position itself.
+            const bool bDragging = (LOWORD(wParam) == TB_THUMBTRACK);
+
             int pos = m_pTreeViewZoom->GetPosition();
             UpdateUIOnZoom(pos);
+
+            if (!bDragging)
+                PersistZoom(pos);
 
             return TRUE;
         }
