@@ -1,7 +1,8 @@
+#include "Profile.h"
+
 #include <shlobj.h>
 #include <memory>
 
-#include "Profile.h"
 #include "Utility.h"
 #include "Define.h"
 #include "StringHelper.h"

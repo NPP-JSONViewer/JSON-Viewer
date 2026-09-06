@@ -1,7 +1,7 @@
+#include "JsonHandler.h"
+
 #include <vector>
 #include <algorithm>
-
-#include "JsonHandler.h"
 
 namespace rj = rapidjson;
 

@@ -1,6 +1,7 @@
+#include "NppJsonPlugin.h"
+
 #include <tchar.h>
 
-#include "NppJsonPlugin.h"
 #include "resource.h"
 #include "Profile.h"
 

@@ -1,4 +1,5 @@
 #include "ScintillaEditor.h"
+
 #include <cassert>
 #include <memory>
 
