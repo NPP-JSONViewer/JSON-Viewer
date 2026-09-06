@@ -1,9 +1,11 @@
 #include "SettingsDlg.h"
+
+#include <commctrl.h>
+#include <Uxtheme.h>
+
 #include "resource.h"
 #include "Utility.h"
 #include "Profile.h"
-#include <commctrl.h>
-#include <Uxtheme.h>
 
 
 SettingsDlg::SettingsDlg(HINSTANCE hInstance, HWND hParent, int nCmdId, const std::wstring& configPath, std::shared_ptr<Setting>& pSetting)

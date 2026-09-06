@@ -37,7 +37,7 @@ private:
     class Callback
     {
         friend class NppJsonPlugin;
-        static NppJsonPlugin* m_pNppJsonPlugin;
+        inline static NppJsonPlugin* m_pNppJsonPlugin = nullptr;
 
     public:
         Callback()  = default;

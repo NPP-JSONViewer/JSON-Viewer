@@ -1,10 +1,10 @@
+#include "NppJsonPlugin.h"
+
 #include <tchar.h>
 
-#include "NppJsonPlugin.h"
 #include "resource.h"
 #include "Profile.h"
 
-NppJsonPlugin* NppJsonPlugin::Callback::m_pNppJsonPlugin = nullptr;
 
 NppJsonPlugin::NppJsonPlugin()
     : m_shortcutCommands(nTotalCommandCount)

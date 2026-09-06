@@ -1,10 +1,12 @@
 #include "AboutDlg.h"
+
+#include <string>
+#include <commctrl.h>
+
 #include "resource.h"
 #include "Utility.h"
 #include "StringHelper.h"
 #include "Define.h"
-#include <string>
-#include <commctrl.h>
 
 
 AboutDlg::AboutDlg(HINSTANCE hInstance, HWND hParent, int nCmdId)

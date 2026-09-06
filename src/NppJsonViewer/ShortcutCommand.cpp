@@ -1,4 +1,5 @@
 #include "ShortcutCommand.h"
+
 #include <tchar.h>
 
 ShortcutCommand::ShortcutCommand(int nCommandCount)
