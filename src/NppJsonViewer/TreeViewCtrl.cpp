@@ -49,6 +49,35 @@ auto TreeViewCtrl::InsertNode(const std::wstring& text, LPARAM lparam, HTREEITEM
     return item;
 }
 
+// Inserts a node right after hAfter (or as the first child when hAfter is null).
+// Needed to rebuild a tree in a specific sibling order when restoring a snapshot.
+auto TreeViewCtrl::InsertNodeAfter(HTREEITEM hAfter, const std::wstring& text, LPARAM lparam, HTREEITEM parentNode) -> HTREEITEM
+{
+    TV_INSERTSTRUCT tvInsert {};
+
+    tvInsert.hParent      = (parentNode == TVI_ROOT) ? NULL : parentNode;
+    tvInsert.hInsertAfter = hAfter ? hAfter : TVI_FIRST;
+
+    if (text.length() + 1 > m_nMaxNodeTextLength)
+        m_nMaxNodeTextLength = text.length() + 1;
+
+    tvInsert.item.mask    = TVIF_HANDLE | TVIF_TEXT | TVIF_PARAM;
+    tvInsert.item.pszText = const_cast<LPTSTR>(text.c_str());
+    tvInsert.item.lParam  = lparam;
+
+    return reinterpret_cast<HTREEITEM>(SendDlgItemMessage(m_hParent, m_nCtrlID, TVM_INSERTITEM, 0, reinterpret_cast<LPARAM>(&tvInsert)));
+}
+
+auto TreeViewCtrl::GetChildItem(HTREEITEM node) const -> HTREEITEM
+{
+    return TreeView_GetNextItem(m_hTree, node, TVGN_CHILD);
+}
+
+auto TreeViewCtrl::GetNextSibling(HTREEITEM node) const -> HTREEITEM
+{
+    return TreeView_GetNextItem(m_hTree, node, TVGN_NEXT);
+}
+
 void TreeViewCtrl::UpdateNodeText(HTREEITEM node, const std::wstring& text)
 {
     auto tvi = std::make_unique<TVITEMW>();

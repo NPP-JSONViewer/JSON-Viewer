@@ -109,6 +109,8 @@ BEGIN
     CONTROL         "Use json highlighting",IDC_CHK_JSON_HIGHLIGHT,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,5,59,140,10
     CONTROL         "Replace value 'undefined' with 'null'",IDC_CHK_REPLACE_UNDEFINED,
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,5,72,140,10
+    CONTROL         "Draw tree when a json file is opened",IDC_CHK_DRAW_ON_OPEN,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,5,85,140,10
     GROUPBOX        " Indentation: ",IDC_STATIC,153,7,140,43
     CONTROL         "Auto detect",IDC_RADIO_INDENT_AUTO,"Button",BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,160,21,50,10
     CONTROL         "Use tab",IDC_RADIO_INDENT_TAB,"Button",BS_AUTORADIOBUTTON,240,21,50,10

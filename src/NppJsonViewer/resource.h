@@ -44,6 +44,7 @@
 #define IDC_CHK_REPLACE_UNDEFINED       1033
 #define IDC_ZOOM_SLIDER                 1034
 #define IDC_ZOOM_PERCENT                1035
+#define IDC_CHK_DRAW_ON_OPEN            1036
 #define IDM_COPY_TREEITEM               40001
 #define IDM_COPY_NODENAME               40002
 #define IDM_COPY_NODEVALUE              40003
