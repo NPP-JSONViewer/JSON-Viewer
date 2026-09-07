@@ -1,6 +1,7 @@
 #include "JsonViewDlg.h"
 
 #include <format>
+#include <functional>
 #include <regex>
 
 #include "Define.h"
@@ -334,13 +335,20 @@ void JsonViewDlg::ValidateJson()
     DrawJsonTree();
 }
 
-void JsonViewDlg::DrawJsonTree()
+void JsonViewDlg::DrawJsonTree(bool bPreserveExpansion)
 {
     UpdateTitle();
 
     // Disable all buttons and treeView
     std::vector<DWORD> ctrls = {IDC_BTN_REFRESH, IDC_BTN_VALIDATE, IDC_BTN_FORMAT, IDC_BTN_SEARCH, IDC_EDT_SEARCH};
     EnableControls(ctrls, false);
+
+    // Capture the expansion/selection state before the tree is thrown away, so
+    // that it can be re-applied onto the freshly built one.
+    TreeExpansionState expState;
+    const bool         bHasCurrentTree = m_pTreeView->GetRoot() && m_pTreeView->GetNodeCount() > 1;
+    if (bPreserveExpansion && bHasCurrentTree)
+        expState = CaptureExpansionState();
 
     HTREEITEM rootNode = nullptr;
     rootNode           = m_pTreeView->InitTree();
@@ -380,6 +388,11 @@ void JsonViewDlg::DrawJsonTree()
     }
 
     m_pTreeView->Expand(rootNode);
+
+    // Re-apply the state of the previous tree. Paths that no longer exist
+    // (the document changed in the meantime) are silently dropped.
+    if (bPreserveExpansion && bHasCurrentTree && m_pTreeView->GetNodeCount() > 1)
+        ApplyExpansionState(expState);
 
     // Enable all buttons and treeView
     EnableControls(ctrls, true);
@@ -563,6 +576,163 @@ void JsonViewDlg::SearchInTree()
             else
                 CUtility::SetEditCtrlText(::GetDlgItem(_hSelf, IDC_EDT_NODEPATH), STR_SRCH_NOTFOUND + itemToSearch);
         }
+    }
+}
+
+TreeExpansionState JsonViewDlg::CaptureExpansionState() const
+{
+    TreeExpansionState expState;
+
+    auto hRoot = m_pTreeView->GetRoot();
+    if (!hRoot)
+        return expState;
+
+    // Collect the key path of every node (root excluded) with its expanded flag
+    std::function<void(HTREEITEM, const std::vector<std::wstring>&)> walk;
+    walk = [&](HTREEITEM hParent, const std::vector<std::wstring>& parentKeys) {
+        for (HTREEITEM hChild = m_pTreeView->GetChildItem(hParent); hChild;
+             hChild           = m_pTreeView->GetNextSibling(hChild))
+        {
+            auto keys    = parentKeys;
+            auto nodeKey = GetPathKey(hChild);
+            keys.push_back(nodeKey);
+
+            expState.expandedPaths[TreeExpansionHelper::JoinPath(parentKeys, nodeKey)] = m_pTreeView->IsExpanded(hChild);
+
+            walk(hChild, keys);
+        }
+    };
+
+    walk(hRoot, {});
+
+    expState.selectedPath = GetCurrentSelectedPath();
+
+    return expState;
+}
+
+void JsonViewDlg::ApplyExpansionState(const TreeExpansionState& state)
+{
+    auto paths                                      = CollectExpandedPaths();
+    auto [pathsToExpand, pathToSelect]              = TreeExpansionHelper::MatchExpansion(state, paths);
+
+    for (const auto& path : pathsToExpand)
+    {
+        auto keys = TreeExpansionHelper::SplitPath(path);
+        if (!keys.empty())
+            ExpandByPath(keys);
+    }
+
+    if (!pathToSelect.empty())
+        SelectByPath(pathToSelect);
+}
+
+std::vector<std::wstring> JsonViewDlg::CollectExpandedPaths() const
+{
+    std::vector<std::wstring> paths;
+
+    auto hRoot = m_pTreeView->GetRoot();
+    if (!hRoot)
+        return paths;
+
+    std::function<void(HTREEITEM, const std::vector<std::wstring>&)> walk;
+    walk = [&](HTREEITEM hParent, const std::vector<std::wstring>& parentKeys) {
+        for (HTREEITEM hChild = m_pTreeView->GetChildItem(hParent); hChild;
+             hChild           = m_pTreeView->GetNextSibling(hChild))
+        {
+            auto nodeKey = GetPathKey(hChild);
+
+            auto keys = parentKeys;
+            keys.push_back(nodeKey);
+
+            paths.push_back(TreeExpansionHelper::JoinPath(parentKeys, nodeKey));
+
+            walk(hChild, keys);
+        }
+    };
+
+    walk(hRoot, {});
+
+    return paths;
+}
+
+std::vector<std::wstring> JsonViewDlg::GetCurrentSelectedPath() const
+{
+    std::vector<std::wstring> path;
+
+    auto hRoot     = m_pTreeView->GetRoot();
+    auto hSelected = m_pTreeView->GetSelection();
+    if (!hRoot || !hSelected || hSelected == hRoot)
+        return path;
+
+    // Walk up to the root and reverse the collected keys on the way back
+    std::vector<std::wstring> reversedKeys;
+    for (HTREEITEM h = hSelected; h && h != hRoot; h = m_pTreeView->GetParentItem(h))
+    {
+        reversedKeys.push_back(GetPathKey(h));
+    }
+
+    // Guard against a selection that does not belong to this tree anymore
+    if (m_pTreeView->GetParentItem(hSelected) == nullptr)
+        return {};
+
+    path.assign(reversedKeys.rbegin(), reversedKeys.rend());
+    return path;
+}
+
+auto JsonViewDlg::GetPathKey(HTREEITEM hti) const -> std::wstring
+{
+    auto key = m_pTreeView->GetNodeKey(hti);
+
+    // Remove the surrounding quotes of object keys: "name" -> name.
+    // Array indices ([0]) and unquoted keys are returned untouched.
+    if (key.size() >= 2 && key.front() == L'"' && key.back() == L'"')
+        key = key.substr(1, key.size() - 2);
+
+    return key;
+}
+
+auto JsonViewDlg::FindNodeByPath(const std::vector<std::wstring>& path) const -> HTREEITEM
+{
+    if (path.empty())
+        return nullptr;
+
+    auto hRoot = m_pTreeView->GetRoot();
+    if (!hRoot)
+        return nullptr;
+
+    HTREEITEM hCurrent = hRoot;
+    for (const auto& key : path)
+    {
+        HTREEITEM hNext = m_pTreeView->GetChildItem(hCurrent);
+        while (hNext && GetPathKey(hNext) != key)
+        {
+            hNext = m_pTreeView->GetNextSibling(hNext);
+        }
+
+        if (!hNext)
+            return nullptr;
+
+        hCurrent = hNext;
+    }
+
+    return hCurrent == hRoot ? nullptr : hCurrent;
+}
+
+void JsonViewDlg::ExpandByPath(const std::vector<std::wstring>& path)
+{
+    auto hNode = FindNodeByPath(path);
+    if (hNode)
+        m_pTreeView->Expand(hNode);
+}
+
+void JsonViewDlg::SelectByPath(const std::vector<std::wstring>& path)
+{
+    auto hNode = FindNodeByPath(path);
+    if (hNode)
+    {
+        // TreeView_SelectItem expands collapsed ancestors on its own, so the
+        // expansion state restored just before is left untouched.
+        m_pTreeView->SetSelection(hNode);
     }
 }
 
@@ -1129,7 +1299,7 @@ INT_PTR JsonViewDlg::run_dlgProc(UINT message, WPARAM wParam, LPARAM lParam)
         {
             // Handle Button events
         case IDC_BTN_REFRESH:
-            DrawJsonTree();
+            DrawJsonTree(true);
             break;
 
         case IDC_BTN_FORMAT:

@@ -49,6 +49,16 @@ auto TreeViewCtrl::InsertNode(const std::wstring& text, LPARAM lparam, HTREEITEM
     return item;
 }
 
+auto TreeViewCtrl::GetChildItem(HTREEITEM node) const -> HTREEITEM
+{
+    return TreeView_GetNextItem(m_hTree, node, TVGN_CHILD);
+}
+
+auto TreeViewCtrl::GetNextSibling(HTREEITEM node) const -> HTREEITEM
+{
+    return TreeView_GetNextItem(m_hTree, node, TVGN_NEXT);
+}
+
 void TreeViewCtrl::UpdateNodeText(HTREEITEM node, const std::wstring& text)
 {
     auto tvi = std::make_unique<TVITEMW>();

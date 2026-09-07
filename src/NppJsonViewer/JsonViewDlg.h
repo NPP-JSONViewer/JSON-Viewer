@@ -14,6 +14,7 @@
 #include "JsonHandler.h"
 #include "JsonNode.h"
 #include "TreeHandler.h"
+#include "TreeExpansion.h"
 
 
 class JsonViewDlg
@@ -53,7 +54,7 @@ public:
     void      AppendNodeCount(HTREEITEM node, unsigned elementCount, bool bArray) override;
 
 private:
-    void DrawJsonTree();
+    void DrawJsonTree(bool bPreserveExpansion = false);
     void ReDrawJsonTree(bool bForce = false);
     void HighlightAsJson(bool bForcefully = false) const;
     auto PopulateTreeUsingSax(HTREEITEM tree_root, const std::string& jsonText) -> std::optional<std::wstring>;
@@ -65,6 +66,24 @@ private:
     void GoToPosition(size_t nLineToGo, size_t nPos, size_t nLen) const;
 
     void SearchInTree();
+
+    // Expansion/selection state, captured before the tree is rebuilt and
+    // re-applied afterwards (see DrawJsonTree(bPreserveExpansion = true)).
+    auto CaptureExpansionState() const -> TreeExpansionState;
+    void ApplyExpansionState(const TreeExpansionState& state);
+
+    auto CollectExpandedPaths() const -> std::vector<std::wstring>;
+    auto GetCurrentSelectedPath() const -> std::vector<std::wstring>;
+    void ExpandByPath(const std::vector<std::wstring>& path);
+    void SelectByPath(const std::vector<std::wstring>& path);
+
+    // Key of a node as used inside a node path: the raw key without the
+    // surrounding quotes ("name" -> name, [0] -> [0]).
+    auto GetPathKey(HTREEITEM hti) const -> std::wstring;
+
+    // Resolve a key path (relative to the tree root) back to a node.
+    // Returns nullptr when any level of the path cannot be found.
+    auto FindNodeByPath(const std::vector<std::wstring>& path) const -> HTREEITEM;
 
     auto GetTitleFileName() const -> std::wstring;
     void PrepareButtons();
