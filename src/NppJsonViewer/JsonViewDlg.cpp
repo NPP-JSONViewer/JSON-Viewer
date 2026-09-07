@@ -1,3 +1,4 @@
+#include <algorithm>
 #include "JsonViewDlg.h"
 
 #include <format>
@@ -52,6 +53,10 @@ void JsonViewDlg::ShowDlg(bool bShow)
         getClientRect(rc);
         m_lfInitialClientWidth  = rc.right - rc.left;
         m_lfInitialClientHeight = rc.bottom - rc.top;
+
+        // Remember the template layout: every later resize is expressed as
+        // "template rect + (current client size - initial client size)".
+        CaptureInitialControlRects();
 
         // define the default docking behaviour
         data.uMask         = DWS_DF_CONT_LEFT | DWS_ICONTAB | DWS_ADDINFO;
@@ -655,64 +660,67 @@ void JsonViewDlg::SetIconAndTooltip(eButton ctrlType, const std::wstring& toolTi
     CUtility::CreateToolTip(_hSelf, nCtrlID, toolTip, _hInst);
 }
 
+void JsonViewDlg::CaptureInitialControlRects()
+{
+    auto capture = [this](int id, RECT& out) {
+        RECT r {};
+        ::GetWindowRect(::GetDlgItem(getHSelf(), id), &r);
+        ::MapWindowPoints(NULL, getHSelf(), reinterpret_cast<LPPOINT>(&r), 2);
+        out = r;
+    };
+
+    capture(IDC_EDT_SEARCH,   m_rcInitSearch);
+    capture(IDC_BTN_SEARCH,   m_rcInitSearchBtn);
+    capture(IDC_TREE,         m_rcInitTree);
+    capture(IDC_EDT_NODEPATH, m_rcInitNodePath);
+}
+
 void JsonViewDlg::AdjustDocPanelSize(int nWidth, int nHeight)
 {
-    // Calculate desktop scale.
-    float fDeskScale = CUtility::GetDesktopScale(_hSelf);
-
-    auto newDeltaWidth = nWidth - m_lfInitialClientWidth - 2;    // -2 is used for margin
-    auto addWidth      = static_cast<int>((newDeltaWidth - m_lfDeltaWidth) * fDeskScale);
-    m_lfDeltaWidth     = newDeltaWidth;
-
-    auto newDeltaHeight = nHeight - m_lfInitialClientHeight;
-    auto addHeight      = static_cast<int>((newDeltaHeight - m_lfDeltaHeight) * fDeskScale);
-    m_lfDeltaHeight     = newDeltaHeight;
-
-    // elements that need to be resized horizontally
-    const auto resizeWindowIDs = {IDC_EDT_SEARCH, IDC_TREE};
-
-    // elements that need to be moved
-    const auto moveWindowIDs = {IDC_BTN_SEARCH};
-
-    // elements which requires both resizing and move
-    const auto resizeAndMoveWindowIDs = {IDC_EDT_NODEPATH};
+    // nWidth/nHeight (WM_SIZE) and m_lfInitialClient* (GetClientRect) are both
+    // already in physical pixels, so the delta must NOT be multiplied by the
+    // desktop DPI scale. The previous code did exactly that: on any monitor
+    // whose scale is not 100% the tree grew faster than its parent panel and
+    // its bottom rows - together with the node path box - slid below the
+    // panel's client area, where no scroll bar can ever reach them.
+    // Every control is therefore positioned from the *current* client size
+    // (template rect + unscaled delta), which also makes repeated resizes
+    // idempotent instead of accumulated.
+    const int addWidth = nWidth - m_lfInitialClientWidth;
 
     const UINT flags = SWP_NOZORDER | SWP_NOOWNERZORDER | SWP_NOACTIVATE | SWP_NOCOPYBITS | SWP_SHOWWINDOW;
 
-    RECT rc;
-    for (int id : resizeWindowIDs)
-    {
-        HWND hWnd = ::GetDlgItem(_hSelf, id);
-        ::GetWindowRect(hWnd, &rc);
-        int cx = rc.right - rc.left + addWidth;
-        int cy = rc.bottom - rc.top;
+    const auto width  = [](const RECT& r) { return r.right - r.left; };
+    const auto height = [](const RECT& r) { return r.bottom - r.top; };
 
-        if (id == IDC_TREE)
-            cy += addHeight;
+    // Pixels kept below the node path box. The dialog template reserves a small
+    // margin; fall back to 2 px when the template is already tighter than that.
+    // (RECT members are LONG: cast so (std::max) deduces a single type.
+    // The parens also defeat the windows.h min/max macros on MSVC.)
+    const int bottomMargin  = (std::max)(2, static_cast<int>(m_lfInitialClientHeight) - static_cast<int>(m_rcInitNodePath.bottom));
+    const int gapTreeToPath = (std::max)(1, static_cast<int>(m_rcInitNodePath.top) - static_cast<int>(m_rcInitTree.bottom));
 
-        ::SetWindowPos(hWnd, NULL, 0, 0, cx, cy, SWP_NOMOVE | flags);
-    }
+    const int nodePathTop = nHeight - bottomMargin - height(m_rcInitNodePath);
+    const int treeHeight  = (std::max)(20, nodePathTop - gapTreeToPath - static_cast<int>(m_rcInitTree.top));
 
-    for (int id : moveWindowIDs)
-    {
-        HWND hWnd = GetDlgItem(_hSelf, id);
-        ::GetWindowRect(hWnd, &rc);
-        ::MapWindowPoints(NULL, _hSelf, (LPPOINT)&rc, 2);
+    // search box stretches to the right, the search button slides along with it
+    ::SetWindowPos(::GetDlgItem(_hSelf, IDC_EDT_SEARCH), NULL,
+                   m_rcInitSearch.left, m_rcInitSearch.top,
+                   width(m_rcInitSearch) + addWidth, height(m_rcInitSearch), flags);
 
-        ::SetWindowPos(hWnd, NULL, rc.left + addWidth, rc.top, 0, 0, SWP_NOSIZE | flags);
-    }
+    ::SetWindowPos(::GetDlgItem(_hSelf, IDC_BTN_SEARCH), NULL,
+                   m_rcInitSearchBtn.left + addWidth, m_rcInitSearchBtn.top,
+                   0, 0, SWP_NOSIZE | flags);
 
-    for (int id : resizeAndMoveWindowIDs)
-    {
-        HWND hWnd = GetDlgItem(_hSelf, id);
+    // node path box: pinned to the bottom, full width
+    ::SetWindowPos(::GetDlgItem(_hSelf, IDC_EDT_NODEPATH), NULL,
+                   m_rcInitNodePath.left, nodePathTop,
+                   width(m_rcInitNodePath) + addWidth, height(m_rcInitNodePath), flags);
 
-        ::GetWindowRect(hWnd, &rc);
-        int cx = rc.right - rc.left + addWidth;
-        int cy = rc.bottom - rc.top;
-        ::MapWindowPoints(NULL, _hSelf, (LPPOINT)&rc, 2);
-
-        ::SetWindowPos(hWnd, NULL, rc.left, rc.top + addHeight, cx, cy, flags);
-    }
+    // tree: everything between the tool bar row and the node path box
+    ::SetWindowPos(::GetDlgItem(_hSelf, IDC_TREE), NULL,
+                   m_rcInitTree.left, m_rcInitTree.top,
+                   width(m_rcInitTree) + addWidth, treeHeight, flags);
 }
 
 void JsonViewDlg::ShowContextMenu(int x, int y)
