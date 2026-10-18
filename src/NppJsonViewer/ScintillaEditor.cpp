@@ -1,5 +1,5 @@
 #include "ScintillaEditor.h"
-
+#include "StringHelper.h"
 #include <cassert>
 #include <memory>
 
@@ -57,7 +57,25 @@ bool ScintillaEditor::IsJsonFile() const
 {
     unsigned languageType = 0;
     ::SendMessage(m_NppData._nppHandle, NPPM_GETCURRENTLANGTYPE, 0, reinterpret_cast<LPARAM>(&languageType));
-    return languageType == LangType::L_JSON;
+
+    if (languageType == LangType::L_JSON)
+        return true;
+
+    // Notepad++ maps the .jsonc extension to the json5 language ("json5 jsonc"
+    // share a single entry in the default langs.xml), so a jsonc document used
+    // to be skipped by everything gated on IsJsonFile(). Accept that language
+    // for .jsonc files ONLY: the parser handles comments and trailing commas
+    // (both are configurable and on by default) but not the rest of the JSON5
+    // syntax (unquoted keys, single-quoted strings), and a real .json5 file
+    // must keep being ignored exactly as it was before this change.
+    if (languageType == LangType::L_JSON5)
+    {
+        auto fileName = GetCurrentFileName();
+        StringHelper::ToLower(fileName);
+        return fileName.ends_with(L".jsonc");
+    }
+
+    return false;
 }
 
 auto ScintillaEditor::GetCurrentFileName() const -> std::wstring
