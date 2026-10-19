@@ -43,6 +43,7 @@ public:
 
     void ShowDlg(bool bShow);
     void FormatJson();
+    void FormatJsonLines();
     void CompressJson();
     void SortJsonByKey();
     void HandleTabActivated();

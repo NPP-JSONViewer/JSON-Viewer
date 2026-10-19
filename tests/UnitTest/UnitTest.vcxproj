@@ -156,6 +156,7 @@
     <ClCompile Include="..\..\src\NppJsonViewer\Profile.cpp" />
     <ClCompile Include="..\..\src\NppJsonViewer\RapidJsonHandler.cpp" />
     <ClCompile Include="JsonCompressTest.cpp" />
+    <ClCompile Include="JsonLinesFormatTest.cpp" />
     <ClCompile Include="JsonFormatTest.cpp" />
     <ClCompile Include="JsonHandlerTest.cpp" />
     <ClCompile Include="JsonSortByKeyTest.cpp" />

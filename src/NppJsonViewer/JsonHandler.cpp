@@ -30,6 +30,53 @@ auto JsonHandler::FormatJson(const std::string& jsonText, LE le, LF lf, char ind
     return ParseJson<flgBaseWriter>(jsonText, sb, handler);
 }
 
+auto JsonHandler::FormatJsonLines(const std::string& jsonText, LE le, LF lf, char indentChar, unsigned indentLen) -> const Result
+{
+    const std::string eol = le == LE::kCrLf ? "\r\n" : le == LE::kCr ? "\r" : "\n";
+    std::string output;
+    size_t start = 0;
+    size_t lineNumber = 1;
+    bool hasRecord = false;
+
+    while (start < jsonText.size())
+    {
+        const size_t end = jsonText.find_first_of("\r\n", start);
+        const std::string line = jsonText.substr(start, end == std::string::npos ? end : end - start);
+        if (line.find_first_not_of(" \t") != std::string::npos)
+        {
+            auto result = FormatJson(line, le, lf, indentChar, indentLen);
+            if (!result.success)
+            {
+                result.error_pos += static_cast<int>(start);
+                result.error_str = "Line " + std::to_string(lineNumber) + ": " + result.error_str;
+                return result;
+            }
+            if (hasRecord)
+                output += eol;
+            output += result.response;
+            hasRecord = true;
+        }
+
+        if (end == std::string::npos)
+            break;
+        start = end + 1;
+        if (jsonText[end] == '\r' && start < jsonText.size() && jsonText[start] == '\n')
+            ++start;
+        ++lineNumber;
+    }
+
+    if (!hasRecord)
+        return FormatJson(jsonText, le, lf, indentChar, indentLen);
+
+    if (!jsonText.empty() && (jsonText.back() == '\r' || jsonText.back() == '\n'))
+        output += eol;
+
+    Result result;
+    result.success = true;
+    result.response = std::move(output);
+    return result;
+}
+
 auto JsonHandler::SortJsonByKey(const std::string& jsonText, LE le, LF lf, char indentChar, unsigned indentLen) -> const Result
 {
     auto res = ValidateJson(jsonText);

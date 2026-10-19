@@ -45,6 +45,7 @@ public:
 
     auto GetCompressedJson(const std::string& jsonText) -> const Result;
     auto FormatJson(const std::string& jsonText, LE le, LF lf, char indentChar, unsigned indentLen) -> const Result;
+    auto FormatJsonLines(const std::string& jsonText, LE le, LF lf, char indentChar, unsigned indentLen) -> const Result;
     auto SortJsonByKey(const std::string& jsonText, LE le, LF lf, char indentChar, unsigned indentLen) -> const Result;
     auto ValidateJson(const std::string& jsonText) -> const Result;
 

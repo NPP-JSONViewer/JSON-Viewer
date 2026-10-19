@@ -51,6 +51,10 @@ private:
         {
             m_pNppJsonPlugin->FormatJson();
         }
+        static void FormatJsonLines()
+        {
+            m_pNppJsonPlugin->FormatJsonLines();
+        }
         static void CompressJson()
         {
             m_pNppJsonPlugin->CompressJson();
@@ -81,6 +85,7 @@ private:
 
     void ShowJsonDlg();
     void FormatJson();
+    void FormatJsonLines();
     void CompressJson();
     void SortJsonByKey();
     void OpenSettingDlg();

@@ -127,6 +127,8 @@ void NppJsonPlugin::InitCommandMenu()
     m_shortcutCommands.SetShortCut(CallBackID::FORMAT, {true, true, true, 'M'});
     m_shortcutCommands.SetCommand(CallBackID::FORMAT, MENU_FORMAT_JSON, Callback::FormatJson, false);
 
+    m_shortcutCommands.SetCommand(CallBackID::FORMAT_LINES, MENU_FORMAT_JSON_LINES, Callback::FormatJsonLines, false);
+
     m_shortcutCommands.SetShortCut(CallBackID::COMPRESS, {true, true, true, 'C'});
     m_shortcutCommands.SetCommand(CallBackID::COMPRESS, MENU_COMPRESS_JSON, Callback::CompressJson, false);
 
@@ -199,6 +201,15 @@ void NppJsonPlugin::FormatJson()
     if (m_pJsonViewDlg)    // Hope it is constructed by now.
     {
         m_pJsonViewDlg->FormatJson();
+    }
+}
+
+void NppJsonPlugin::FormatJsonLines()
+{
+    ConstructJsonDlg();
+    if (m_pJsonViewDlg)
+    {
+        m_pJsonViewDlg->FormatJsonLines();
     }
 }
 

@@ -113,6 +113,36 @@ void JsonViewDlg::FormatJson()
     ReDrawJsonTree();
 }
 
+void JsonViewDlg::FormatJsonLines()
+{
+    UpdateTitle();
+    m_pEditor->RefreshViewHandle();
+
+    const auto selectedData = m_pEditor->GetJsonText();
+    const auto selectedText = IsSelectionValidJson(selectedData);
+    if (!selectedText.has_value() || selectedText.value().empty())
+    {
+        const std::wstring msg = IsMultiSelection(selectedData) ? JSON_ERR_MULTI_SELECTION : JSON_ERR_PARSE;
+        ShowMessage(JSON_INFO_TITLE, msg, MB_OK | MB_ICONINFORMATION);
+        return;
+    }
+
+    auto [le, lf, indentChar, indentLen] = GetFormatSetting();
+    const Result res = JsonHandler(m_pSetting->parseOptions).FormatJsonLines(selectedText.value(), le, lf, indentChar, indentLen);
+    if (res.success)
+    {
+        m_pEditor->ReplaceSelection(res.response);
+        HighlightAsJson();
+    }
+    else
+    {
+        ReportError(res);
+    }
+
+    // The tree viewer accepts a single JSON document, not a stream of records.
+    // Do not redraw it here: doing so would report a second, unrelated parse error.
+}
+
 void JsonViewDlg::CompressJson()
 {
     UpdateTitle();
