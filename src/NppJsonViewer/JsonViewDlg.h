@@ -71,6 +71,7 @@ private:
     void SetIconAndTooltip(eButton ctrlType, const std::wstring& toolTip);
 
     void AdjustDocPanelSize(int nWidth, int nHeight);
+    void CaptureInitialControlRects();
 
     // Context menu related functions
     void ShowContextMenu(int x, int y);
@@ -117,8 +118,12 @@ private:
     const bool& m_IsNppReady;
 
     // To handle doc panel resizing
-    LONG m_lfDeltaWidth          = 0;
-    LONG m_lfDeltaHeight         = 0;
+    // Template rects of the resizable controls, captured once at creation and
+    // used as the baseline for every later resize (see AdjustDocPanelSize).
+    RECT m_rcInitSearch         = {};
+    RECT m_rcInitSearchBtn      = {};
+    RECT m_rcInitTree           = {};
+    RECT m_rcInitNodePath       = {};
     LONG m_lfInitialClientWidth  = 0;
     LONG m_lfInitialClientHeight = 0;
     RECT m_rcInitialWindowRect   = {};
