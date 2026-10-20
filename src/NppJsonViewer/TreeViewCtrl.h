@@ -29,6 +29,10 @@ public:
     void UpdateNodeText(HTREEITEM node, const std::wstring& text);
     auto GetNodeCount() const -> unsigned int;
 
+    auto GetChildItem(HTREEITEM node) const -> HTREEITEM;
+    auto GetNextSibling(HTREEITEM node) const -> HTREEITEM;
+    auto GetParentItem(HTREEITEM node) const -> HTREEITEM;
+
     bool IsExpanded(HTREEITEM node) const;
     bool IsThisOrAnyChildExpanded(HTREEITEM node) const;
     bool IsThisOrAnyChildCollapsed(HTREEITEM node) const;
@@ -64,8 +68,6 @@ public:
 
 private:
     void ExpandOrCollapse(HTREEITEM node, UINT_PTR code) const;
-
-    HTREEITEM GetParentItem(HTREEITEM hti) const;
 
     bool GetTVItem(HTREEITEM hti, TVITEM* tvi) const;
     bool SetTVItem(TVITEM* tvi) const;
