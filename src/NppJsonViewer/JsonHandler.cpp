@@ -11,7 +11,7 @@ JsonHandler::JsonHandler(const ParseOptions& options)
 {
 }
 
-auto JsonHandler::GetCompressedJson(const std::string& jsonText) -> const Result
+auto JsonHandler::GetCompressedJson(const std::string& jsonText) -> Result
 {
     rj::StringBuffer                                                                                sb;
     rj::Writer<rj::StringBuffer, rj::UTF8<>, rj::UTF8<>, rj::CrtAllocator, rj::kWriteNanAndInfFlag> handler(sb);
@@ -19,7 +19,7 @@ auto JsonHandler::GetCompressedJson(const std::string& jsonText) -> const Result
     return ParseJson<flgBaseWriter>(jsonText, sb, handler);
 }
 
-auto JsonHandler::FormatJson(const std::string& jsonText, LE le, LF lf, char indentChar, unsigned indentLen) -> const Result
+auto JsonHandler::FormatJson(const std::string& jsonText, LE le, LF lf, char indentChar, unsigned indentLen) -> Result
 {
     rj::StringBuffer                                                                                      sb;
     rj::PrettyWriter<rj::StringBuffer, rj::UTF8<>, rj::UTF8<>, rj::CrtAllocator, rj::kWriteNanAndInfFlag> handler(sb);
@@ -30,7 +30,7 @@ auto JsonHandler::FormatJson(const std::string& jsonText, LE le, LF lf, char ind
     return ParseJson<flgBaseWriter>(jsonText, sb, handler);
 }
 
-auto JsonHandler::FormatJsonLines(const std::string& jsonText, LE le, LF lf, char indentChar, unsigned indentLen) -> const Result
+auto JsonHandler::FormatJsonLines(const std::string& jsonText, LE le, LF lf, char indentChar, unsigned indentLen) -> Result
 {
     const std::string eol = le == LE::kCrLf ? "\r\n" : le == LE::kCr ? "\r" : "\n";
     std::string output;
@@ -45,15 +45,15 @@ auto JsonHandler::FormatJsonLines(const std::string& jsonText, LE le, LF lf, cha
         if (line.find_first_not_of(" \t") != std::string::npos)
         {
             auto result = FormatJson(line, le, lf, indentChar, indentLen);
-            if (!result.success)
+            if (!result)
             {
-                result.error_pos += static_cast<int>(start);
-                result.error_str = "Line " + std::to_string(lineNumber) + ": " + result.error_str;
-                return result;
+                result.error().position += static_cast<int>(start);
+                result.error().message = "Line " + std::to_string(lineNumber) + ": " + result.error().message;
+                return std::unexpected(result.error());
             }
             if (hasRecord)
                 output += eol;
-            output += result.response;
+            output += *result;
             hasRecord = true;
         }
 
@@ -71,25 +71,21 @@ auto JsonHandler::FormatJsonLines(const std::string& jsonText, LE le, LF lf, cha
     if (!jsonText.empty() && (jsonText.back() == '\r' || jsonText.back() == '\n'))
         output += eol;
 
-    Result result;
-    result.success = true;
-    result.response = std::move(output);
-    return result;
+    return output;
 }
 
-auto JsonHandler::SortJsonByKey(const std::string& jsonText, LE le, LF lf, char indentChar, unsigned indentLen) -> const Result
+auto JsonHandler::SortJsonByKey(const std::string& jsonText, LE le, LF lf, char indentChar, unsigned indentLen) -> Result
 {
-    auto res = ValidateJson(jsonText);
-    if (res.success)
-    {
-        // Sort the JSON string
-        auto sorted = SortJsonText(jsonText);
-        res         = FormatJson(sorted, le, lf, indentChar, indentLen);
-    }
-    return res;
+    auto result = ValidateJson(jsonText);
+    if (!result)
+        return std::unexpected(result.error());
+
+    // Sort the JSON string
+    auto sorted = SortJsonText(jsonText);
+    return FormatJson(sorted, le, lf, indentChar, indentLen);
 }
 
-auto JsonHandler::ValidateJson(const std::string& jsonText) -> const Result
+auto JsonHandler::ValidateJson(const std::string& jsonText) -> Result
 {
     rj::StringBuffer                                                                                sb;
     rj::Writer<rj::StringBuffer, rj::UTF8<>, rj::UTF8<>, rj::CrtAllocator, rj::kWriteNanAndInfFlag> handler(sb);

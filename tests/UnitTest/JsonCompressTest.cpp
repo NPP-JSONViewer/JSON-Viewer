@@ -29,11 +29,8 @@ namespace JsonCompress
 
         auto result = m_jsonHandler.GetCompressedJson(inputJson);
 
-        EXPECT_TRUE(result.success);
-        EXPECT_EQ(result.error_code, -1);
-        EXPECT_EQ(result.error_pos, -1);
-        EXPECT_EQ(result.error_str, "");
-        EXPECT_EQ(result.response, R"({"name":"John","age":30})");
+        EXPECT_TRUE(result.has_value());
+        EXPECT_EQ(*result, R"({"name":"John","age":30})");
     }
 
     // Test 2: Test invalid JSON input
@@ -43,11 +40,11 @@ namespace JsonCompress
 
         auto result = m_jsonHandler.GetCompressedJson(inputJson);
 
-        EXPECT_FALSE(result.success);
-        EXPECT_NE(result.error_code, -1);
-        EXPECT_NE(result.error_pos, -1);
-        EXPECT_FALSE(result.error_str.empty());
-        EXPECT_EQ(result.response, "");
+        EXPECT_FALSE(result.has_value());
+        EXPECT_NE(result.error().code, -1);
+        EXPECT_NE(result.error().position, -1);
+        EXPECT_FALSE(result.error().message.empty());
+
     }
 
     // Test 3: Test valid JSON with tab indentation
@@ -57,11 +54,8 @@ namespace JsonCompress
 
         auto result = m_jsonHandler.GetCompressedJson(inputJson);
 
-        EXPECT_TRUE(result.success);
-        EXPECT_EQ(result.error_code, -1);
-        EXPECT_EQ(result.error_pos, -1);
-        EXPECT_EQ(result.error_str, "");
-        EXPECT_EQ(result.response, R"({"name":"John","age":30})");
+        EXPECT_TRUE(result.has_value());
+        EXPECT_EQ(*result, R"({"name":"John","age":30})");
     }
 
     // Test 4: Test valid JSON with Windows line endings
@@ -71,11 +65,8 @@ namespace JsonCompress
 
         auto result = m_jsonHandler.GetCompressedJson(inputJson);
 
-        EXPECT_TRUE(result.success);
-        EXPECT_EQ(result.error_code, -1);
-        EXPECT_EQ(result.error_pos, -1);
-        EXPECT_EQ(result.error_str, "");
-        EXPECT_EQ(result.response, R"({"name":"John","age":30})");
+        EXPECT_TRUE(result.has_value());
+        EXPECT_EQ(*result, R"({"name":"John","age":30})");
     }
 
     // Test 5: Test valid JSON with no indentation (compact format)
@@ -84,11 +75,8 @@ namespace JsonCompress
         std::string inputJson = R"({"name":"John","age":30})";
         auto        result    = m_jsonHandler.GetCompressedJson(inputJson);
 
-        EXPECT_TRUE(result.success);
-        EXPECT_EQ(result.error_code, -1);
-        EXPECT_EQ(result.error_pos, -1);
-        EXPECT_EQ(result.error_str, "");
-        EXPECT_EQ(result.response, R"({"name":"John","age":30})");
+        EXPECT_TRUE(result.has_value());
+        EXPECT_EQ(*result, R"({"name":"John","age":30})");
     }
 
     // Test 6: Test JSON with comments ignored
@@ -106,11 +94,8 @@ namespace JsonCompress
 
         auto result = m_jsonHandler.GetCompressedJson(inputJson);
 
-        EXPECT_TRUE(result.success);
-        EXPECT_EQ(result.error_code, -1);
-        EXPECT_EQ(result.error_pos, -1);
-        EXPECT_EQ(result.error_str, "");
-        EXPECT_EQ(result.response, R"({"name":"John","age":30})");
+        EXPECT_TRUE(result.has_value());
+        EXPECT_EQ(*result, R"({"name":"John","age":30})");
     }
 
     // Test 7: Test JSON with trailing commas ignored
@@ -127,11 +112,8 @@ namespace JsonCompress
 
         auto result = m_jsonHandler.GetCompressedJson(inputJson);
 
-        EXPECT_TRUE(result.success);
-        EXPECT_EQ(result.error_code, -1);
-        EXPECT_EQ(result.error_pos, -1);
-        EXPECT_EQ(result.error_str, "");
-        EXPECT_EQ(result.response, R"({"name":"John","age":30})");
+        EXPECT_TRUE(result.has_value());
+        EXPECT_EQ(*result, R"({"name":"John","age":30})");
     }
 
     // Test 8: Test with infinity NaN inf
@@ -147,11 +129,8 @@ namespace JsonCompress
         {
             auto result = m_jsonHandler.GetCompressedJson(input);
 
-            EXPECT_TRUE(result.success);
-            EXPECT_EQ(result.error_code, -1);
-            EXPECT_EQ(result.error_pos, -1);
-            EXPECT_EQ(result.error_str, "");
-            EXPECT_EQ(result.response, output);
+            EXPECT_TRUE(result.has_value());
+            EXPECT_EQ(*result, output);
         }
     }
 
@@ -165,11 +144,8 @@ namespace JsonCompress
         const std::string output    = R"({"FreeTextInput":"<script>alert(\"links\");</script>"})";
         auto              result    = m_jsonHandler.GetCompressedJson(inputJson);
 
-        EXPECT_TRUE(result.success);
-        EXPECT_EQ(result.error_code, -1);
-        EXPECT_EQ(result.error_pos, -1);
-        EXPECT_EQ(result.error_str, "");
-        EXPECT_EQ(result.response, output);
+        EXPECT_TRUE(result.has_value());
+        EXPECT_EQ(*result, output);
     }
 
     // Test 10: Test with numbers (with and without precision)
@@ -192,12 +168,9 @@ namespace JsonCompress
         for (const auto& [input, output] : testData)
         {
             auto result      = m_jsonHandler.GetCompressedJson(input);
-            bool foundNumber = result.response.find(output) != std::string::npos;
-            EXPECT_TRUE(result.success);
-            EXPECT_EQ(result.error_code, -1);
-            EXPECT_EQ(result.error_pos, -1);
-            EXPECT_EQ(result.error_str, "");
-            EXPECT_EQ(foundNumber, true) << "Number: '" << output.c_str() << "' not found in '" << result.response.c_str() << "'.\n";
+            EXPECT_TRUE(result.has_value());
+            bool foundNumber = result->find(output) != std::string::npos;
+            EXPECT_EQ(foundNumber, true) << "Number: '" << output.c_str() << "' not found in '" << result->c_str() << "'.\n";
         }
     }
 
@@ -233,11 +206,8 @@ namespace JsonCompress
 
         auto result = m_jsonHandler.GetCompressedJson(inputJson);
 
-        EXPECT_TRUE(result.success);
-        EXPECT_EQ(result.error_code, -1);
-        EXPECT_EQ(result.error_pos, -1);
-        EXPECT_EQ(result.error_str, "");
-        EXPECT_EQ(result.response, outputJson);
+        EXPECT_TRUE(result.has_value());
+        EXPECT_EQ(*result, outputJson);
     }
 
 }    // namespace JsonCompress

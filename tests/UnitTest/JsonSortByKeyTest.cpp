@@ -23,8 +23,8 @@ namespace JsonSortByKey
         std::string inputJson = R"({"b": "valueB", "a": "valueA"})";
         auto        result    = m_jsonHandler.SortJsonByKey(inputJson, {}, {}, ' ', 4);
 
-        ASSERT_TRUE(result.success);
-        ASSERT_EQ(result.response, "{\n    \"a\": \"valueA\",\n    \"b\": \"valueB\"\n}");
+        ASSERT_TRUE(result.has_value());
+        ASSERT_EQ(*result, "{\n    \"a\": \"valueA\",\n    \"b\": \"valueB\"\n}");
     }
 
     TEST_F(JsonSortByKeyTest, TestSortJsonByKey_InvalidJson)
@@ -32,7 +32,7 @@ namespace JsonSortByKey
         std::string inputJson = R"({"b": "valueB", "a": "valueA")";    // Invalid JSON
         auto        result    = m_jsonHandler.SortJsonByKey(inputJson, {}, {}, ' ', 4);
 
-        ASSERT_FALSE(result.success);
+        ASSERT_FALSE(result.has_value());
     }
 
     TEST_F(JsonSortByKeyTest, TestSortJsonByKey_NumberValue_Success)
@@ -40,14 +40,14 @@ namespace JsonSortByKey
         std::string inputJson = R"({"b": "valueB", "a": 30})";
         auto        result    = m_jsonHandler.SortJsonByKey(inputJson, {}, {}, ' ', 4);
 
-        ASSERT_TRUE(result.success);
-        ASSERT_EQ(result.response, "{\n    \"a\": 30,\n    \"b\": \"valueB\"\n}");
+        ASSERT_TRUE(result.has_value());
+        ASSERT_EQ(*result, "{\n    \"a\": 30,\n    \"b\": \"valueB\"\n}");
 
         std::string inputJson2 = R"({ "name": "My name?", "age": 27, "is_student": false })";
         auto        result2    = m_jsonHandler.SortJsonByKey(inputJson2, {}, {}, ' ', 2);
 
-        ASSERT_TRUE(result2.success);
-        ASSERT_EQ(result2.response, "{\n  \"age\": 27,\n  \"is_student\": false,\n  \"name\": \"My name?\"\n}");
+        ASSERT_TRUE(result2.has_value());
+        ASSERT_EQ(*result2, "{\n  \"age\": 27,\n  \"is_student\": false,\n  \"name\": \"My name?\"\n}");
     }
 
     TEST_F(JsonSortByKeyTest, TestSortJsonByKey_NaN_Value_Success)
@@ -55,8 +55,8 @@ namespace JsonSortByKey
         std::string inputJson = R"({"Nan": NaN, "Hello": "World"})";
         auto        result    = m_jsonHandler.SortJsonByKey(inputJson, {}, {}, ' ', 4);
 
-        ASSERT_TRUE(result.success);
-        ASSERT_EQ(result.response, "{\n    \"Hello\": \"World\",\n    \"Nan\": NaN\n}");
+        ASSERT_TRUE(result.has_value());
+        ASSERT_EQ(*result, "{\n    \"Hello\": \"World\",\n    \"Nan\": NaN\n}");
     }
 
     TEST_F(JsonSortByKeyTest, TestSortJsonByKey_ArrayValue_Success)
@@ -64,8 +64,8 @@ namespace JsonSortByKey
         std::string inputJson = R"({"text": ["Hello", "World"], "Inf": [-Infinity, Infinity, -Infinity, Infinity]})";
         auto        result    = m_jsonHandler.SortJsonByKey(inputJson, {}, LF::kFormatSingleLineArray, ' ', 2);
 
-        ASSERT_TRUE(result.success);
-        ASSERT_EQ(result.response, "{\n  \"Inf\": [-Infinity, Infinity, -Infinity, Infinity],\n  \"text\": [\"Hello\", \"World\"]\n}");
+        ASSERT_TRUE(result.has_value());
+        ASSERT_EQ(*result, "{\n  \"Inf\": [-Infinity, Infinity, -Infinity, Infinity],\n  \"text\": [\"Hello\", \"World\"]\n}");
     }
 
     TEST_F(JsonSortByKeyTest, TestSortJsonByKey_EmptyObject)
@@ -73,8 +73,8 @@ namespace JsonSortByKey
         std::string inputJson = R"({})";
         auto        result    = m_jsonHandler.SortJsonByKey(inputJson, {}, {}, ' ', 2);
 
-        ASSERT_TRUE(result.success);
-        ASSERT_EQ(result.response, "{}");
+        ASSERT_TRUE(result.has_value());
+        ASSERT_EQ(*result, "{}");
     }
 
     TEST_F(JsonSortByKeyTest, TestSortJsonByKey_NestedObject)
@@ -82,8 +82,8 @@ namespace JsonSortByKey
         std::string inputJson = R"({"z": {"b": 2, "a": 1}, "a": {"c": 3}})";
         auto        result    = m_jsonHandler.SortJsonByKey(inputJson, {}, {}, ' ', 2);
 
-        ASSERT_TRUE(result.success);
-        ASSERT_EQ(result.response, "{\n  \"a\": {\n    \"c\": 3\n  },\n  \"z\": {\n    \"a\": 1,\n    \"b\": 2\n  }\n}");
+        ASSERT_TRUE(result.has_value());
+        ASSERT_EQ(*result, "{\n  \"a\": {\n    \"c\": 3\n  },\n  \"z\": {\n    \"a\": 1,\n    \"b\": 2\n  }\n}");
     }
 
     TEST_F(JsonSortByKeyTest, TestSortJsonByKey_SpecialCharacters)
@@ -91,8 +91,8 @@ namespace JsonSortByKey
         std::string inputJson = R"({"!": 1, "#": 2, "A": 3})";
         auto        result    = m_jsonHandler.SortJsonByKey(inputJson, {}, {}, ' ', 2);
 
-        ASSERT_TRUE(result.success);
-        ASSERT_EQ(result.response, "{\n  \"!\": 1,\n  \"#\": 2,\n  \"A\": 3\n}");
+        ASSERT_TRUE(result.has_value());
+        ASSERT_EQ(*result, "{\n  \"!\": 1,\n  \"#\": 2,\n  \"A\": 3\n}");
     }
 
     TEST_F(JsonSortByKeyTest, TestSortJsonByKey_UnicodeKeys)
@@ -100,8 +100,8 @@ namespace JsonSortByKey
         std::string inputJson = R"({"α": 1, "β": 2, "γ": 3})";
         auto        result    = m_jsonHandler.SortJsonByKey(inputJson, {}, {}, ' ', 2);
 
-        ASSERT_TRUE(result.success);
-        ASSERT_EQ(result.response, "{\n  \"α\": 1,\n  \"β\": 2,\n  \"γ\": 3\n}");
+        ASSERT_TRUE(result.has_value());
+        ASSERT_EQ(*result, "{\n  \"α\": 1,\n  \"β\": 2,\n  \"γ\": 3\n}");
     }
 
     TEST_F(JsonSortByKeyTest, TestSortJsonByKey_NullValue)
@@ -109,8 +109,8 @@ namespace JsonSortByKey
         std::string inputJson = R"({"b": null, "a": "valueA"})";
         auto        result    = m_jsonHandler.SortJsonByKey(inputJson, {}, {}, ' ', 2);
 
-        ASSERT_TRUE(result.success);
-        ASSERT_EQ(result.response, "{\n  \"a\": \"valueA\",\n  \"b\": null\n}");
+        ASSERT_TRUE(result.has_value());
+        ASSERT_EQ(*result, "{\n  \"a\": \"valueA\",\n  \"b\": null\n}");
     }
 
     TEST_F(JsonSortByKeyTest, TestSortJsonByKey_IgnoreComment)
@@ -120,8 +120,8 @@ namespace JsonSortByKey
         std::string inputJson  = R"({"b": 2, /* comment */ "a": 1})";
         auto        result     = JsonHandler {options}.SortJsonByKey(inputJson, {}, {}, ' ', 2);
 
-        ASSERT_TRUE(result.success);
-        ASSERT_EQ(result.response, "{\n  \"a\": 1,\n  \"b\": 2\n}");
+        ASSERT_TRUE(result.has_value());
+        ASSERT_EQ(*result, "{\n  \"a\": 1,\n  \"b\": 2\n}");
     }
 
     TEST_F(JsonSortByKeyTest, TestSortJsonByKey_IgnoreTrailingComma)
@@ -131,7 +131,7 @@ namespace JsonSortByKey
         std::string inputJson        = R"({"a": 1, "b": 2,})";
         auto        result           = JsonHandler {options}.SortJsonByKey(inputJson, {}, {}, ' ', 2);
 
-        ASSERT_FALSE(result.success);
+        ASSERT_FALSE(result.has_value());
     }
 
     TEST_F(JsonSortByKeyTest, TestSortJsonByKey_NumberPrecision_Success)
@@ -141,9 +141,9 @@ namespace JsonSortByKey
         std::string inputJson = R"({"z": "last", "pi": 3.141592653589793238, "tiny": 1e-14, "tiny2": 0.00000000000001, "big": 12345678901234567890})";
         auto        result    = m_jsonHandler.SortJsonByKey(inputJson, {}, {}, ' ', 2);
 
-        ASSERT_TRUE(result.success);
+        ASSERT_TRUE(result.has_value());
         ASSERT_EQ(
-            result.response,
+            *result,
             "{\n  \"big\": 12345678901234567890,\n  \"pi\": 3.141592653589793238,\n  \"tiny\": 1e-14,\n  \"tiny2\": 0.00000000000001,\n  \"z\": \"last\"\n}");
     }
 
@@ -168,7 +168,7 @@ namespace JsonSortByKey
                                 R"( "leading_zero_frac": 0.123})";
         auto        result    = m_jsonHandler.SortJsonByKey(inputJson, {}, {}, ' ', 2);
 
-        ASSERT_TRUE(result.success);
+        ASSERT_TRUE(result.has_value());
 
         // Verify exact output with alphabetically sorted keys and preserved number text
         std::string expected = "{\n"
@@ -188,6 +188,6 @@ namespace JsonSortByKey
                                "  \"tiny_frac\": 0.000000000000000001,\n"
                                "  \"zero\": 0\n"
                                "}";
-        ASSERT_EQ(result.response, expected);
+        ASSERT_EQ(*result, expected);
     }
 }    // namespace JsonSortByKey

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <expected>
 #include <string>
 
 #include <rapidjson/reader.h>
@@ -14,14 +15,14 @@
 
 namespace rj = rapidjson;
 
-struct Result
+struct JsonError
 {
-    bool        success    = false;
-    int         error_pos  = -1;
-    int         error_code = -1;
-    std::string error_str;
-    std::string response;
+    int         position;
+    int         code;
+    std::string message;
 };
+
+using Result = std::expected<std::string, JsonError>;
 
 using LE = rj::LineEndingOption;
 using LF = rj::PrettyFormatOptions;
@@ -43,14 +44,14 @@ public:
     explicit JsonHandler(const ParseOptions& options);
     ~JsonHandler() = default;
 
-    auto GetCompressedJson(const std::string& jsonText) -> const Result;
-    auto FormatJson(const std::string& jsonText, LE le, LF lf, char indentChar, unsigned indentLen) -> const Result;
-    auto FormatJsonLines(const std::string& jsonText, LE le, LF lf, char indentChar, unsigned indentLen) -> const Result;
-    auto SortJsonByKey(const std::string& jsonText, LE le, LF lf, char indentChar, unsigned indentLen) -> const Result;
-    auto ValidateJson(const std::string& jsonText) -> const Result;
+    auto GetCompressedJson(const std::string& jsonText) -> Result;
+    auto FormatJson(const std::string& jsonText, LE le, LF lf, char indentChar, unsigned indentLen) -> Result;
+    auto FormatJsonLines(const std::string& jsonText, LE le, LF lf, char indentChar, unsigned indentLen) -> Result;
+    auto SortJsonByKey(const std::string& jsonText, LE le, LF lf, char indentChar, unsigned indentLen) -> Result;
+    auto ValidateJson(const std::string& jsonText) -> Result;
 
     template <unsigned format, typename Handler>
-    auto ParseJson(const std::string& jsonText, rj::StringBuffer& sb, Handler& handler, TrackingStreamSharedPtr pTS = nullptr) -> const Result;
+    auto ParseJson(const std::string& jsonText, rj::StringBuffer& sb, Handler& handler, TrackingStreamSharedPtr pTS = nullptr) -> Result;
 
 private:
     void SortJsonObject(rj::Value& jsonObject, rj::Document::AllocatorType& allocator) const;
@@ -59,10 +60,8 @@ private:
 };
 
 template <unsigned flgBase, typename Handler>
-inline auto JsonHandler::ParseJson(const std::string& jsonText, rj::StringBuffer& sb, Handler& handler, TrackingStreamSharedPtr pTS) -> const Result
+inline auto JsonHandler::ParseJson(const std::string& jsonText, rj::StringBuffer& sb, Handler& handler, TrackingStreamSharedPtr pTS) -> Result
 {
-    Result retVal {};
-
     bool       success = false;
     rj::Reader reader;
 
@@ -99,19 +98,12 @@ inline auto JsonHandler::ParseJson(const std::string& jsonText, rj::StringBuffer
 
     if (success)
     {
-        retVal.success    = true;
-        retVal.response   = sb.GetString();
-        retVal.error_code = retVal.error_pos = -1;
-        retVal.error_str.clear();
-    }
-    else
-    {
-        retVal.success    = false;
-        retVal.error_str  = rj::GetParseError_En(reader.GetParseErrorCode());
-        retVal.error_pos  = static_cast<int>(reader.GetErrorOffset());
-        retVal.error_code = reader.GetParseErrorCode();
-        retVal.response.clear();
+        return std::string(sb.GetString());
     }
 
-    return retVal;
+    return std::unexpected(
+        JsonError {
+            .position = static_cast<int>(reader.GetErrorOffset()),
+            .code     = static_cast<int>(reader.GetParseErrorCode()),
+            .message  = rj::GetParseError_En(reader.GetParseErrorCode())});
 }

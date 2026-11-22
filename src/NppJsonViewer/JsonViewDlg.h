@@ -85,7 +85,7 @@ private:
     auto CopyPath() const -> std::wstring;
 
     int  ShowMessage(const std::wstring& title, const std::wstring& msg, int flag, bool bDonotShow = false);
-    void ReportError(const Result& result);
+    void ReportError(const JsonError& error);
 
     void ToggleMenuItemState(bool bVisible);
 

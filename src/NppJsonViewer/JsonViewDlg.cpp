@@ -97,9 +97,9 @@ void JsonViewDlg::FormatJson()
 
     Result res = JsonHandler(m_pSetting->parseOptions).FormatJson(selectedText.value(), le, lf, indentChar, indentLen);
 
-    if (res.success)
+    if (res)
     {
-        m_pEditor->ReplaceSelection(res.response);
+        m_pEditor->ReplaceSelection(*res);
         HighlightAsJson();
     }
     else
@@ -107,7 +107,7 @@ void JsonViewDlg::FormatJson()
         if (CheckForTokenUndefined(JsonViewDlg::eMethod::FormatJson, selectedText.value(), res, NULL))
             return;
 
-        ReportError(res);
+        ReportError(res.error());
     }
 
     ReDrawJsonTree();
@@ -129,14 +129,14 @@ void JsonViewDlg::FormatJsonLines()
 
     auto [le, lf, indentChar, indentLen] = GetFormatSetting();
     const Result res = JsonHandler(m_pSetting->parseOptions).FormatJsonLines(selectedText.value(), le, lf, indentChar, indentLen);
-    if (res.success)
+    if (res)
     {
-        m_pEditor->ReplaceSelection(res.response);
+        m_pEditor->ReplaceSelection(*res);
         HighlightAsJson();
     }
     else
     {
-        ReportError(res);
+        ReportError(res.error());
     }
 
     // The tree viewer accepts a single JSON document, not a stream of records.
@@ -159,9 +159,9 @@ void JsonViewDlg::CompressJson()
 
     Result res = JsonHandler(m_pSetting->parseOptions).GetCompressedJson(selectedText.value());
 
-    if (res.success)
+    if (res)
     {
-        m_pEditor->ReplaceSelection(res.response);
+        m_pEditor->ReplaceSelection(*res);
         HighlightAsJson();
     }
     else
@@ -169,7 +169,7 @@ void JsonViewDlg::CompressJson()
         if (CheckForTokenUndefined(JsonViewDlg::eMethod::GetCompressedJson, selectedText.value(), res, NULL))
             return;
 
-        ReportError(res);
+        ReportError(res.error());
     }
 
     ReDrawJsonTree();
@@ -193,9 +193,9 @@ void JsonViewDlg::SortJsonByKey()
 
     Result res = JsonHandler(m_pSetting->parseOptions).SortJsonByKey(selectedText.value(), le, lf, indentChar, indentLen);
 
-    if (res.success)
+    if (res)
     {
-        m_pEditor->ReplaceSelection(res.response);
+        m_pEditor->ReplaceSelection(*res);
         HighlightAsJson();
     }
     else
@@ -203,7 +203,7 @@ void JsonViewDlg::SortJsonByKey()
         if (CheckForTokenUndefined(JsonViewDlg::eMethod::SortJsonByKey, selectedText.value(), res, NULL))
             return;
 
-        ReportError(res);
+        ReportError(res.error());
     }
 
     ReDrawJsonTree();
@@ -215,7 +215,7 @@ bool JsonViewDlg::CheckForTokenUndefined(eMethod method, std::string selectedTex
 
     if (m_pSetting->parseOptions.bReplaceUndefined)
     {
-        auto text = selectedText.substr(res.error_pos, 9);
+        auto text = selectedText.substr(res.error().position, 9);
         StringHelper::ToLower(text);
 
         if (text == "undefined")
@@ -246,10 +246,10 @@ bool JsonViewDlg::CheckForTokenUndefined(eMethod method, std::string selectedTex
                     res = JsonHandler(m_pSetting->parseOptions).SortJsonByKey(text, le, lf, indentChar, indentLen);
                     break;
                 }
-                if (res.success)
+                if (res)
                 {
                     bool bShouldReplace = method == eMethod::ParseJson || method == eMethod::ValidateJson || method == eMethod::SortJsonByKey;
-                    m_pEditor->ReplaceSelection(bShouldReplace ? text : res.response);
+                    m_pEditor->ReplaceSelection(bShouldReplace ? text : *res);
                     HighlightAsJson();
                     return true;
                 }
@@ -351,7 +351,7 @@ void JsonViewDlg::ValidateJson()
 
     Result res = JsonHandler(m_pSetting->parseOptions).ValidateJson(selectedText.value());
 
-    if (res.success)
+    if (res)
     {
         ShowMessage(JSON_INFO_TITLE, JSON_ERR_VALIDATE_SUCCESS, MB_OK | MB_ICONINFORMATION);
     }
@@ -363,7 +363,7 @@ void JsonViewDlg::ValidateJson()
             return;
         }
 
-        ReportError(res);
+        ReportError(res.error());
     }
 
     DrawJsonTree();
@@ -446,7 +446,7 @@ auto JsonViewDlg::PopulateTreeUsingSax(HTREEITEM tree_root, const std::string& j
     rapidjson::StringBuffer sb;
 
     Result res = JsonHandler(m_pSetting->parseOptions).ParseJson<flgBaseReader>(jsonText, sb, handler, pTS);
-    if (!res.success)
+    if (!res)
     {
         if (CheckForTokenUndefined(JsonViewDlg::eMethod::ParseJson, jsonText, res, tree_root))
             return retVal;
@@ -460,10 +460,10 @@ auto JsonViewDlg::PopulateTreeUsingSax(HTREEITEM tree_root, const std::string& j
         {
             // Mark the error position
             size_t start       = m_pEditor->GetSelectionStart();
-            size_t errPosition = start + static_cast<size_t>(res.error_pos);
+            size_t errPosition = start + static_cast<size_t>(res.error().position);
             m_pEditor->MakeSelection(errPosition, errPosition + 1);
 
-            std::string err = std::format("\n\nError: ({} : {})", res.error_code, res.error_str);
+            std::string err = std::format("\n\nError: ({} : {})", res.error().code, res.error().message);
             retVal          = std::make_optional<std::wstring>((JSON_ERR_VALIDATE + StringHelper::ToWstring(err)));
         }
     }
@@ -905,15 +905,15 @@ int JsonViewDlg::ShowMessage(const std::wstring& title, const std::wstring& msg,
     return !bDonotShow ? ::MessageBox(_hParent, msg.c_str(), title.c_str(), flag) : IDOK;
 }
 
-void JsonViewDlg::ReportError(const Result& result)
+void JsonViewDlg::ReportError(const JsonError& error)
 {
     // Mark the error position
-    size_t start = m_pEditor->GetSelectionStart() + result.error_pos;
+    size_t start = m_pEditor->GetSelectionStart() + error.position;
     size_t end   = m_pEditor->GetSelectionEnd();
     m_pEditor->MakeSelection(start, end);
 
     // Intimate user
-    std::string err = std::format("\n\nError: ({} : {})", result.error_code, result.error_str);
+    std::string err = std::format("\n\nError: ({} : {})", error.code, error.message);
 
     ShowMessage(JSON_ERROR_TITLE, (JSON_ERR_VALIDATE + StringHelper::ToWstring(err)).c_str(), MB_OK | MB_ICONERROR);
 }

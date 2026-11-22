@@ -86,7 +86,7 @@ namespace JsonNavigation
         rapidjson::StringBuffer sb;
 
         Result res = m_jsonHandler.ParseJson<flgBaseReader>(jsonText, sb, *m_pHandler, m_pTSS);
-        ASSERT_TRUE(res.success);
+        ASSERT_TRUE(res.has_value());
 
         for (const auto& each : m_testData.output)
         {
@@ -117,7 +117,7 @@ namespace JsonNavigation
         rapidjson::StringBuffer sb;
 
         Result res = m_jsonHandler.ParseJson<flgBaseReader>(jsonText, sb, *m_pHandler, m_pTSS);
-        ASSERT_TRUE(res.success);
+        ASSERT_TRUE(res.has_value());
 
         for (const auto& each : m_testData.output)
         {
@@ -212,7 +212,7 @@ namespace JsonNavigation
         rapidjson::StringBuffer sb;
 
         Result res = m_jsonHandler.ParseJson<flgBaseReader>(jsonText, sb, *m_pHandler, m_pTSS);
-        ASSERT_TRUE(res.success);
+        ASSERT_TRUE(res.has_value());
 
         for (const auto& each : m_testData.output)
         {

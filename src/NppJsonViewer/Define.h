@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <utility>
 
 #include "PluginInterface.h"
 
@@ -16,22 +17,22 @@ enum class CallBackID : int
     SETTING,
     ABOUT
 };
-constexpr const int nTotalCommandCount = static_cast<int>(CallBackID::ABOUT) + 1;
+constexpr int nTotalCommandCount = std::to_underlying(CallBackID::ABOUT) + 1;
 
 // Define plugin name here
 const TCHAR PLUGIN_NAME[]   = TEXT("JSON Viewer");
 const TCHAR PLUGIN_CONFIG[] = TEXT("JSONViewer.ini");
 
 // Text which can be considered for localization
-const TCHAR TITLE_JSON_PANEL[]     = TEXT("JSON Viewer");
-const TCHAR MENU_SHOW_JSON_PANEL[] = TEXT("Show &JSON Viewer");
-const TCHAR MENU_FORMAT_JSON[]     = TEXT("&Format JSON");
+const TCHAR TITLE_JSON_PANEL[]       = TEXT("JSON Viewer");
+const TCHAR MENU_SHOW_JSON_PANEL[]   = TEXT("Show &JSON Viewer");
+const TCHAR MENU_FORMAT_JSON[]       = TEXT("&Format JSON");
 const TCHAR MENU_FORMAT_JSON_LINES[] = TEXT("Format JSON &Lines");
-const TCHAR MENU_COMPRESS_JSON[]   = TEXT("&Compress JSON");
-const TCHAR MENU_SORT_BY_KEY[]     = TEXT("Sort by &key (ascending)");
-const TCHAR MENU_SETTING[]         = TEXT("&Settings");
-const TCHAR MENU_ABOUT[]           = TEXT("&About");
-const TCHAR MENU_SEPERATOR[]       = TEXT("-SEPARATOR-");
+const TCHAR MENU_COMPRESS_JSON[]     = TEXT("&Compress JSON");
+const TCHAR MENU_SORT_BY_KEY[]       = TEXT("Sort by &key (ascending)");
+const TCHAR MENU_SETTING[]           = TEXT("&Settings");
+const TCHAR MENU_ABOUT[]             = TEXT("&About");
+const TCHAR MENU_SEPERATOR[]         = TEXT("-SEPARATOR-");
 
 const TCHAR TOOLTIP_REFRESH[]  = TEXT("Refresh JSON tree");
 const TCHAR TOOLTIP_VALIDATE[] = TEXT("Validate JSON to detect any errors");

@@ -33,11 +33,8 @@ namespace JsonFormat
 
         auto result = m_jsonFormatter.FormatJson(inputJson, lineEndingOption, formatOptions, indentChar, indentLen);
 
-        EXPECT_TRUE(result.success);
-        EXPECT_EQ(result.error_code, -1);
-        EXPECT_EQ(result.error_pos, -1);
-        EXPECT_EQ(result.error_str, "");
-        EXPECT_EQ(result.response, "{\n    \"name\": \"John\",\n    \"age\": 30\n}");
+        EXPECT_TRUE(result.has_value());
+        EXPECT_EQ(*result, "{\n    \"name\": \"John\",\n    \"age\": 30\n}");
     }
 
     // Test 2: Test invalid JSON input
@@ -51,11 +48,11 @@ namespace JsonFormat
 
         auto result = m_jsonFormatter.FormatJson(inputJson, lineEndingOption, formatOptions, indentChar, indentLen);
 
-        EXPECT_FALSE(result.success);
-        EXPECT_NE(result.error_code, -1);
-        EXPECT_NE(result.error_pos, -1);
-        EXPECT_FALSE(result.error_str.empty());
-        EXPECT_EQ(result.response, "");
+        EXPECT_FALSE(result.has_value());
+        EXPECT_NE(result.error().code, -1);
+        EXPECT_NE(result.error().position, -1);
+        EXPECT_FALSE(result.error().message.empty());
+
     }
 
     // Test 3: Test valid JSON with custom indentation (tabs instead of spaces)
@@ -69,11 +66,8 @@ namespace JsonFormat
 
         auto result = m_jsonFormatter.FormatJson(inputJson, lineEndingOption, formatOptions, indentChar, indentLen);
 
-        EXPECT_TRUE(result.success);
-        EXPECT_EQ(result.error_code, -1);
-        EXPECT_EQ(result.error_pos, -1);
-        EXPECT_EQ(result.error_str, "");
-        EXPECT_EQ(result.response, "{\n\t\"name\": \"John\",\n\t\"age\": 30\n}");
+        EXPECT_TRUE(result.has_value());
+        EXPECT_EQ(*result, "{\n\t\"name\": \"John\",\n\t\"age\": 30\n}");
     }
 
     // Test 4: Test valid JSON with Windows line endings
@@ -87,11 +81,8 @@ namespace JsonFormat
 
         auto result = m_jsonFormatter.FormatJson(inputJson, lineEndingOption, formatOptions, indentChar, indentLen);
 
-        EXPECT_TRUE(result.success);
-        EXPECT_EQ(result.error_code, -1);
-        EXPECT_EQ(result.error_pos, -1);
-        EXPECT_EQ(result.error_str, "");
-        EXPECT_EQ(result.response, "{\r\n    \"name\": \"John\",\r\n    \"age\": 30\r\n}");
+        EXPECT_TRUE(result.has_value());
+        EXPECT_EQ(*result, "{\r\n    \"name\": \"John\",\r\n    \"age\": 30\r\n}");
     }
 
     // Test 5: Test valid JSON with no indentation (compact format)
@@ -105,11 +96,8 @@ namespace JsonFormat
 
         auto result = m_jsonFormatter.FormatJson(inputJson, lineEndingOption, formatOptions, indentChar, indentLen);
 
-        EXPECT_TRUE(result.success);
-        EXPECT_EQ(result.error_code, -1);
-        EXPECT_EQ(result.error_pos, -1);
-        EXPECT_EQ(result.error_str, "");
-        EXPECT_EQ(result.response, "{\r\n\"name\": \"John\",\r\n\"age\": 30\r\n}");
+        EXPECT_TRUE(result.has_value());
+        EXPECT_EQ(*result, "{\r\n\"name\": \"John\",\r\n\"age\": 30\r\n}");
     }
 
     // Test 6: Test JSON with comments ignored
@@ -131,11 +119,8 @@ namespace JsonFormat
 
         auto result = m_jsonFormatter.FormatJson(inputJson, lineEndingOption, formatOptions, indentChar, indentLen);
 
-        EXPECT_TRUE(result.success);
-        EXPECT_EQ(result.error_code, -1);
-        EXPECT_EQ(result.error_pos, -1);
-        EXPECT_EQ(result.error_str, "");
-        EXPECT_EQ(result.response, "{\r\n    \"name\": \"John\",\r\n    \"age\": 30\r\n}");
+        EXPECT_TRUE(result.has_value());
+        EXPECT_EQ(*result, "{\r\n    \"name\": \"John\",\r\n    \"age\": 30\r\n}");
     }
 
     // Test 7: Test JSON with trailing commas ignored
@@ -156,11 +141,8 @@ namespace JsonFormat
 
         auto result = m_jsonFormatter.FormatJson(inputJson, lineEndingOption, formatOptions, indentChar, indentLen);
 
-        EXPECT_TRUE(result.success);
-        EXPECT_EQ(result.error_code, -1);
-        EXPECT_EQ(result.error_pos, -1);
-        EXPECT_EQ(result.error_str, "");
-        EXPECT_EQ(result.response, "{\r\n  \"name\": \"John\",\r\n  \"age\": 30\r\n}");
+        EXPECT_TRUE(result.has_value());
+        EXPECT_EQ(*result, "{\r\n  \"name\": \"John\",\r\n  \"age\": 30\r\n}");
     }
 
     // Test 8: Test with infinity NaN inf
@@ -181,11 +163,8 @@ namespace JsonFormat
         {
             auto result = m_jsonFormatter.FormatJson(input, lineEndingOption, formatOptions, indentChar, indentLen);
 
-            EXPECT_TRUE(result.success);
-            EXPECT_EQ(result.error_code, -1);
-            EXPECT_EQ(result.error_pos, -1);
-            EXPECT_EQ(result.error_str, "");
-            EXPECT_EQ(result.response, output);
+            EXPECT_TRUE(result.has_value());
+            EXPECT_EQ(*result, output);
         }
     }
 
@@ -207,11 +186,8 @@ namespace JsonFormat
         {
             auto result = m_jsonFormatter.FormatJson(input, lineEndingOption, formatOptions, indentChar, indentLen);
 
-            EXPECT_TRUE(result.success);
-            EXPECT_EQ(result.error_code, -1);
-            EXPECT_EQ(result.error_pos, -1);
-            EXPECT_EQ(result.error_str, "");
-            EXPECT_EQ(result.response, output);
+            EXPECT_TRUE(result.has_value());
+            EXPECT_EQ(*result, output);
         }
     }
 
@@ -226,11 +202,8 @@ namespace JsonFormat
 
         auto result = m_jsonFormatter.FormatJson(inputJson, lineEndingOption, formatOptions, indentChar, indentLen);
 
-        EXPECT_TRUE(result.success);
-        EXPECT_EQ(result.error_code, -1);
-        EXPECT_EQ(result.error_pos, -1);
-        EXPECT_EQ(result.error_str, "");
-        EXPECT_EQ(result.response, "{\r\n\"FreeTextInput\": \"<script>alert(\\\"links\\\");</script>\"\r\n}");
+        EXPECT_TRUE(result.has_value());
+        EXPECT_EQ(*result, "{\r\n\"FreeTextInput\": \"<script>alert(\\\"links\\\");</script>\"\r\n}");
     }
 
     // Test 11: Test with numbers (with and without precision)
@@ -291,12 +264,9 @@ namespace JsonFormat
         for (const auto& [input, output] : testData)
         {
             auto result      = m_jsonFormatter.FormatJson(input, lineEndingOption, formatOptions, indentChar, indentLen);
-            bool foundNumber = result.response.find(output) != std::string::npos;
-            EXPECT_TRUE(result.success);
-            EXPECT_EQ(result.error_code, -1);
-            EXPECT_EQ(result.error_pos, -1);
-            EXPECT_EQ(result.error_str, "");
-            EXPECT_EQ(foundNumber, true) << "Number: '" << output.c_str() << "' not found in '" << result.response.c_str() << "'.\n";
+            EXPECT_TRUE(result.has_value());
+            bool foundNumber = result->find(output) != std::string::npos;
+            EXPECT_EQ(foundNumber, true) << "Number: '" << output.c_str() << "' not found in '" << result->c_str() << "'.\n";
         }
     }
 
@@ -338,11 +308,8 @@ namespace JsonFormat
 
         auto result = m_jsonFormatter.FormatJson(inputJson, lineEndingOption, formatOptions, indentChar, indentLen);
 
-        EXPECT_TRUE(result.success);
-        EXPECT_EQ(result.error_code, -1);
-        EXPECT_EQ(result.error_pos, -1);
-        EXPECT_EQ(result.error_str, "");
-        EXPECT_EQ(result.response, outputJson);
+        EXPECT_TRUE(result.has_value());
+        EXPECT_EQ(*result, outputJson);
     }
 
     // Test 13: Test with different type of data in array on single line
@@ -384,11 +351,8 @@ namespace JsonFormat
 
         auto result = m_jsonFormatter.FormatJson(inputJson, lineEndingOption, formatOptions, indentChar, indentLen);
 
-        EXPECT_TRUE(result.success);
-        EXPECT_EQ(result.error_code, -1);
-        EXPECT_EQ(result.error_pos, -1);
-        EXPECT_EQ(result.error_str, "");
-        EXPECT_EQ(result.response, outputJson);
+        EXPECT_TRUE(result.has_value());
+        EXPECT_EQ(*result, outputJson);
     }
 
 }    // namespace JsonFormat
