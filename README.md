@@ -16,6 +16,18 @@ This plugin is designed to display JSON strings in a Treeview format and highlig
 
 ## Latest Updates:
 
+### 2.2.1.0
+
+1. New features:
+    1. Added **Format JSON Lines** to pretty-print a selection of complete JSON values, or the whole document when no text is selected.
+    2. Persisted the tree view zoom level across Notepad++ sessions.
+
+2. Bug/regression fixes:
+    1. Fixed bottom tree-view rows being clipped when the panel is resized at high DPI.
+    2. Recognized `.jsonc` files without implying JSON5 support.
+    3. Improved settings persistence when the viewer closes.
+
+
 ### 2.2.0.0
 
 1. Bug/regression fixes:
