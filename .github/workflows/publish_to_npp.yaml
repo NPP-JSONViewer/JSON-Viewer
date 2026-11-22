@@ -1,0 +1,291 @@
+name: Publish to Notepad++ Plugin List
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: read
+
+jobs:
+  update-plugin-list:
+    # Ignore prereleases
+    if: github.event.release.prerelease == false
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Prepare release information
+        id: release
+        shell: bash
+        run: |
+          TAG="${{ github.event.release.tag_name }}"
+          VERSION="${TAG#v}"
+
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Download release binaries
+        shell: bash
+        env:
+          TAG: ${{ steps.release.outputs.tag }}
+        run: |
+          set -euo pipefail
+
+          mkdir -p "$RUNNER_TEMP/release"
+
+          BASE_URL="https://github.com/NPP-JSONViewer/JSON-Viewer/releases/download/$TAG"
+
+          curl -fL "$BASE_URL/NppJSONViewer_ARM64_Release.zip" \
+            -o "$RUNNER_TEMP/release/NppJSONViewer_ARM64_Release.zip"
+
+          curl -fL "$BASE_URL/NppJSONViewer_x64_Release.zip" \
+            -o "$RUNNER_TEMP/release/NppJSONViewer_x64_Release.zip"
+
+          curl -fL "$BASE_URL/NppJSONViewer_Win32_Release.zip" \
+            -o "$RUNNER_TEMP/release/NppJSONViewer_Win32_Release.zip"
+
+      - name: Clone plugin list fork
+        run: |
+          set -euo pipefail
+
+          git clone https://github.com/SinghRajenM/nppPluginList.git \
+            "$RUNNER_TEMP/nppPluginList"
+
+          cd "$RUNNER_TEMP/nppPluginList"
+
+          git remote add upstream \
+            https://github.com/notepad-plus-plus/nppPluginList.git
+
+          # TESTING: Use your fork's master as the base.
+          git fetch origin master
+
+          BRANCH="update-jsonviewer-${{ steps.release.outputs.tag }}"
+
+          git checkout -B "$BRANCH" origin/master
+
+          echo "BRANCH=$BRANCH" >> "$GITHUB_ENV"
+
+      - name: Update plugin JSON files
+        shell: bash
+        env:
+          VERSION: ${{ steps.release.outputs.version }}
+          TAG: ${{ steps.release.outputs.tag }}
+        run: |
+          set -euo pipefail
+
+          REPO="$RUNNER_TEMP/nppPluginList"
+          ASSETS="$RUNNER_TEMP/release"
+
+          update_entry() {
+            local json_file="$1"
+            local asset="$2"
+
+            local hash
+            hash=$(sha256sum "$ASSETS/$asset" | awk '{print $1}')
+
+            local url="https://github.com/NPP-JSONViewer/JSON-Viewer/releases/download/$TAG/$asset"
+
+            echo "Updating $json_file"
+            echo "SHA256: $hash"
+
+            # Update only the three required values.
+            # Preserve all existing JSON formatting and whitespace.
+            python3 - "$REPO/$json_file" "$VERSION" "$hash" "$url" <<'PY'
+          import json
+          import re
+          import sys
+          from pathlib import Path
+
+          path = Path(sys.argv[1])
+          version, sha256, url = sys.argv[2:]
+
+          content = path.read_bytes().decode("utf-8")
+
+          # Locate JSON objects while respecting quoted strings.
+          stack = []
+          objects = []
+          in_string = False
+          escaped = False
+
+          for i, char in enumerate(content):
+              if in_string:
+                  if escaped:
+                      escaped = False
+                  elif char == "\\":
+                      escaped = True
+                  elif char == '"':
+                      in_string = False
+                  continue
+
+              if char == '"':
+                  in_string = True
+              elif char == '{':
+                  stack.append(i)
+              elif char == '}':
+                  if not stack:
+                      raise ValueError("Unbalanced JSON object")
+
+                  start = stack.pop()
+                  objects.append((start, i + 1))
+
+          if stack or in_string:
+              raise ValueError("Incomplete JSON document")
+
+          # Find the NPPJSONViewer entry.
+          marker = re.compile(
+              r'"folder-name"\s*:\s*"NPPJSONViewer"'
+          )
+
+          matches = list(marker.finditer(content))
+
+          if len(matches) != 1:
+              raise ValueError(
+                  f"Expected exactly one NPPJSONViewer entry "
+                  f"in {path}, found {len(matches)}"
+              )
+
+          position = matches[0].start()
+
+          # Find the smallest JSON object containing the entry.
+          candidates = [
+              (end - start, start, end)
+              for start, end in objects
+              if start <= position < end
+          ]
+
+          if not candidates:
+              raise ValueError("Could not locate plugin JSON object")
+
+          _, start, end = min(candidates)
+          entry = content[start:end]
+
+          # Update only these properties.
+          updates = {
+              "version": version,
+              "id": sha256,
+              "repository": url,
+          }
+
+          for key, value in updates.items():
+              pattern = re.compile(
+                  r'(?m)^([ \t]*"' + re.escape(key) +
+                  r'"[ \t]*:[ \t]*)"(?:\\.|[^"\\])*"'
+              )
+
+              entry, count = pattern.subn(
+                  lambda m: m.group(1) + json.dumps(value),
+                  entry
+              )
+
+              if count != 1:
+                  raise ValueError(
+                      f"Expected one '{key}' property, found {count}"
+                  )
+
+          # Replace only the original plugin object.
+          updated = content[:start] + entry + content[end:]
+
+          # Validate before writing.
+          json.loads(updated)
+
+          path.write_bytes(updated.encode("utf-8"))
+
+          print(f"Updated successfully: {path}")
+          PY
+          }
+
+          cd "$REPO"
+
+          update_entry src/pl.arm64.json \
+            NppJSONViewer_ARM64_Release.zip
+
+          update_entry src/pl.x64.json \
+            NppJSONViewer_x64_Release.zip
+
+          update_entry src/pl.x86.json \
+            NppJSONViewer_Win32_Release.zip
+
+          # Validate JSON syntax.
+          jq empty src/pl.arm64.json
+          jq empty src/pl.x64.json
+          jq empty src/pl.x86.json
+
+      - name: Commit and push changes
+        id: commit
+        shell: bash
+        env:
+          TOKEN: ${{ secrets.NPP_PLUGINLIST_TOKEN }}
+          VERSION: ${{ steps.release.outputs.version }}
+        run: |
+          set -euo pipefail
+
+          cd "$RUNNER_TEMP/nppPluginList"
+
+          if git diff --quiet; then
+            echo "No changes required."
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email \
+            "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add src/pl.arm64.json src/pl.x64.json src/pl.x86.json
+
+          # Display the changes for verification.
+          git diff --cached --stat
+          git diff --cached
+
+          git commit -m "Update JSON Viewer to v$VERSION"
+
+          AUTH=$(printf 'x-access-token:%s' "$TOKEN" | base64 -w0)
+
+          # Force-update the dedicated automation branch.
+          git -c http.extraheader="AUTHORIZATION: basic $AUTH" \
+            push --force origin "$BRANCH"
+
+          echo "changed=true" >> "$GITHUB_OUTPUT"
+
+      - name: Create Pull Request
+        if: steps.commit.outputs.changed == 'true'
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.NPP_PLUGINLIST_TOKEN }}
+          VERSION: ${{ steps.release.outputs.version }}
+        run: |
+          set -euo pipefail
+
+          TARGET_REPO="notepad-plus-plus/nppPluginList"
+          BASE_BRANCH="master"
+          HEAD_BRANCH="SinghRajenM:$BRANCH"
+
+          # Check whether a PR already exists.
+          EXISTING_PR=$(gh pr list \
+            --repo "$TARGET_REPO" \
+            --head "$HEAD_BRANCH" \
+            --base "$BASE_BRANCH" \
+            --json url \
+            --jq '.[0].url // empty')
+
+          if [[ -n "$EXISTING_PR" ]]; then
+            echo "Pull request already exists: $EXISTING_PR"
+            exit 0
+          fi
+
+          gh pr create \
+            --repo "$TARGET_REPO" \
+            --base "$BASE_BRANCH" \
+            --head "$HEAD_BRANCH" \
+            --title "Update JSON Viewer to v$VERSION" \
+            --body "Automated update of JSON Viewer plugin.
+
+          Version: $VERSION
+
+          Updated:
+          - ARM64 package and SHA-256
+          - x64 package and SHA-256
+          - x86 package and SHA-256
+
+          Generated automatically after publishing the plugin release."
